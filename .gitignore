@@ -35,5 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
-*.-local.properties
+*-local.properties
 *.yml
