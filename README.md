@@ -43,3 +43,9 @@ public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupReques
   throw new ApplicationException(ErrorCode.INVALID_QUANTITY_IS_ZERO);
 ```
 - ApplicationException(ErrorCode.설정에러명) 형태로 커스텀 에러 반환 가능
+- 예시
+  ```
+        if (findCoupon.getQuantity() <= 0) {
+            throw new ApplicationException(ErrorCode.INVALID_QUANTITY_IS_ZERO);
+        }
+  ```
