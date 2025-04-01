@@ -23,10 +23,10 @@ public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupReques
 ## ApiResponse.success(responseData, "Response 메시지");
 ```
 @PostMapping("/signin")
-  public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBody SigninRequest request) {
+public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBody SigninRequest request) {
     AccessTokenResponse response = authService.signin(request); //토큰값 반환
     return ResponseEntity.ok(ApiResponse.success(response,"로그인에 성공했습니다."));
-  }
+}
 ```
 - 결과
   ```
@@ -45,7 +45,7 @@ public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupReques
 - ApplicationException(ErrorCode.설정에러명) 형태로 커스텀 에러 반환 가능
 - 예시
   ```
-        if (findCoupon.getQuantity() <= 0) {
-            throw new ApplicationException(ErrorCode.INVALID_QUANTITY_IS_ZERO);
-        }
+  if (findCoupon.getQuantity() <= 0) {
+    throw new ApplicationException(ErrorCode.INVALID_QUANTITY_IS_ZERO);
+  }
   ```
