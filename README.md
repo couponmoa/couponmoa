@@ -30,10 +30,10 @@ public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupReques
 ```
 - 결과
   ```
-{
-  “status”: “OK”,
-  “code”: 200,
-  “message”: “로그인에 성공했습니다.”,
-  “data”: {token}
-}
+    {
+      “status”: “OK”,
+      “code”: 200,
+      “message”: “로그인에 성공했습니다.”,
+      “data”: {token}
+    }
   ```
