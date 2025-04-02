@@ -1,12 +1,13 @@
 package com.couponmoa.backend.domain.usercoupon.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.service.UserCouponService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * TODO: userId를 PathVariable에서 Jwt로 변경
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserCouponController {
 
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_SIZE = 10;
+
     private final UserCouponService userCouponService;
 
     @PostMapping("/v1/coupons/{couponId}/issue/{userId}")
@@ -26,5 +30,16 @@ public class UserCouponController {
     ) {
         userCouponService.createUserCoupon(userId, couponId);
         return ApiResponse.success();
+    }
+
+    @GetMapping("/v1/user-coupons/{userId}")
+    public ApiResponse<Page<UserCouponResponse>> findUserCoupons(
+            @PathVariable Long userId,
+            @RequestParam(required = false) UserCouponStatus status,
+            @RequestParam(defaultValue = "" + DEFAULT_PAGE) @Min(1) Integer page,
+            @RequestParam(defaultValue = "" + DEFAULT_SIZE) @Min(1) Integer size
+    ) {
+        Page<UserCouponResponse> response = userCouponService.findUserCoupons(userId, status, page, size);
+        return ApiResponse.success(response);
     }
 }
