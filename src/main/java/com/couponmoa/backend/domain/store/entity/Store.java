@@ -36,4 +36,11 @@ public class Store extends BaseEntity {
         this.storeCategory = storeCategory;
     }
 
+    // update 메서드
+    public void update(String name, String description, String address, StoreCategory storeCategory) {
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.storeCategory = storeCategory;
+    }
 }
