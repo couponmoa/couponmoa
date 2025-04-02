@@ -69,3 +69,5 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
   public class UserCoupon extends BaseEntity { ... }
   ```
   
+# 이슈관리
+![image](https://github.com/user-attachments/assets/5ad21c67-edba-48a9-99a5-20a251bde732)
