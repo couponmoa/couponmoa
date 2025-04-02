@@ -68,6 +68,14 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
   @Table(name = "user_coupon")
   public class UserCoupon extends BaseEntity { ... }
   ```
-  
+
 # 이슈관리
 ![image](https://github.com/user-attachments/assets/5ad21c67-edba-48a9-99a5-20a251bde732)
+- 깃허브 이슈 탭에서 이슈관리 가능(깃허브 좌상단)
+- 지금 개발중인것을 제목으로 작성
+- 이슈 생성 시, 깃허브에서 자동으로 이슈번호 발급
+  ![image](https://github.com/user-attachments/assets/fbdc65f8-50f8-4518-82b2-f9575d138c14)
+- commit시 아래 예시와 같이 commit 권장 
+  ```
+  git commit -m "feat(#이슈 번호): 개발 내용"
+  ```
