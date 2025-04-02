@@ -4,11 +4,13 @@ import com.couponmoa.backend.common.entity.BaseEntity;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
     @Id
@@ -27,4 +29,11 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    public User(String email, String password, String nickname, UserRole userRole) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.userRole = userRole;
+    }
 }
