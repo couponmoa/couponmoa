@@ -1,10 +1,13 @@
 package com.couponmoa.backend.domain.usercoupon.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.service.UserCouponService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,6 +53,15 @@ public class UserCouponController {
             @PathVariable Long userCouponId
     ) {
         UserCouponCodeResponse response = userCouponService.findUserCouponCode(userId, userCouponId);
+        return ApiResponse.success(response);
+    }
+
+    @PostMapping("/v1/user-coupons/use/{userId}")
+    public ApiResponse<UseUserCouponResponse> useUserCoupon(
+            @PathVariable Long userId,
+            @Valid @RequestBody UserCouponRequest request
+    ) {
+        UseUserCouponResponse response = userCouponService.useUserCoupon(userId, request);
         return ApiResponse.success(response);
     }
 }

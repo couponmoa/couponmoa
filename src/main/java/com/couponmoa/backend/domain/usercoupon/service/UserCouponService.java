@@ -6,8 +6,10 @@ import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
+import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
@@ -58,6 +60,18 @@ public class UserCouponService {
         validateCouponStatus(userCoupon.getStatus());
 
         return new UserCouponCodeResponse(userCoupon.getCode());
+    }
+
+    @Transactional
+    public UseUserCouponResponse useUserCoupon(Long userId, UserCouponRequest request) {
+        UserCoupon userCoupon = userCouponRepository.findByCode(request.getCode())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_COUPON_NOT_FOUND));
+
+        // TODO: Coupon 연관관계 구현 후 요청자가 Store 주인인지 검사하는 로직 추가
+        validateCouponStatus(userCoupon.getStatus());
+
+        userCoupon.setUsed();
+        return UseUserCouponResponse.from(userCoupon);
     }
 
     private void validateCouponIssuable(Coupon coupon) {

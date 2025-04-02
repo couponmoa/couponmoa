@@ -6,7 +6,10 @@ import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 public interface UserCouponRepository extends BaseRepository<UserCoupon, Long> {
     Boolean existsByUserIdAndCouponId(Long userId, Long couponId);
@@ -19,4 +22,7 @@ public interface UserCouponRepository extends BaseRepository<UserCoupon, Long> {
                 WHERE uc.user.id = :userId AND (:status IS NULL OR uc.status = :status)
             """)
     Page<UserCouponResponse> findByUserIdAndStatus(Long userId, UserCouponStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = "coupon")
+    Optional<UserCoupon> findByCode(String code);
 }
