@@ -2,6 +2,8 @@ package com.couponmoa.backend.domain.subscribe.userstore.entity;
 
 
 import com.couponmoa.backend.common.entity.BaseEntity;
+import com.couponmoa.backend.domain.store.entity.Store;
+import com.couponmoa.backend.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +16,12 @@ public class UserStoreSubscribe extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_store_subscribe_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

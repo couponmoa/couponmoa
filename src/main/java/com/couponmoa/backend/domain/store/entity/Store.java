@@ -2,6 +2,7 @@ package com.couponmoa.backend.domain.store.entity;
 
 import com.couponmoa.backend.common.entity.BaseEntity;
 import com.couponmoa.backend.domain.store.enums.StoreCategory;
+import com.couponmoa.backend.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,9 @@ public class Store extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
- /*   @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;*/
+    private User user;
 
     private String name;
 
