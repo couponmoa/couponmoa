@@ -3,17 +3,26 @@ package com.couponmoa.backend.domain.subscribe.usercoupon.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.subscribe.usercoupon.dto.response.FindSubscribeListResponse;
 import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
 import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.couponmoa.backend.common.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserCouponSubscribeService {
 
     private final UserRepository userRepo;
@@ -35,6 +44,16 @@ public class UserCouponSubscribeService {
         UserCouponSubscribe userCouponSubscribe = userCouponSubRepo.findByUserAndCoupon(user, coupon).orElseThrow(() -> new ApplicationException(NOT_FOUNT_USER_COUPON));
 
         userCouponSubRepo.delete(userCouponSubscribe);
+    }
+
+    public List<FindSubscribeListResponse> findSubscribeList(Long userId, int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        User user = getUser(userId);
+
+        return userCouponSubRepo.findByUser(user, pageable)
+                .stream()
+                .map(FindSubscribeListResponse::new)
+                .toList();
     }
 
     private User getUser(Long userId) {
