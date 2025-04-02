@@ -7,21 +7,35 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public enum ErrorCode {
-
-    //F
+    // common
     FORBIDDEN_ADMIN_ONLY(FORBIDDEN, "ADMIN 권한을 가진 유저만 접근할 수 있습니다."),
 
-    // Coupon
+    // auth
+    TOKEN_NOT_FOUND(NOT_FOUND, "존재하지 않는 토큰입니다."),
+    INVALID_JWT(UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),
+    EXPIRED_JWT(UNAUTHORIZED, "만료된 JWT 토큰입니다."),
+    UNSUPPORTED_JWT(BAD_REQUEST, "지원되지 않는 JWT 토큰입니다."),
+
+    // user
+    INVALID_USER_ROLE(FORBIDDEN,"유효하지 않은 권한입니다."),
+    EMAIL_ALREADY_EXIST(BAD_REQUEST,"이미 존재하는 이메일입니다."),
+    EMAIL_ALREADY_DELETED(BAD_REQUEST,"이미 탈퇴한 이메일입니다."),
+    USER_NOT_FOUND(NOT_FOUND,"존재하지 않는 계정입니다."),
+    INVALID_PASSWORD(BAD_REQUEST,"비밀번호가 일치하지 않습니다"),
+
+    // coupon
     COUPON_NOT_FOUND(NOT_FOUND, "쿠폰을 찾을 수 없습니다."),
     COUPON_NOT_ACTIVE(BAD_REQUEST, "쿠폰 발급 기간이 아닙니다."),
     COUPON_SOLE_OUT(BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
 
-    // UserCoupon
+    // user coupon
     USER_COUPON_NOT_FOUND(NOT_FOUND, "사용자 쿠폰을 찾을 수 없습니다."),
     USER_COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급받은 쿠폰입니다."),
     USER_COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰을 조회할 권한이 없습니다."),
-    USER_COUPON_CODE_UNAVAILABLE(BAD_REQUEST, "쿠폰이 이미 사용되었거나 만료되었습니다.")
-    ;
+    USER_COUPON_CODE_UNAVAILABLE(BAD_REQUEST, "쿠폰이 이미 사용되었거나 만료되었습니다."),
+
+    // server
+    EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
