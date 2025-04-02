@@ -1,6 +1,7 @@
 package com.couponmoa.backend.domain.subscribe.usercoupon.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
+import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.subscribe.usercoupon.dto.response.FindSubscribeListResponse;
@@ -32,9 +33,13 @@ public class UserCouponSubscribeService {
     public void subscribeCoupon(Long userId, Long couponId) {
         Coupon coupon = getCoupon(couponId);
         User user = getUser(userId);
+
+        if (userCouponSubRepo.existsByUserAndCoupon(user, coupon)) {
+            throw new ApplicationException(DUPLICATED_USER_COUPON);
+        }
+
         UserCouponSubscribe userCouponSubscribe = new UserCouponSubscribe(user, coupon);
         userCouponSubRepo.save(userCouponSubscribe).getId();
-
     }
 
     public void unSubscribeCoupon(Long userId, Long couponId) {
