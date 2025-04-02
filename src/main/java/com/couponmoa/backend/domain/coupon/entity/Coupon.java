@@ -54,4 +54,11 @@ public class Coupon extends BaseEntity {
         this.expiryDate = expiryDate;
         this.counponCategory = counponCategory;
     }
+
+    public void availableQuantityDown() {
+        if (availableQuantity <= 0) {
+            throw new IllegalStateException("쿠폰 잔여 개수는 음수일 수 없습니다.");
+        }
+        availableQuantity--;
+    }
 }

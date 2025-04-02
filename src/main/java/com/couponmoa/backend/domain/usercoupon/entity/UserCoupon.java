@@ -21,13 +21,13 @@ public class UserCoupon extends BaseEntity {
     @Column(name = "user_coupon_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "coupon_id", nullable = false)
-//    private Coupon coupon;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id", nullable = false)
+    private Coupon coupon;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,8 +36,8 @@ public class UserCoupon extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String code = UUID.randomUUID().toString();
 
-//    public UserCoupon(User user, Coupon coupon) {
-//        this.user = user;
-//        this.coupon = coupon;
-//    }
+    public UserCoupon(User user, Coupon coupon) {
+        this.user = user;
+        this.coupon = coupon;
+    }
 }
