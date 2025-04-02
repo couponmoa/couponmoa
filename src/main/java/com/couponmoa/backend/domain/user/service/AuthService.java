@@ -5,6 +5,7 @@ import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.domain.user.dto.request.SigninRequest;
 import com.couponmoa.backend.domain.user.dto.request.SignupRequest;
+import com.couponmoa.backend.domain.user.dto.response.TokenResponse;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 @RequiredArgsConstructor
@@ -46,14 +48,29 @@ public class AuthService {
     }
 
     @Transactional
-    public String signin(SigninRequest signinRequest) {
+    public TokenResponse signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(signinRequest.getEmail())
                 .orElseThrow(()-> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         if(!passwordEncoder.matches(signinRequest.getPassword(),user.getPassword())) {
             throw new ApplicationException(ErrorCode.INVALID_PASSWORD);
         }
+        String accessToken = jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getUserRole());
+        String refreshToken = jwtUtil.createRefreshToken(user.getId(), user.getEmail(), user.getUserRole());
 
-        return jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
+        return new TokenResponse(accessToken,refreshToken);
     }
+
+    @Transactional
+    public TokenResponse refreshToken(String refreshToken) {
+        String userId = jwtUtil.extractClaims(refreshToken).getSubject();
+
+        jwtUtil.validateToken(refreshToken, userId);
+
+        User user = userRepository.findByIdOrElseThrow(Long.valueOf(userId),ErrorCode.USER_NOT_FOUND);
+        String newAccessToken = jwtUtil.createAccessToken(user.getId(), user.getEmail(),user.getUserRole());
+
+        return new TokenResponse(newAccessToken,refreshToken);
+    }
+
 }
