@@ -12,4 +12,6 @@ public interface UserRepository extends BaseRepository<User, Long> {
     boolean existsByEmailAndDeletedAtIsNotNull(String email);
 
     Optional<User> findByEmailAndDeletedAtIsNull(String email);
+
+    boolean existsByEmail(String email);
 }
