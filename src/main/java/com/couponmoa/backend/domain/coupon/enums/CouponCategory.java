@@ -6,4 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CouponCategory {
+    백화점, 식당
 }

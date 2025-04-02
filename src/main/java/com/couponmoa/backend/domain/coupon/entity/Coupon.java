@@ -19,20 +19,31 @@ public class Coupon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private int totalQuantity;
+
     private int availableQuantity;
+
     private BigDecimal discountAmount;
+
     private BigDecimal discountRate;
+
     private String description;
+
     private LocalDateTime startDate;
+
     private LocalDateTime endDate;
+
     private LocalDateTime expiryDate;
+
+    @Enumerated(EnumType.STRING)
     private CouponCategory counponCategory;
 
     @Builder
-    public Coupon(String name, int totalQuantity, int availableQuantity,BigDecimal discountAmount, BigDecimal discountRate,
-                  String description,LocalDateTime expiryDate,CouponCategory counponCategory) {
+    public Coupon(String name, int totalQuantity, int availableQuantity, BigDecimal discountAmount, BigDecimal discountRate,
+                  String description, LocalDateTime expiryDate, CouponCategory counponCategory) {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.availableQuantity = availableQuantity;
@@ -43,8 +54,8 @@ public class Coupon extends BaseEntity {
         this.counponCategory = counponCategory;
     }
 
-    public void update(String name, int totalQuantity, int availableQuantity,BigDecimal discountAmount, BigDecimal discountRate,
-                       String description,LocalDateTime expiryDate,CouponCategory counponCategory) {
+    public void update(String name, int totalQuantity, int availableQuantity, BigDecimal discountAmount, BigDecimal discountRate,
+                       String description, LocalDateTime expiryDate, CouponCategory counponCategory) {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.availableQuantity = availableQuantity;
