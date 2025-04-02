@@ -24,4 +24,9 @@ public class UserStoreSubscribe extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public UserStoreSubscribe(User user, Store store) {
+        this.store = store;
+        this.user = user;
+    }
 }

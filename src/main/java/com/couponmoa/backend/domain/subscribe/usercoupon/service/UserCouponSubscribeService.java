@@ -1,22 +1,19 @@
 package com.couponmoa.backend.domain.subscribe.usercoupon.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
-import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
-import com.couponmoa.backend.domain.subscribe.usercoupon.dto.response.FindSubscribeListResponse;
+import com.couponmoa.backend.domain.subscribe.usercoupon.dto.response.FindCouponSubscribeListResponse;
 import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
 import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.couponmoa.backend.common.exception.ErrorCode.*;
@@ -51,13 +48,13 @@ public class UserCouponSubscribeService {
         userCouponSubRepo.delete(userCouponSubscribe);
     }
 
-    public List<FindSubscribeListResponse> findSubscribeList(Long userId, int page, int size) {
+    public List<FindCouponSubscribeListResponse> findSubscribeList(Long userId, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         User user = getUser(userId);
 
         return userCouponSubRepo.findByUser(user, pageable)
                 .stream()
-                .map(FindSubscribeListResponse::new)
+                .map(FindCouponSubscribeListResponse::new)
                 .toList();
     }
 
@@ -67,9 +64,5 @@ public class UserCouponSubscribeService {
 
     private Coupon getCoupon(Long couponId) {
         return couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_COUPON);
-    }
-
-    private UserCouponSubscribe findById(Long id) {
-        return userCouponSubRepo.findByIdOrElseThrow(id, NOT_FOUNT_USER_COUPON);
     }
 }
