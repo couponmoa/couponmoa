@@ -13,4 +13,6 @@ public interface UserCouponSubscribeRepository extends BaseRepository<UserCoupon
     Optional<UserCouponSubscribe> findByUserAndCoupon(User user, Coupon coupon);
 
     Page<UserCouponSubscribe> findByUser(User user, Pageable pageable);
+
+    boolean existsByUserAndCoupon(User user, Coupon coupon);
 }
