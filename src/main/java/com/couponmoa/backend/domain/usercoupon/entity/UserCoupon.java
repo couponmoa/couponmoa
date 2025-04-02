@@ -40,4 +40,11 @@ public class UserCoupon extends BaseEntity {
         this.user = user;
         this.coupon = coupon;
     }
+
+    public void setUsed() {
+        if (status != UserCouponStatus.UNUSED) {
+            throw new IllegalStateException("사용되지 않은 쿠폰만 사용 처리할 수 있습니다.");
+        }
+        status = UserCouponStatus.USED;
+    }
 }
