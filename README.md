@@ -49,3 +49,23 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
     throw new ApplicationException(ErrorCode.INVALID_QUANTITY_IS_ZERO);
   }
   ```
+  
+# BaseRepository
+- **예외 처리가 되어있는** findById를 BaseRepository를 상속받아서 사용할 수 있음
+- 각자 레포지토리 만들 시 JpaRepository 대신 BaseRepository 클래스를 상속받아서 사용 권장
+- 예시
+  ```
+  public interface UserCouponRepository extends BaseRepository<UserCoupon, Long> { ...  }
+  ```
+
+# BaseEntity
+- **Auditing 적용 되어있는** 날짜 필드를 BaseEntity에서 상속받아서 사용할 수 있음
+- createdAt과 modifiedAt 필드가 필요한 엔티티를 만들 시, BaseEntity 클래스를 상속받아서 사용할 것을 권장
+- 상속 받을 시, 엔티티 필드에 createdAt과 modifiedAt을 굳이 작성하지 않아도 됨
+- 예시
+  ```
+  @Entity
+  @Table(name = "user_coupon")
+  public class UserCoupon extends BaseEntity { ... }
+  ```
+  
