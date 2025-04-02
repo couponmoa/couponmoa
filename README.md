@@ -79,3 +79,12 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
   ```
   git commit -m "feat(#이슈 번호): 개발 내용"
   ```
+
+# 로그인한 유저 정보 받기
+- jwt, spring security를 통해 현재 로그인한 유저의 객체를 받아올 수 있다
+- @AuthenticationPrincipal AuthUser user
+- 예시
+  ```
+  @PostMapping("/{couponId}/subscriptions")
+  public ResponseEntity<ApiResponse<Void>> subscribeCoupon(@AuthenticationPrincipal AuthUser user) { ... }
+  ```
