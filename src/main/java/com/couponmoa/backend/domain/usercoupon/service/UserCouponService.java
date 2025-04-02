@@ -6,9 +6,14 @@ import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
+import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +41,12 @@ public class UserCouponService {
         User user = userRepository.getReferenceById(userId);
         UserCoupon userCoupon = new UserCoupon(user, coupon);
         userCouponRepository.save(userCoupon);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserCouponResponse> findUserCoupons(Long userId, UserCouponStatus status, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return userCouponRepository.findByUserIdAndStatus(userId, status, pageable);
     }
 
     private void validateCouponIssuable(Coupon coupon) {
