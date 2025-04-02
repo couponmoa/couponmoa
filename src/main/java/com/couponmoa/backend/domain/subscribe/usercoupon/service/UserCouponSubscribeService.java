@@ -1,5 +1,6 @@
 package com.couponmoa.backend.domain.subscribe.usercoupon.service;
 
+import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
@@ -19,19 +20,21 @@ public class UserCouponSubscribeService {
     private final CouponRepository couponRepo;
     private final UserCouponSubscribeRepository userCouponSubRepo;
 
-    public Long subscribeCoupon(Long userId, Long couponId) {
+    public void subscribeCoupon(Long userId, Long couponId) {
         Coupon coupon = getCoupon(couponId);
         User user = getUser(userId);
         UserCouponSubscribe userCouponSubscribe = new UserCouponSubscribe(user, coupon);
+        userCouponSubRepo.save(userCouponSubscribe).getId();
 
-        return userCouponSubRepo.save(userCouponSubscribe).getId();
     }
 
     public void unSubscribeCoupon(Long userId, Long couponId) {
         Coupon coupon = getCoupon(couponId);
         User user = getUser(userId);
 
+        UserCouponSubscribe userCouponSubscribe = userCouponSubRepo.findByUserAndCoupon(user, coupon).orElseThrow(() -> new ApplicationException(NOT_FOUNT_USER_COUPON));
 
+        userCouponSubRepo.delete(userCouponSubscribe);
     }
 
     private User getUser(Long userId) {
@@ -45,6 +48,4 @@ public class UserCouponSubscribeService {
     private UserCouponSubscribe findById(Long id) {
         return userCouponSubRepo.findByIdOrElseThrow(id, NOT_FOUNT_USER_COUPON);
     }
-
-
 }
