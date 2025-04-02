@@ -12,13 +12,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class FindSubscribeListResponse {
+public class FindCouponSubscribeListResponse {
     private Long id;
     private String name;
     private int availableQuantity;
-
     private BigDecimal discountAmount;
-
     private BigDecimal discountRate;
     private String description;
     private LocalDateTime startDate;
@@ -26,7 +24,7 @@ public class FindSubscribeListResponse {
     private LocalDateTime expiryDate;
     private CouponCategory counponCategory;
 
-    public FindSubscribeListResponse(UserCouponSubscribe userCouponSubscribe) {
+    public FindCouponSubscribeListResponse(UserCouponSubscribe userCouponSubscribe) {
         Coupon coupon = userCouponSubscribe.getCoupon();
         this.availableQuantity = coupon.getAvailableQuantity();
         this.counponCategory = coupon.getCounponCategory();

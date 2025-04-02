@@ -10,9 +10,11 @@ public enum ErrorCode {
 
     // coupon
     NOT_FOUNT_COUPON(NOT_FOUND, "쿠폰을 찾을 수 없습니다."),
+    NOT_FOUND_STORE(NOT_FOUND, "가게을 찾을 수 없습니다."),
     NOT_FOUNT_USER(NOT_FOUND, "유저를 찾을 수 없습니다."),
     NOT_FOUNT_USER_COUPON(NOT_FOUND, "쿠폰 id를 찾을 수 없습니다."),
     DUPLICATED_USER_COUPON(CONFLICT, "이미 구독한 쿠폰입니다."),
+
 
     // common
     FORBIDDEN_ADMIN_ONLY(FORBIDDEN, "ADMIN 권한을 가진 유저만 접근할 수 있습니다."),
