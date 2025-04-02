@@ -20,14 +20,31 @@ public class UserCouponSubscribeService {
     private final UserCouponSubscribeRepository userCouponSubRepo;
 
     public Long subscribeCoupon(Long userId, Long couponId) {
-        Coupon coupon = couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_COUPON);
-        User user = userRepo.findByIdOrElseThrow(userId, NOT_FOUNT_USER);
+        Coupon coupon = getCoupon(couponId);
+        User user = getUser(userId);
         UserCouponSubscribe userCouponSubscribe = new UserCouponSubscribe(user, coupon);
 
         return userCouponSubRepo.save(userCouponSubscribe).getId();
     }
 
+    public void unSubscribeCoupon(Long userId, Long couponId) {
+        Coupon coupon = getCoupon(couponId);
+        User user = getUser(userId);
+
+
+    }
+
+    private User getUser(Long userId) {
+        return userRepo.findByIdOrElseThrow(userId, NOT_FOUNT_USER);
+    }
+
+    private Coupon getCoupon(Long couponId) {
+        return couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_COUPON);
+    }
+
     private UserCouponSubscribe findById(Long id) {
         return userCouponSubRepo.findByIdOrElseThrow(id, NOT_FOUNT_USER_COUPON);
     }
+
+
 }
