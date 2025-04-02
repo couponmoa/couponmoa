@@ -1,22 +1,22 @@
 package com.couponmoa.backend.domain.usercoupon.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
+import com.couponmoa.backend.domain.user.dto.AuthUser;
+import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.service.UserCouponService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * TODO: userId를 PathVariable에서 Jwt로 변경
- * TODO: API 별 권한 체크 추가
- */
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -27,41 +27,45 @@ public class UserCouponController {
 
     private final UserCouponService userCouponService;
 
-    @PostMapping("/v1/coupons/{couponId}/issue/{userId}")
+    @Secured(UserRole.Authority.USER)
+    @PostMapping("/v1/coupons/{couponId}/issue")
     public ApiResponse<Void> createUserCoupon(
-            @PathVariable Long userId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long couponId
     ) {
-        userCouponService.createUserCoupon(userId, couponId);
+        userCouponService.createUserCoupon(authUser.getId(), couponId);
         return ApiResponse.success();
     }
 
-    @GetMapping("/v1/user-coupons/{userId}")
+    @Secured(UserRole.Authority.USER)
+    @GetMapping("/v1/user-coupons")
     public ApiResponse<Page<UserCouponResponse>> findUserCoupons(
-            @PathVariable Long userId,
+            @AuthenticationPrincipal AuthUser authUser,
             @RequestParam(required = false) UserCouponStatus status,
             @RequestParam(defaultValue = "" + DEFAULT_PAGE) @Min(1) Integer page,
             @RequestParam(defaultValue = "" + DEFAULT_SIZE) @Min(1) Integer size
     ) {
-        Page<UserCouponResponse> response = userCouponService.findUserCoupons(userId, status, page, size);
+        Page<UserCouponResponse> response = userCouponService.findUserCoupons(authUser.getId(), status, page, size);
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/v1/user-coupons/{userCouponId}/code/{userId}")
+    @Secured(UserRole.Authority.USER)
+    @GetMapping("/v1/user-coupons/{userCouponId}/code")
     public ApiResponse<UserCouponCodeResponse> findUserCouponCode(
-            @PathVariable Long userId,
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long userCouponId
     ) {
-        UserCouponCodeResponse response = userCouponService.findUserCouponCode(userId, userCouponId);
+        UserCouponCodeResponse response = userCouponService.findUserCouponCode(authUser.getId(), userCouponId);
         return ApiResponse.success(response);
     }
 
-    @PostMapping("/v1/user-coupons/use/{userId}")
+    @Secured(UserRole.Authority.ADMIN)
+    @PostMapping("/v1/user-coupons/use")
     public ApiResponse<UseUserCouponResponse> useUserCoupon(
-            @PathVariable Long userId,
+            @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserCouponRequest request
     ) {
-        UseUserCouponResponse response = userCouponService.useUserCoupon(userId, request);
+        UseUserCouponResponse response = userCouponService.useUserCoupon(authUser.getId(), request);
         return ApiResponse.success(response);
     }
 }
