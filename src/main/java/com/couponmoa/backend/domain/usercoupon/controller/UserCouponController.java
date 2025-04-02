@@ -1,6 +1,7 @@
 package com.couponmoa.backend.domain.usercoupon.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.service.UserCouponService;
@@ -40,6 +41,15 @@ public class UserCouponController {
             @RequestParam(defaultValue = "" + DEFAULT_SIZE) @Min(1) Integer size
     ) {
         Page<UserCouponResponse> response = userCouponService.findUserCoupons(userId, status, page, size);
+        return ApiResponse.success(response);
+    }
+
+    @GetMapping("/v1/user-coupons/{userCouponId}/code/{userId}")
+    public ApiResponse<UserCouponCodeResponse> findUserCouponCode(
+            @PathVariable Long userId,
+            @PathVariable Long userCouponId
+    ) {
+        UserCouponCodeResponse response = userCouponService.findUserCouponCode(userId, userCouponId);
         return ApiResponse.success(response);
     }
 }

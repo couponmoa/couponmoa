@@ -6,6 +6,7 @@ import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
@@ -49,6 +50,16 @@ public class UserCouponService {
         return userCouponRepository.findByUserIdAndStatus(userId, status, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public UserCouponCodeResponse findUserCouponCode(Long userId, Long userCouponId) {
+        UserCoupon userCoupon = userCouponRepository.findByIdOrElseThrow(userCouponId, ErrorCode.USER_COUPON_NOT_FOUND);
+
+        validateCouponOwner(userCoupon.getUser(), userId);
+        validateCouponStatus(userCoupon.getStatus());
+
+        return new UserCouponCodeResponse(userCoupon.getCode());
+    }
+
     private void validateCouponIssuable(Coupon coupon) {
         validateCouponActivePeriod(coupon.getStartDate(), coupon.getEndDate());
         validateCouponAvailableQuantity(coupon.getAvailableQuantity());
@@ -70,7 +81,19 @@ public class UserCouponService {
     private void validateCouponNotAlreadyIssued(Long userId, Long couponId) {
         Boolean alreadyIssued = userCouponRepository.existsByUserIdAndCouponId(userId, couponId);
         if (alreadyIssued) {
-            throw new ApplicationException(ErrorCode.COUPON_ALREADY_ISSUED);
+            throw new ApplicationException(ErrorCode.USER_COUPON_ALREADY_ISSUED);
+        }
+    }
+
+    private static void validateCouponOwner(User userCouponOwner, Long userId) {
+        if (!userCouponOwner.getId().equals(userId)) {
+            throw new ApplicationException(ErrorCode.USER_COUPON_ACCESS_DENIED);
+        }
+    }
+
+    private void validateCouponStatus(UserCouponStatus status) {
+        if (status != UserCouponStatus.UNUSED) {
+            throw new ApplicationException(ErrorCode.USER_COUPON_CODE_UNAVAILABLE);
         }
     }
 }
