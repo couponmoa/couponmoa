@@ -25,7 +25,19 @@ public enum ErrorCode {
     INVALID_PASSWORD(BAD_REQUEST,"비밀번호가 일치하지 않습니다"),
 
     // server
-    EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다.");
+    EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다."),
+
+    // store
+    STORE_NOT_FOUND(NOT_FOUND, "존재하지 않는 스토어 입니다."),
+
+    // coupon
+    DISCOUNT_REQUIRED(BAD_REQUEST, "할인 금액과 할인율 중 하나는 설정되어야 합니다." ),
+    INVALID_DISCOUNT_SETTING(BAD_REQUEST,"할인 금액과 할인율 중 하나만 설정할 수 있습니다." ),
+    DISCOUNT_EXCEEDS_MAX(BAD_REQUEST,"할인 금액은 최대 할인 금액을 초과할 수 없습니다." ),
+    INVALID_START_DATE(BAD_REQUEST,"쿠폰 발급 시작일은 현재 시간 이후여야 합니다." ),
+    INVALID_DATE_ORDER(BAD_REQUEST,"쿠폰 발급 시작일은 종료일보다 이전이어야 합니다." ),
+    INVALID_EXPIRY_DATE(BAD_REQUEST,"쿠폰 만료일은 발급 종료일 이후여야 합니다." ),
+    COUPON_NOT_FOUND(NOT_FOUND,"존재하지 않는 쿠폰입니다." );
 
     private final HttpStatus httpStatus;
     private final String message;
