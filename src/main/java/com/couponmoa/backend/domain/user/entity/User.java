@@ -5,11 +5,13 @@ import com.couponmoa.backend.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
@@ -35,5 +37,10 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.userRole = userRole;
+    }
+
+    public void update(String email, String nickname) {
+        if(email != null) this.email = email;
+        if(nickname != null) this.nickname = nickname;
     }
 }
