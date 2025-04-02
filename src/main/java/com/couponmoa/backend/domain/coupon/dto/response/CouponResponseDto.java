@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.dto.response;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
