@@ -88,3 +88,23 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
   @PostMapping("/{couponId}/subscriptions")
   public ResponseEntity<ApiResponse<Void>> subscribeCoupon(@AuthenticationPrincipal AuthUser user) { ... }
   ```
+
+# 회원가입, 로그인 request 예시
+- 회원가입
+  ```
+  {
+      "email":"test1111@gmail.com",
+      "password":"Password1234!",
+      "nickname":"nickname",
+      "userRole":"ROLE_USER"
+  }
+  ```
+
+- 로그인
+  ```
+  {
+    "email":"test1111@gmail.com",
+    "password":"Password1234!"
+  }
+  ```
+    
