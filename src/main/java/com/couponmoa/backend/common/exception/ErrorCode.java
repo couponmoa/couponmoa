@@ -19,6 +19,7 @@ public enum ErrorCode {
     INVALID_JWT(UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),
     EXPIRED_JWT(UNAUTHORIZED, "만료된 JWT 토큰입니다."),
     UNSUPPORTED_JWT(BAD_REQUEST, "지원되지 않는 JWT 토큰입니다."),
+    UNAUTHORIZED_ACCESS(UNAUTHORIZED,"로그인 되어 있지 않습니다." ),
 
     // user
     INVALID_USER_ROLE(FORBIDDEN,"유효하지 않은 권한입니다."),
@@ -39,6 +40,7 @@ public enum ErrorCode {
 
     // store
     STORE_NOT_FOUND(NOT_FOUND, "존재하지 않는 스토어 입니다."),
+    NOT_VALIDATE_STORE_OWNER(UNAUTHORIZED,"남의 스토어를 건들지 마라" ),
 
     // coupon
     DISCOUNT_REQUIRED(BAD_REQUEST, "할인 금액과 할인율 중 하나는 설정되어야 합니다." ),
@@ -53,7 +55,6 @@ public enum ErrorCode {
     COUPON_NOT_ACTIVE(BAD_REQUEST, "쿠폰 발급 기간이 아닙니다."),
     COUPON_SOLE_OUT(BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
     ;
-
 
     private final HttpStatus httpStatus;
     private final String message;
