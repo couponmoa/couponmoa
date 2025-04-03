@@ -116,5 +116,7 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
 
 - 쿠폰 생성 시 : totalQuantity의 경우 요청 값으로 생성, availableQuantity는 tQ의 값으로 생성(초기 생성시 총 개수만큼 발급이 가능)
 - 쿠폰 사용 시 : 사용자가 쿠폰을 발급받으면 useCoupon() 메서드를 통해 availableQuantity 감소 (동시성 제어 예정)
-- 쿠폰 수정 시(쿠폰 수량 수정) : 요청 값으로 새로운 총 쿠폰 개수(newTotalQuantity)를 받음, ,availableQuantity는 new TotalQuantity - issuedQuantity로 자동 설정됨.
-    -newTotalQuantity는 이미 발급된 쿠폰 개수(issuedCouponQuantity) 보다 작을 수 없음. 단, availableQuantity가 아직 남아있을때, 이전의 totalQuantity보다 작은 값을 넣어, availableQuantity를 줄이는 방식으로는 동작가능.
+- 쿠폰 수정 시(쿠폰 수량 수정) : 요청 값으로 새로운 총 쿠폰 개수(newTotalQuantity)를 받음, ,
+  availableQuantity는 new TotalQuantity - issuedQuantity로 자동 설정됨.
+  newTotalQuantity는 이미 발급된 쿠폰 개수(issuedCouponQuantity) 보다 작을 수 없음.
+  단, availableQuantity가 아직 남아있을때, 이전의 totalQuantity보다 작은 값을 넣어, availableQuantity를 줄이는 방식으로는 동작가능.
