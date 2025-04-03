@@ -21,6 +21,5 @@ public class FindStoreSubscribeListResponse {
         this.description = store.getDescription();
         this.id = store.getId();
         this.name = store.getName();
-        this.storeCategory = store.getStoreCategory();
     }
 }
