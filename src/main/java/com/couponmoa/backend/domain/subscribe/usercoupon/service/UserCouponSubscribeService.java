@@ -51,6 +51,7 @@ public class UserCouponSubscribeService {
         userCouponSubRepo.delete(userCouponSubscribe);
     }
 
+    @Transactional(readOnly = true)
     public List<FindCouponSubscribeListResponse> findSubscribeList(Long userId, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         User user = getUser(userId);
@@ -61,6 +62,7 @@ public class UserCouponSubscribeService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<String> sendAlert(Long couponId) {
         Coupon coupon = couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_USER_COUPON);
         List<User> userList = userCouponSubRepo.findByCoupon_Id(couponId)
