@@ -32,7 +32,7 @@ public class UserService {
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = getUserById(userId);
 
-        if(userRepository.existsByEmail(userUpdateRequest.getEmail())) {
+        if (userRepository.existsByEmail(userUpdateRequest.getEmail())) {
             throw new ApplicationException(ErrorCode.EMAIL_ALREADY_EXIST);
         }
 
@@ -54,7 +54,7 @@ public class UserService {
 
     public void deleteUser(Long userId, UserDeleteRequest userDeleteRequest) {
         User user = getUserById(userId);
-        checkPasswordMatches(userDeleteRequest.getPassword(),user);
+        checkPasswordMatches(userDeleteRequest.getPassword(), user);
         user.setDeletedAt(LocalDateTime.now());
     }
 
