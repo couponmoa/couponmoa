@@ -78,8 +78,8 @@ public class UserCouponSubscribeService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailArray);
-        message.setSubject("가게 새 쿠폰이 발행 안내");
-        message.setText(coupon.getName() + "에서 새 쿠폰이 발행되었습니다!");
+        message.setSubject("쿠폰 갱신 안내");
+        message.setText(coupon.getName() + "쿠폰이 새로 발행되었습니다!");
         mailSender.send(message);
 
         return emailList;
