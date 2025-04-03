@@ -3,7 +3,6 @@ package com.couponmoa.backend.domain.store.controller;
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
-import com.couponmoa.backend.domain.store.enums.StoreCategory;
 import com.couponmoa.backend.domain.store.service.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class StoreController {
     @PostMapping
     public ResponseEntity<ApiResponse<StoreResponse>> createStore(
             @RequestBody StoreRequest request,
-            @AuthenticationPrincipal AuthUser authUser) { //임시로 userId를 파라미터로 받음
+            @AuthenticationPrincipal AuthUser authUser) {
         StoreResponse response = storeService.createStore(request, authUser);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response, "가게가 성공적으로 등록되었습니다"));
@@ -32,10 +31,9 @@ public class StoreController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<StoreResponse>> getStoreList(
-            @RequestParam(required = false)StoreCategory category) {
-        List<StoreResponse> response = storeService.getStoreList(category);
-        return ResponseEntity.ok(ApiResponse.success((StoreResponse) response));
+    public ResponseEntity<ApiResponse<List<StoreResponse>>> getStoreList() {
+        List<StoreResponse> response = storeService.getStoreList(); // category 제거
+        return ResponseEntity.ok(ApiResponse.success(response, "가게 목록 조회 성공"));
     }
 
     @GetMapping("/{storeId}")
