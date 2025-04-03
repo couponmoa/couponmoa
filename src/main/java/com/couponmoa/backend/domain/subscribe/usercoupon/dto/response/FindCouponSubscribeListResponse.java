@@ -2,7 +2,6 @@ package com.couponmoa.backend.domain.subscribe.usercoupon.dto.response;
 
 
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

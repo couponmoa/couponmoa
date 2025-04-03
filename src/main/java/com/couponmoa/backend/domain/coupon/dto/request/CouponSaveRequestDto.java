@@ -1,9 +1,7 @@
 package com.couponmoa.backend.domain.coupon.dto.request;
 
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,23 +28,4 @@ public class CouponSaveRequestDto {
     private LocalDateTime endDate;
     private LocalDateTime expiryDate;
     private Long storeId;
-
-    @Builder
-    public CouponSaveRequestDto(String name, int totalQuantity,
-                                BigDecimal discountAmount, BigDecimal discountRate,
-                                BigDecimal minOrderAmount, BigDecimal maxDiscountAmount,
-                                String description, LocalDateTime startDate, LocalDateTime endDate,
-                                LocalDateTime expiryDate, Long storeId) {
-        this.name = name;
-        this.totalQuantity = totalQuantity;
-        this.discountAmount = discountAmount;
-        this.discountRate = discountRate;
-        this.minOrderAmount = minOrderAmount;
-        this.maxDiscountAmount = maxDiscountAmount;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.expiryDate = expiryDate;
-        this.storeId = storeId;
-    }
 }
