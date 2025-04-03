@@ -62,21 +62,29 @@ public class UserStoreSubscribeService {
                 .toList();
     }
 
-    public void sendAlert(Long storeId) {
+    public List<String> sendAlert(Long storeId) {
+        Store store = storeRepo.findByIdOrElseThrow(storeId, NOT_FOUND_STORE);
+
         //가게를 구독한 유저 리스트를 꺼내온다
         List<User> userList = userStoreSubRepo.findByStore_Id(storeId)
                 .stream()
                 .map(UserStoreSubscribe::getUser).toList();
 
-        List<String> userEmailList = userList.stream()
+        List<String> emailList = userList.stream()
                 .map(User::getEmail)
                 .toList();
 
+        String[] emailArray = userList.stream()
+                .map(User::getEmail)
+                .toList().toArray(new String[0]);
+
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("psejin1478@gmail.com");
-        message.setSubject("이메일 수신 테스트");
-        message.setSubject("이메일 본문 테스트");
+        message.setTo(emailArray);
+        message.setSubject("가게 새 쿠폰이 발행 안내");
+        message.setText(store.getName() + "에서 새 쿠폰이 발행되었습니다!");
         mailSender.send(message);
+
+        return emailList;
     }
 
     private User getUser(Long userId) {
