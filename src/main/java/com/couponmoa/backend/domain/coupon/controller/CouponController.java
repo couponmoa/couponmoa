@@ -37,9 +37,6 @@ public class CouponController {
     public ResponseEntity<ApiResponse<CouponResponseDto>> createCoupon(
             @Valid @RequestBody CouponSaveRequestDto requestDto) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authentication Name: " + authentication.getName());
-
         return ResponseEntity.ok(couponService.createCoupon(requestDto));
     }
 
