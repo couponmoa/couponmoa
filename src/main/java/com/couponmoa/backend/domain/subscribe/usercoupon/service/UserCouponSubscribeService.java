@@ -58,6 +58,14 @@ public class UserCouponSubscribeService {
                 .toList();
     }
 
+    public void findByCouponId(Long couponId) {
+        List<User> userList = userCouponSubRepo.findByCoupon_Id(couponId)
+                .stream()
+                .map(UserCouponSubscribe::getUser)
+                .toList();
+
+    }
+
     private User getUser(Long userId) {
         return userRepo.findByIdOrElseThrow(userId, NOT_FOUNT_USER);
     }

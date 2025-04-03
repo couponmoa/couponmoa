@@ -6,7 +6,9 @@ import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscr
 import com.couponmoa.backend.domain.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserCouponSubscribeRepository extends BaseRepository<UserCouponSubscribe, Long> {
@@ -15,4 +17,7 @@ public interface UserCouponSubscribeRepository extends BaseRepository<UserCoupon
     Page<UserCouponSubscribe> findByUser(User user, Pageable pageable);
 
     boolean existsByUserAndCoupon(User user, Coupon coupon);
+
+    @EntityGraph(attributePaths = {"user"})
+    List<UserCouponSubscribe> findByCoupon_Id(Long couponId);
 }
