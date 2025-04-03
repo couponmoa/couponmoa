@@ -27,6 +27,7 @@ public enum ErrorCode {
     // server
     EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다.");
 
+
     private final HttpStatus httpStatus;
     private final String message;
 
