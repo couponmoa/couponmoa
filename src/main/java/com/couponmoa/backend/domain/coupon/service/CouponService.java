@@ -77,8 +77,7 @@ public class CouponService {
                 .description(requestDto.getDescription())
                 .startDate(requestDto.getStartDate())
                 .endDate(requestDto.getEndDate())
-                .expiryDate(requestDto.getExpiryDate()) //
-                .category(requestDto.getCategory()) //
+                .expiryDate(requestDto.getExpiryDate())
                 .store(store)
                 .build();
 
@@ -123,7 +122,6 @@ public class CouponService {
                 requestDto.getStartDate(),
                 requestDto.getEndDate(),
                 requestDto.getExpiryDate(),
-                requestDto.getCategory(),
                 coupon.getStore()
         );
 

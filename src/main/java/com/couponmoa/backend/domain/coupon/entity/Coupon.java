@@ -1,7 +1,8 @@
 package com.couponmoa.backend.domain.coupon.entity;
 
 import com.couponmoa.backend.common.entity.BaseEntity;
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
+import com.couponmoa.backend.common.exception.ApplicationException;
+import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -36,18 +37,14 @@ public class Coupon extends BaseEntity {
     private LocalDateTime expiryDate; // 쿠폰 만료일
     private LocalDateTime deletedAt;
 
-    @Enumerated(EnumType.STRING)
-    private CouponCategory category;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="store_id",nullable = false)
+    @JoinColumn(name="store_id", nullable = false)
     private Store store;
 
     @Builder
     public Coupon(String name, int totalQuantity, BigDecimal discountAmount, BigDecimal discountRate,
                   BigDecimal minOrderAmount, BigDecimal maxDiscountAmount, String description,
-                  LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, CouponCategory category,
-                  Store store) {
+                  LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, Store store) {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.availableQuantity = totalQuantity; // totalQuantity와 같은 값으로 자동 초기화
@@ -59,32 +56,34 @@ public class Coupon extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.expiryDate = expiryDate;
-        this.category = category;
         this.store = store;
     }
 
     public void useCoupon() {
         if (this.availableQuantity <= 0) {
-            throw new IllegalStateException("쿠폰이 모두 소진되었습니다.");
+            throw new ApplicationException(ErrorCode.COUPON_OUT_OF_STOCK);
         }
         this.availableQuantity--; // 자동으로 설정
     }
 
     public void updateQuantity(int newTotalQuantity) {
-        int usedCouponQuantity = this.totalQuantity - this.availableQuantity;
+        int issuedCouponQuantity = this.totalQuantity - this.availableQuantity;
 
-        if (newTotalQuantity < usedCouponQuantity) {
-            throw new IllegalArgumentException("새로운 총 수량은 이미 발급된 쿠폰 수보다 커야합니다.");
+        if (newTotalQuantity < issuedCouponQuantity) {
+            throw new ApplicationException(ErrorCode.INVALID_TOTAL_QUANTITY);
         }
 
+//        이미 발급된 쿠폰 개수(issuedCouponQuantity)보다 적은 총 수량(newTotalQuantity)을 입력해
+//        발급 가능한 총수량(newAvailableQuantity)을 줄이려고 시도하면 예외발생하기 때문에 추가
+        int newAvailableQuantity = Math.max(0, newTotalQuantity - issuedCouponQuantity);
+
         this.totalQuantity = newTotalQuantity;
-        this.availableQuantity = newTotalQuantity - usedCouponQuantity; // 자동으로 설정
+        this.availableQuantity = newTotalQuantity - issuedCouponQuantity; // 자동으로 설정
     }
 
     public void update(String name, BigDecimal discountAmount, BigDecimal discountRate,
                        BigDecimal minOrderAmount, BigDecimal maxDiscountAmount, String description,
-                       LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, CouponCategory category,
-                       Store store) {
+                       LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, Store store) {
         this.name = name;
         this.discountAmount = discountAmount;
         this.discountRate = discountRate;
@@ -94,7 +93,6 @@ public class Coupon extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.expiryDate = expiryDate;
-        this.category = category;
         this.store = store;
     }
 
