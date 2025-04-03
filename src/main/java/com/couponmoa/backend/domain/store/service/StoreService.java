@@ -5,7 +5,6 @@ import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
-import com.couponmoa.backend.domain.store.enums.StoreCategory;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,38 +29,33 @@ public class StoreService {
         User user = userRepository.findById(authUser.getId())
                 .orElseThrow(()-> new IllegalArgumentException("유저를 찾을 수 없습니다"));
         Store store = new Store(
+                user,
                 request.getName(),
                 request.getDescription(),
-                request.getAddress(),
-                request.getStoreCategory()
+                request.getAddress()
         );
         Store savedStore = storeRepository.save(store);
         return new StoreResponse(
                 savedStore.getId(),
                 savedStore.getName(),
                 savedStore.getDescription(),
-                savedStore.getAddress(),
-                savedStore.getStoreCategory()
+                savedStore.getAddress()
         );
     }
 
     @Transactional(readOnly = true)
-    public List<StoreResponse> getStoreList(StoreCategory category) {
-        List<Store> stores = (category == null)
-                ? storeRepository.findAll()
-                : storeRepository.findByStoreCategory(category);
-
-        List<StoreResponse> responseList = new ArrayList<>();
+    public List<StoreResponse> getStoreList() {
+        List<Store> stores = storeRepository.findAll();
+        List<StoreResponse> responses = new ArrayList<>();
         for (Store store : stores) {
-            responseList.add(new StoreResponse(
+            responses.add(new StoreResponse(
                     store.getId(),
                     store.getName(),
                     store.getDescription(),
-                    store.getAddress(),
-                    store.getStoreCategory()
+                    store.getAddress()
             ));
         }
-        return responseList;
+        return responses;
     }
 
     @Transactional(readOnly = true)
@@ -71,8 +66,7 @@ public class StoreService {
                 store.getId(),
                 store.getName(),
                 store.getDescription(),
-                store.getAddress(),
-                store.getStoreCategory()
+                store.getAddress()
         );
     }
 
@@ -87,16 +81,14 @@ public class StoreService {
         store.update(
                 request.getName(),
                 request.getDescription(),
-                request.getAddress(),
-                request.getStoreCategory()
+                request.getAddress()
         );
         Store savedStore = storeRepository.save(store);
         return new StoreResponse(
                 savedStore.getId(),
                 savedStore.getName(),
                 savedStore.getDescription(),
-                savedStore.getAddress(),
-                savedStore.getStoreCategory()
+                savedStore.getAddress()
         );
     }
 
