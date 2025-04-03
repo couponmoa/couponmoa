@@ -22,12 +22,10 @@ public class FindCouponSubscribeListResponse {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime expiryDate;
-    private CouponCategory counponCategory;
 
     public FindCouponSubscribeListResponse(UserCouponSubscribe userCouponSubscribe) {
         Coupon coupon = userCouponSubscribe.getCoupon();
         this.availableQuantity = coupon.getAvailableQuantity();
-        this.counponCategory = coupon.getCounponCategory();
         this.description = coupon.getDescription();
         this.discountAmount = coupon.getDiscountAmount();
         this.discountRate = coupon.getDiscountRate();
