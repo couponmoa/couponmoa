@@ -31,6 +31,7 @@ public enum ErrorCode {
     EMAIL_ALREADY_DELETED(BAD_REQUEST,"이미 탈퇴한 이메일입니다."),
     USER_NOT_FOUND(NOT_FOUND,"존재하지 않는 계정입니다."),
     INVALID_PASSWORD(BAD_REQUEST,"비밀번호가 일치하지 않습니다"),
+    SAME_PASSWORD(BAD_REQUEST,"동일한 비밀번호입니다."),
 
     // server
     EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다.");

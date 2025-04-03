@@ -19,7 +19,7 @@ public enum UserRole {
         return Arrays.stream(UserRole.values())
                 .filter(r -> r.name().equalsIgnoreCase(userRole))
                 .findFirst()
-                .orElseThrow(()->new ApplicationException(ErrorCode.INVALID_USER_ROLE));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_USER_ROLE));
     }
 
     public static class Authority {
