@@ -47,7 +47,7 @@ public class UserStoreSubscribeService {
         Store store = getStore(storeId);
         User user = getUser(userId);
 
-        UserStoreSubscribe userCouponSubscribe = userStoreSubRepo.findByUserAndStore(user, store).orElseThrow(() -> new ApplicationException(NOT_FOUND_STORE));
+        UserStoreSubscribe userCouponSubscribe = userStoreSubRepo.findByUserAndStore(user, store).orElseThrow(() -> new ApplicationException(STORE_NOT_FOUND));
 
         userStoreSubRepo.delete(userCouponSubscribe);
     }
@@ -84,6 +84,6 @@ public class UserStoreSubscribeService {
     }
 
     private Store getStore(Long storeId) {
-        return storeRepo.findByIdOrElseThrow(storeId, NOT_FOUND_STORE);
+        return storeRepo.findByIdOrElseThrow(storeId, STORE_NOT_FOUND);
     }
 }

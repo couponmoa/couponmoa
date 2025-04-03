@@ -58,13 +58,6 @@ public class Coupon extends BaseEntity {
         this.store = store;
     }
 
-    public void useCoupon() {
-        if (this.availableQuantity <= 0) {
-            throw new ApplicationException(ErrorCode.COUPON_OUT_OF_STOCK);
-        }
-        this.availableQuantity--; // 자동으로 설정
-    }
-
     public void updateQuantity(int newTotalQuantity) {
         int issuedCouponQuantity = this.totalQuantity - this.availableQuantity;
 

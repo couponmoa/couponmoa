@@ -16,13 +16,14 @@ public interface UserCouponRepository extends BaseRepository<UserCoupon, Long> {
 
     @Query("""
                 SELECT uc.id AS id, uc.status AS status, c.discountAmount AS discountAmount, c.discountRate AS discountRate,
-                       c.name AS name, c.description AS description, c.expiryDate AS expiryDate, c.counponCategory AS category
+                       c.name AS name, c.description AS description, c.expiryDate AS expiryDate, c.minOrderAmount AS minOrderAmount,
+                       c.maxDiscountAmount AS maxDiscountAmount
                 FROM UserCoupon uc
                 JOIN uc.coupon c
                 WHERE uc.user.id = :userId AND (:status IS NULL OR uc.status = :status)
             """)
     Page<UserCouponResponse> findByUserIdAndStatus(Long userId, UserCouponStatus status, Pageable pageable);
 
-    @EntityGraph(attributePaths = "coupon")
+    @EntityGraph(attributePaths = {"coupon", "coupon.store"})
     Optional<UserCoupon> findByCode(String code);
 }
