@@ -41,7 +41,7 @@ public class CouponController {
     @Operation(summary = "쿠폰 목록 조회", description = "쿠폰 목록을 페이징하여 조회함.") //현재 정렬 순서는 issuedQuantity, 이후에 검색어 or 정렬 기준 추가, 모든 데이터의 issuedQ가 0일때 조회 기준도 있어야함.
     @GetMapping
     public ResponseEntity<ApiResponse<Page<CouponSimpleResponseDto>>> findAllCoupons(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         ApiResponse<Page<CouponSimpleResponseDto>> response = couponReadService.findAllCoupons(page, size);
