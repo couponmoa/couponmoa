@@ -47,7 +47,7 @@ public class UserStoreSubscribeService {
         Store store = getStore(storeId);
         User user = getUser(userId);
 
-        UserStoreSubscribe userCouponSubscribe = userStoreSubRepo.findByUserAndStore(user, store).orElseThrow(() -> new ApplicationException(NOT_FOUND_STORE));
+        UserStoreSubscribe userCouponSubscribe = userStoreSubRepo.findByUserAndStore(user, store).orElseThrow(() -> new ApplicationException(STORE_NOT_FOUND));
 
         userStoreSubRepo.delete(userCouponSubscribe);
     }
@@ -63,7 +63,7 @@ public class UserStoreSubscribeService {
     }
 
     public List<String> sendAlert(Long storeId) {
-        Store store = storeRepo.findByIdOrElseThrow(storeId, NOT_FOUND_STORE);
+        Store store = storeRepo.findByIdOrElseThrow(storeId, STORE_NOT_FOUND);
 
         //가게를 구독한 유저 리스트를 꺼내온다
         List<User> userList = userStoreSubRepo.findByStore_Id(storeId)
@@ -88,10 +88,10 @@ public class UserStoreSubscribeService {
     }
 
     private User getUser(Long userId) {
-        return userRepo.findByIdOrElseThrow(userId, NOT_FOUNT_USER);
+        return userRepo.findByIdOrElseThrow(userId, USER_NOT_FOUND);
     }
 
     private Store getStore(Long storeId) {
-        return storeRepo.findByIdOrElseThrow(storeId, NOT_FOUND_STORE);
+        return storeRepo.findByIdOrElseThrow(storeId, STORE_NOT_FOUND);
     }
 }
