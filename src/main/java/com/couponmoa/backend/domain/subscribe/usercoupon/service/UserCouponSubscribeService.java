@@ -62,7 +62,7 @@ public class UserCouponSubscribeService {
     }
 
     public List<String> sendAlert(Long couponId) {
-        Coupon coupon = couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_USER_COUPON);
+        Coupon coupon = couponRepo.findByIdOrElseThrow(couponId, USER_COUPON_NOT_FOUND);
         List<User> userList = userCouponSubRepo.findByCoupon_Id(couponId)
                 .stream()
                 .map(UserCouponSubscribe::getUser)

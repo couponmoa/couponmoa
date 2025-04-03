@@ -63,7 +63,7 @@ public class UserStoreSubscribeService {
     }
 
     public List<String> sendAlert(Long storeId) {
-        Store store = storeRepo.findByIdOrElseThrow(storeId, NOT_FOUND_STORE);
+        Store store = storeRepo.findByIdOrElseThrow(storeId, STORE_NOT_FOUND);
 
         //가게를 구독한 유저 리스트를 꺼내온다
         List<User> userList = userStoreSubRepo.findByStore_Id(storeId)
