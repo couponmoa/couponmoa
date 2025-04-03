@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +25,7 @@ public class StoreService {
 
     @Transactional
     public StoreResponse createStore(StoreRequest request, AuthUser authUser) {
-        User user = userRepository.findById(authUser.getId())
-                .orElseThrow(()-> new IllegalArgumentException("유저를 찾을 수 없습니다"));
+        User user = userRepository.findByIdOrElseThrow(authUser.getId(), ErrorCode.USER_NOT_FOUND);
         Store store = new Store(
                 user,
                 request.getName(),
@@ -60,8 +58,7 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public StoreResponse getStore(Long storeId) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(()->new IllegalArgumentException("가게를 찾을 수 없습니다"));
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         return new StoreResponse(
                 store.getId(),
                 store.getName(),
@@ -72,8 +69,7 @@ public class StoreService {
 
     @Transactional
     public StoreResponse updateStore(Long storeId, StoreRequest request, AuthUser authUser) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(()-> new IllegalArgumentException("가게를 찾을 수 없습니다"));
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         if (!store.getUser().getId().equals(authUser.getId())) {
             throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY);
         }
@@ -94,8 +90,7 @@ public class StoreService {
 
     @Transactional
     public void deleteStore(Long storeId, AuthUser authUser) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(()-> new IllegalArgumentException("가게를 찾을 수 없습니다"));
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         if (!store.getUser().getId().equals(authUser.getId())) {
             throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY);
         }
