@@ -4,6 +4,7 @@ import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,8 @@ public class CouponReadService {
         return null;
     }
 
-    public ApiResponse<CouponDetailResponseDto> findCoupon() {
+    public ApiResponse<CouponDetailResponseDto> findCoupon(Long couponId, AuthUser authUser) {
+
         return null;
     }
 }

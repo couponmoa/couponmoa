@@ -37,7 +37,9 @@ public enum ErrorCode {
     INVALID_START_DATE(BAD_REQUEST,"쿠폰 발급 시작일은 현재 시간 이후여야 합니다." ),
     INVALID_DATE_ORDER(BAD_REQUEST,"쿠폰 발급 시작일은 종료일보다 이전이어야 합니다." ),
     INVALID_EXPIRY_DATE(BAD_REQUEST,"쿠폰 만료일은 발급 종료일 이후여야 합니다." ),
-    COUPON_NOT_FOUND(NOT_FOUND,"존재하지 않는 쿠폰입니다." );
+    COUPON_NOT_FOUND(NOT_FOUND,"존재하지 않는 쿠폰입니다." ),
+    INVALID_TOTAL_QUANTITY(BAD_REQUEST,"새로운 총 수량은 이미 발급된 쿠폰 수보다 커야합니다." ),
+    COUPON_OUT_OF_STOCK(BAD_REQUEST,"쿠폰이 모두 소진되었습니다." );
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -7,14 +7,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -32,6 +35,7 @@ public class JwtUtil {
 
     public String createToken(Long userId, String email, UserRole userRole) {
         Date date = new Date();
+        log.info("JWT 생성 - userId: {}, email: {}, 역할: {}", userId, email, userRole.name()); //
 
         return BEARER_PREFIX +
                 Jwts.builder()
@@ -52,10 +56,13 @@ public class JwtUtil {
     }
 
     public Claims extractClaims(String token) {
-        return Jwts.parser()
+        Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+
+        log.info("JWT 검증 완료 - userRole: {}", claims.get("userRole"));
+        return claims;
     }
 }

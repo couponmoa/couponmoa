@@ -29,15 +29,14 @@ public class CouponSaveRequestDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime expiryDate;
-    private CouponCategory category;
     private Long storeId;
 
     @Builder
     public CouponSaveRequestDto(String name, int totalQuantity,
                                 BigDecimal discountAmount, BigDecimal discountRate,
                                 BigDecimal minOrderAmount, BigDecimal maxDiscountAmount,
-                                String description, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate,
-                                CouponCategory category, Long storeId) {
+                                String description, LocalDateTime startDate, LocalDateTime endDate,
+                                LocalDateTime expiryDate, Long storeId) {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.discountAmount = discountAmount;
@@ -48,7 +47,6 @@ public class CouponSaveRequestDto {
         this.startDate = startDate;
         this.endDate = endDate;
         this.expiryDate = expiryDate;
-        this.category = category;
         this.storeId = storeId;
     }
 }
