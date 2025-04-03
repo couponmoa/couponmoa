@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +58,7 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public StoreResponse getStore(Long storeId) {
-        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.NOT_FOUND_STORE);
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         return new StoreResponse(
                 store.getId(),
                 store.getName(),
@@ -70,7 +69,7 @@ public class StoreService {
 
     @Transactional
     public StoreResponse updateStore(Long storeId, StoreRequest request, AuthUser authUser) {
-        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.NOT_FOUND_STORE);
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         if (!store.getUser().getId().equals(authUser.getId())) {
             throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY);
         }
@@ -91,7 +90,7 @@ public class StoreService {
 
     @Transactional
     public void deleteStore(Long storeId, AuthUser authUser) {
-        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.NOT_FOUND_STORE);
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         if (!store.getUser().getId().equals(authUser.getId())) {
             throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY);
         }
