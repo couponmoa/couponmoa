@@ -11,6 +11,8 @@ import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class UserCouponSubscribeService {
     private final UserRepository userRepo;
     private final CouponRepository couponRepo;
     private final UserCouponSubscribeRepository userCouponSubRepo;
+    private final JavaMailSender mailSender;
 
     public void subscribeCoupon(Long userId, Long couponId) {
         Coupon coupon = getCoupon(couponId);
@@ -58,12 +61,28 @@ public class UserCouponSubscribeService {
                 .toList();
     }
 
-    public void findByCouponId(Long couponId) {
+    public List<String> sendAlert(Long couponId) {
+        Coupon coupon = couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_USER_COUPON);
         List<User> userList = userCouponSubRepo.findByCoupon_Id(couponId)
                 .stream()
                 .map(UserCouponSubscribe::getUser)
                 .toList();
 
+        List<String> emailList = userList.stream()
+                .map(User::getEmail)
+                .toList();
+
+        String[] emailArray = userList.stream()
+                .map(User::getEmail)
+                .toList().toArray(new String[0]);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailArray);
+        message.setSubject("가게 새 쿠폰이 발행 안내");
+        message.setText(coupon.getName() + "에서 새 쿠폰이 발행되었습니다!");
+        mailSender.send(message);
+
+        return emailList;
     }
 
     private User getUser(Long userId) {
