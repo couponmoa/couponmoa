@@ -8,6 +8,14 @@ import static org.springframework.http.HttpStatus.*;
 @Getter
 public enum ErrorCode {
 
+    // coupon
+    NOT_FOUNT_COUPON(NOT_FOUND, "쿠폰을 찾을 수 없습니다."),
+    NOT_FOUND_STORE(NOT_FOUND, "가게을 찾을 수 없습니다."),
+    NOT_FOUNT_USER(NOT_FOUND, "유저를 찾을 수 없습니다."),
+    NOT_FOUNT_USER_COUPON(NOT_FOUND, "쿠폰 id를 찾을 수 없습니다."),
+    DUPLICATED_USER_COUPON(CONFLICT, "이미 구독한 쿠폰입니다."),
+
+
     // common
     FORBIDDEN_ADMIN_ONLY(FORBIDDEN, "ADMIN 권한을 가진 유저만 접근할 수 있습니다."),
 
@@ -23,6 +31,7 @@ public enum ErrorCode {
     EMAIL_ALREADY_DELETED(BAD_REQUEST,"이미 탈퇴한 이메일입니다."),
     USER_NOT_FOUND(NOT_FOUND,"존재하지 않는 계정입니다."),
     INVALID_PASSWORD(BAD_REQUEST,"비밀번호가 일치하지 않습니다"),
+    SAME_PASSWORD(BAD_REQUEST,"동일한 비밀번호입니다."),
 
     // server
     EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다."),
@@ -40,6 +49,7 @@ public enum ErrorCode {
     COUPON_NOT_FOUND(NOT_FOUND,"존재하지 않는 쿠폰입니다." ),
     INVALID_TOTAL_QUANTITY(BAD_REQUEST,"새로운 총 수량은 이미 발급된 쿠폰 수보다 커야합니다." ),
     COUPON_OUT_OF_STOCK(BAD_REQUEST,"쿠폰이 모두 소진되었습니다." );
+
 
     private final HttpStatus httpStatus;
     private final String message;
