@@ -43,7 +43,7 @@ public class UserCouponSubscribeService {
         Coupon coupon = getCoupon(couponId);
         User user = getUser(userId);
 
-        UserCouponSubscribe userCouponSubscribe = userCouponSubRepo.findByUserAndCoupon(user, coupon).orElseThrow(() -> new ApplicationException(NOT_FOUNT_USER_COUPON));
+        UserCouponSubscribe userCouponSubscribe = userCouponSubRepo.findByUserAndCoupon(user, coupon).orElseThrow(() -> new ApplicationException(USER_COUPON_NOT_FOUND));
 
         userCouponSubRepo.delete(userCouponSubscribe);
     }
@@ -67,10 +67,10 @@ public class UserCouponSubscribeService {
     }
 
     private User getUser(Long userId) {
-        return userRepo.findByIdOrElseThrow(userId, NOT_FOUNT_USER);
+        return userRepo.findByIdOrElseThrow(userId, USER_NOT_FOUND);
     }
 
     private Coupon getCoupon(Long couponId) {
-        return couponRepo.findByIdOrElseThrow(couponId, NOT_FOUNT_COUPON);
+        return couponRepo.findByIdOrElseThrow(couponId, COUPON_NOT_FOUND);
     }
 }

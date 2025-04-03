@@ -80,7 +80,7 @@ public class UserStoreSubscribeService {
     }
 
     private User getUser(Long userId) {
-        return userRepo.findByIdOrElseThrow(userId, NOT_FOUNT_USER);
+        return userRepo.findByIdOrElseThrow(userId, USER_NOT_FOUND);
     }
 
     private Store getStore(Long storeId) {
