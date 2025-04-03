@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     }
 
     public void update(String email, String nickname) {
-        if(email != null) this.email = email;
-        if(nickname != null) this.nickname = nickname;
+        if (email != null) this.email = email;
+        if (nickname != null) this.nickname = nickname;
     }
 }
