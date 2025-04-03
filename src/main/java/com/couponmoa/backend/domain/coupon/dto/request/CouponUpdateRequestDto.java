@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.dto.request;
 
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
