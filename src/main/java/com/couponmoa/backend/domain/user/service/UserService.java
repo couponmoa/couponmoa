@@ -52,6 +52,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userUpdatePasswordRequest.getNewPassword()));
     }
 
+    @Transactional
     public void deleteUser(Long userId, UserDeleteRequest userDeleteRequest) {
         User user = getUserById(userId);
         checkPasswordMatches(userDeleteRequest.getPassword(), user);
