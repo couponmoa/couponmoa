@@ -53,7 +53,7 @@ public class UserCouponSubscribeController {
     }
 
     @Operation(summary = "알림서비스", description = "구독한 쿠폰이 새로 생기면 이메일을 알림을 보냄")
-    @PostMapping("{couponId}/alert")
+    @PostMapping("/{couponId}/alert")
     public ResponseEntity<ApiResponse<List<String>>> sendAlert(@PathVariable Long couponId) {
         List<String> emailList = userCouponSubServ.sendAlert(couponId);
 
