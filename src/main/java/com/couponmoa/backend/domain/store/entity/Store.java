@@ -1,7 +1,6 @@
 package com.couponmoa.backend.domain.store.entity;
 
 import com.couponmoa.backend.common.entity.BaseEntity;
-import com.couponmoa.backend.domain.store.enums.StoreCategory;
 import com.couponmoa.backend.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,21 +25,17 @@ public class Store extends BaseEntity {
 
     private String address;
 
-    @Enumerated(EnumType.STRING)
-    private StoreCategory storeCategory;
-
-    public Store(String name, String description, String address, StoreCategory storeCategory) {
+    public Store(User user, String name, String description, String address) {
+        this.user = user;
         this.name = name;
         this.description = description;
         this.address = address;
-        this.storeCategory = storeCategory;
     }
 
     // update 메서드
-    public void update(String name, String description, String address, StoreCategory storeCategory) {
+    public void update(String name, String description, String address) {
         this.name = name;
         this.description = description;
         this.address = address;
-        this.storeCategory = storeCategory;
     }
 }
