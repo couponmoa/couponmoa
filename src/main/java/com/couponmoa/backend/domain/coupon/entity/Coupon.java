@@ -58,13 +58,6 @@ public class Coupon extends BaseEntity {
         this.store = store;
     }
 
-    public void useCoupon() {
-        if (this.availableQuantity <= 0) {
-            throw new ApplicationException(ErrorCode.COUPON_OUT_OF_STOCK);
-        }
-        this.availableQuantity--; // 자동으로 설정
-    }
-
     public void updateQuantity(int newTotalQuantity) {
         int issuedCouponQuantity = this.totalQuantity - this.availableQuantity;
 
@@ -97,5 +90,12 @@ public class Coupon extends BaseEntity {
 
     public void delete() {
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void availableQuantityDown() {
+        if (availableQuantity <= 0) {
+            throw new IllegalStateException("쿠폰 잔여 개수는 음수일 수 없습니다.");
+        }
+        availableQuantity--;
     }
 }
