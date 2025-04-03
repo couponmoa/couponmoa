@@ -34,7 +34,7 @@ public class UserStoreSubscribeController {
 
     @Operation(summary = "가게 구독 취소", description = "유저가 특정 가게 구독을 취소함")
     @PostMapping("/{storeId}/unsubscriptions")
-    public ResponseEntity<ApiResponse<Void>> unsubscribeCoupon(@AuthenticationPrincipal AuthUser user,
+    public ResponseEntity<ApiResponse<Void>> unsubscribeStore(@AuthenticationPrincipal AuthUser user,
                                                                @Parameter(description = "구독할 가게 id", required = true)
                                                                @PathVariable Long storeId) {
         userStoreSubServ.unSubscribeCoupon(user.getId(), storeId);
@@ -50,5 +50,11 @@ public class UserStoreSubscribeController {
         List<FindStoreSubscribeListResponse> subscribeList = userStoreSubServ.findSubscribeList(user.getId(), page, size);
 
         return ResponseEntity.ok(ApiResponse.success(subscribeList, "가게 구독 목록 조회 성공"));
+    }
+
+    @Operation(summary = "알림서비스", description = "가게 쿠폰이 새로 생기면 이메일을 알림을 보냄")
+    @PostMapping("{storeId}/alert")
+    public void sendAlert(@PathVariable Long storeId) {
+        userStoreSubServ.sendAlert(storeId);
     }
 }

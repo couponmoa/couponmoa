@@ -11,6 +11,8 @@ import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class UserStoreSubscribeService {
     private final UserRepository userRepo;
     private final StoreRepository storeRepo;
     private final UserStoreSubscribeRepository userStoreSubRepo;
+    private final JavaMailSender mailSender;
 
     public void subscribeStore(Long userId, Long storeId) {
 
@@ -57,6 +60,23 @@ public class UserStoreSubscribeService {
                 .stream()
                 .map(FindStoreSubscribeListResponse::new)
                 .toList();
+    }
+
+    public void sendAlert(Long storeId) {
+        //가게를 구독한 유저 리스트를 꺼내온다
+        List<User> userList = userStoreSubRepo.findByStore_Id(storeId)
+                .stream()
+                .map(UserStoreSubscribe::getUser).toList();
+
+        List<String> userEmailList = userList.stream()
+                .map(User::getEmail)
+                .toList();
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("psejin1478@gmail.com");
+        message.setSubject("이메일 수신 테스트");
+        message.setSubject("이메일 본문 테스트");
+        mailSender.send(message);
     }
 
     private User getUser(Long userId) {
