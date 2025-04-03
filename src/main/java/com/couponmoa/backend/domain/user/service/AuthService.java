@@ -5,6 +5,7 @@ import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.domain.user.dto.request.SigninRequest;
 import com.couponmoa.backend.domain.user.dto.request.SignupRequest;
+import com.couponmoa.backend.domain.user.dto.response.TokenResponse;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
@@ -25,11 +26,10 @@ public class AuthService {
     public void signup(SignupRequest signupRequest) {
         String email = signupRequest.getEmail();
 
-        if(userRepository.existsByEmailAndDeletedAtIsNull(email)) {
+        if (userRepository.existsByEmailAndDeletedAtIsNull(email)) {
             throw new ApplicationException(ErrorCode.EMAIL_ALREADY_EXIST);
         }
-
-        if(userRepository.existsByEmailAndDeletedAtIsNotNull(email)) {
+        if (userRepository.existsByEmailAndDeletedAtIsNotNull(email)) {
             throw new ApplicationException(ErrorCode.EMAIL_ALREADY_DELETED);
         }
 
@@ -46,14 +46,29 @@ public class AuthService {
     }
 
     @Transactional
-    public String signin(SigninRequest signinRequest) {
+    public TokenResponse signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmailAndDeletedAtIsNull(signinRequest.getEmail())
-                .orElseThrow(()-> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(signinRequest.getPassword(),user.getPassword())) {
+        if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
             throw new ApplicationException(ErrorCode.INVALID_PASSWORD);
         }
+        String accessToken = jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getUserRole());
+        String refreshToken = jwtUtil.createRefreshToken(user.getId(), user.getEmail(), user.getUserRole());
 
-        return jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
+        return new TokenResponse(accessToken, refreshToken);
     }
+
+    @Transactional
+    public TokenResponse refreshToken(String refreshToken) {
+        String userId = jwtUtil.extractClaims(refreshToken).getSubject();
+
+        jwtUtil.validateToken(refreshToken, userId);
+
+        User user = userRepository.findByIdOrElseThrow(Long.valueOf(userId), ErrorCode.USER_NOT_FOUND);
+        String newAccessToken = jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getUserRole());
+
+        return new TokenResponse(newAccessToken, refreshToken);
+    }
+
 }

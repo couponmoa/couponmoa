@@ -20,9 +20,7 @@ public class Coupon extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "coupon_id")
     private Long id;
-
     private String name;
     private int totalQuantity;  // 반드시 availableQuantity와 함께 수정되어야 함.
     private int availableQuantity; // 서버에서 자동으로 설정.
@@ -45,6 +43,7 @@ public class Coupon extends BaseEntity {
     public Coupon(String name, int totalQuantity, BigDecimal discountAmount, BigDecimal discountRate,
                   BigDecimal minOrderAmount, BigDecimal maxDiscountAmount, String description,
                   LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, Store store) {
+
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.availableQuantity = totalQuantity; // totalQuantity와 같은 값으로 자동 초기화
