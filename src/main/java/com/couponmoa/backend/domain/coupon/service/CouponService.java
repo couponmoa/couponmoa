@@ -2,6 +2,7 @@ package com.couponmoa.backend.domain.coupon.service;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
+import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponSaveRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
@@ -9,11 +10,12 @@ import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.couponmoa.backend.common.exception.ErrorCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,10 +32,12 @@ public class CouponService {
 
     public ApiResponse<CouponResponseDto> createCoupon(CouponSaveRequestDto requestDto) {
 
-        // store 존재 검증
+        // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
+        validateStoreOwner(requestDto.getStoreId());
+
         Store store = storeRepository.findByIdOrElseThrow(requestDto.getStoreId(), ErrorCode.STORE_NOT_FOUND);
 
-        // 할인 검증
+        // 할인 로직 검증
         // discountAmount와 discountRate 중 하나는 반드시 0이어야 함 (변액 할인과 정액 할인을 동시에 제공하는 쿠폰은 없다.)
         boolean isDiscountAmountDefault = requestDto.getDiscountAmount().compareTo(BigDecimal.ZERO) == 0;
         boolean isDiscountRateDefault = requestDto.getDiscountRate().compareTo(BigDecimal.ZERO) == 0;
@@ -89,8 +93,12 @@ public class CouponService {
 
     public ApiResponse<CouponResponseDto> updateCoupon(Long couponId,CouponUpdateRequestDto requestDto) {
 
+        // 아직 존재하는 쿠폰인지 검증
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
+
+        // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
+        validateStoreOwner(requestDto.getStoreId());
 
         // 쿠폰 시작일 이후에도 수정 가능, 만료일만 검증
         if (requestDto.getEndDate() != null && requestDto.getExpiryDate() != null) {
@@ -129,7 +137,25 @@ public class CouponService {
     }
 
     public void deleteCoupon(Long couponId) {
-        Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, null);
+        // 존재하는 쿠폰인지 검증
+        Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
+
+        // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
+        validateStoreOwner(coupon.getStore().getId());
+
         coupon.delete();
+    }
+
+    private void validateStoreOwner(Long storeId) {
+        Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //로그인 된 유저인지 체크
+        if (!(principal instanceof AuthUser authUSer)) {
+            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        if (!store.getUser().getEmail().equals(authUSer.getEmail())) {
+            throw new ApplicationException(ErrorCode.NOT_VALIDATE_STORE_OWNER);
+        }
     }
 }
