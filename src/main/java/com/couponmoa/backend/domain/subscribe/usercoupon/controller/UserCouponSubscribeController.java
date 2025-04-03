@@ -51,4 +51,12 @@ public class UserCouponSubscribeController {
 
         return ResponseEntity.ok(ApiResponse.success(subscribeList, "쿠폰 구독 목록 조회 성공"));
     }
+
+    @Operation(summary = "알림서비스", description = "구독한 쿠폰이 새로 생기면 이메일을 알림을 보냄")
+    @PostMapping("{couponId}/alert")
+    public ResponseEntity<ApiResponse<List<String>>> sendAlert(@PathVariable Long couponId) {
+        List<String> emailList = userCouponSubServ.sendAlert(couponId);
+
+        return ResponseEntity.ok(ApiResponse.success(emailList));
+    }
 }
