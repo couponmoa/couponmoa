@@ -9,7 +9,6 @@ import static org.springframework.http.HttpStatus.*;
 public enum ErrorCode {
 
     // subscribe
-    NOT_FOUND_STORE(NOT_FOUND, "가게을 찾을 수 없습니다."),
     DUPLICATED_USER_COUPON(CONFLICT, "이미 구독한 쿠폰입니다."),
 
     // common
@@ -29,15 +28,10 @@ public enum ErrorCode {
     INVALID_PASSWORD(BAD_REQUEST,"비밀번호가 일치하지 않습니다"),
     SAME_PASSWORD(BAD_REQUEST,"동일한 비밀번호입니다."),
 
-    // coupon
-    COUPON_NOT_FOUND(NOT_FOUND, "쿠폰을 찾을 수 없습니다."),
-    COUPON_NOT_ACTIVE(BAD_REQUEST, "쿠폰 발급 기간이 아닙니다."),
-    COUPON_SOLE_OUT(BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
-
     // user coupon
     USER_COUPON_NOT_FOUND(NOT_FOUND, "사용자 쿠폰을 찾을 수 없습니다."),
     USER_COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급받은 쿠폰입니다."),
-    USER_COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰을 조회할 권한이 없습니다."),
+    USER_COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰에 대한 권한이 없습니다."),
     USER_COUPON_CODE_UNAVAILABLE(BAD_REQUEST, "쿠폰이 이미 사용되었거나 만료되었습니다."),
 
     // server
@@ -55,7 +49,10 @@ public enum ErrorCode {
     INVALID_EXPIRY_DATE(BAD_REQUEST,"쿠폰 만료일은 발급 종료일 이후여야 합니다." ),
     COUPON_NOT_FOUND(NOT_FOUND,"존재하지 않는 쿠폰입니다." ),
     INVALID_TOTAL_QUANTITY(BAD_REQUEST,"새로운 총 수량은 이미 발급된 쿠폰 수보다 커야합니다." ),
-    COUPON_OUT_OF_STOCK(BAD_REQUEST,"쿠폰이 모두 소진되었습니다." );
+    COUPON_OUT_OF_STOCK(BAD_REQUEST,"쿠폰이 모두 소진되었습니다." ),
+    COUPON_NOT_ACTIVE(BAD_REQUEST, "쿠폰 발급 기간이 아닙니다."),
+    COUPON_SOLE_OUT(BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
+    ;
 
 
     private final HttpStatus httpStatus;

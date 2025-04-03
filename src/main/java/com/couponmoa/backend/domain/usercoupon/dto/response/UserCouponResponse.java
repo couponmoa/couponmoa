@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.usercoupon.dto.response;
 
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 
 import java.math.BigDecimal;
@@ -14,5 +13,6 @@ public interface UserCouponResponse {
     String getName();
     String getDescription();
     LocalDateTime getExpiryDate();
-    CouponCategory getCategory();
+    BigDecimal getMinOrderAmount();
+    BigDecimal getMaxDiscountAmount();
 }

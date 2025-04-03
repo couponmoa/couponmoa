@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.dto.request;
 
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

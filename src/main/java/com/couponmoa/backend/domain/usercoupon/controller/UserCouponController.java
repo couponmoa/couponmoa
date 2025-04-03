@@ -9,6 +9,8 @@ import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeRespon
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.service.UserCouponService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "사용자 쿠폰 API", description = "쿠폰을 발급받고, 발급받은 쿠폰을 관리할 수 있는 API")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class UserCouponController {
 
     private final UserCouponService userCouponService;
 
+    @Operation(summary = "쿠폰 발급")
     @Secured(UserRole.Authority.USER)
     @PostMapping("/v1/coupons/{couponId}/issue")
     public ApiResponse<Void> createUserCoupon(
@@ -37,6 +41,7 @@ public class UserCouponController {
         return ApiResponse.success();
     }
 
+    @Operation(summary = "발급받은 쿠폰 목록 조회")
     @Secured(UserRole.Authority.USER)
     @GetMapping("/v1/user-coupons")
     public ApiResponse<Page<UserCouponResponse>> findUserCoupons(
@@ -49,6 +54,7 @@ public class UserCouponController {
         return ApiResponse.success(response);
     }
 
+    @Operation(summary = "쿠폰 코드 조회")
     @Secured(UserRole.Authority.USER)
     @GetMapping("/v1/user-coupons/{userCouponId}/code")
     public ApiResponse<UserCouponCodeResponse> findUserCouponCode(
@@ -59,6 +65,7 @@ public class UserCouponController {
         return ApiResponse.success(response);
     }
 
+    @Operation(summary = "쿠폰 사용 처리")
     @Secured(UserRole.Authority.ADMIN)
     @PostMapping("/v1/user-coupons/use")
     public ApiResponse<UseUserCouponResponse> useUserCoupon(

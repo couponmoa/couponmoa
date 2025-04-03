@@ -4,6 +4,7 @@ import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
@@ -33,8 +34,7 @@ public class UserCouponService {
 
     @Transactional
     public void createUserCoupon(Long userId, Long couponId) {
-        // TODO: 쿠폰에 deleted_at 추가될 경우 삭제되지 않은 쿠폰만 조회하도록 수정
-        Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
+        Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
 
         validateCouponIssuable(coupon);
         validateCouponNotAlreadyIssued(userId, couponId);
@@ -68,7 +68,7 @@ public class UserCouponService {
         UserCoupon userCoupon = userCouponRepository.findByCode(request.getCode())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_COUPON_NOT_FOUND));
 
-        // TODO: Coupon 연관관계 구현 후 요청자가 Store 주인인지 검사하는 로직 추가
+        validateCouponStoreOwner(userCoupon.getCoupon().getStore(), userId);
         validateCouponStatus(userCoupon.getStatus());
 
         userCoupon.setUsed();
@@ -109,6 +109,12 @@ public class UserCouponService {
     private void validateCouponStatus(UserCouponStatus status) {
         if (status != UserCouponStatus.UNUSED) {
             throw new ApplicationException(ErrorCode.USER_COUPON_CODE_UNAVAILABLE);
+        }
+    }
+
+    private static void validateCouponStoreOwner(Store store, Long userId) {
+        if (!store.getUser().getId().equals(userId)) {
+            throw new ApplicationException(ErrorCode.USER_COUPON_ACCESS_DENIED);
         }
     }
 }
