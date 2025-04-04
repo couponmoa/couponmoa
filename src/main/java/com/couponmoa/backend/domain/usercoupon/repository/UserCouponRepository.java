@@ -1,12 +1,11 @@
 package com.couponmoa.backend.domain.usercoupon.repository;
 
 import com.couponmoa.backend.common.repository.BaseRepository;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.repository.projection.UserCouponProjection;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
@@ -22,8 +21,8 @@ public interface UserCouponRepository extends BaseRepository<UserCoupon, Long> {
                 JOIN uc.coupon c
                 WHERE uc.user.id = :userId AND (:status IS NULL OR uc.status = :status)
             """)
-    Page<UserCouponResponse> findByUserIdAndStatus(Long userId, UserCouponStatus status, Pageable pageable);
+    Page<UserCouponProjection> findByUserIdAndStatus(Long userId, UserCouponStatus status, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"coupon", "coupon.store"})
-    Optional<UserCoupon> findByCode(String code);
+    @Query("SELECT uc FROM UserCoupon uc JOIN FETCH uc.coupon c JOIN FETCH c.store s WHERE uc.code = :code")
+    Optional<UserCoupon> findByCodeWithCouponAndStore(String code);
 }
