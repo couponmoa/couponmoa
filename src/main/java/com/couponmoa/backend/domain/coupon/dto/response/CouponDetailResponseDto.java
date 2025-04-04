@@ -51,7 +51,7 @@ public class CouponDetailResponseDto {
                 .expiryDate(coupon.getExpiryDate())
                 .createdAt(coupon.getCreatedAt())
                 .modifiedAt(coupon.getModifiedAt())
-                .status(coupon.getStatus())
+                .status(CouponStatus.editStatus(coupon.getStartDate(), coupon.getEndDate()))
                 .build();
     }
 }
