@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.coupon.entity;
 import com.couponmoa.backend.common.entity.BaseEntity;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
+import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import com.couponmoa.backend.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -40,10 +41,14 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name="store_id", nullable = false)
     private Store store;
 
+    @Enumerated(EnumType.STRING)
+    private CouponCategory category;
+
     @Builder
     public Coupon(String name, int totalQuantity, BigDecimal discountAmount, BigDecimal discountRate,
                   BigDecimal minOrderAmount, BigDecimal maxDiscountAmount, String description,
-                  LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, Store store) {
+                  LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate,
+                  Store store, CouponCategory category) {
 
         this.name = name;
         this.totalQuantity = totalQuantity;
@@ -58,6 +63,7 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
         this.expiryDate = expiryDate;
         this.store = store;
+        this.category = category;
     }
 
     public void updateQuantity(int newTotalQuantity) {
@@ -88,6 +94,10 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
         this.expiryDate = expiryDate;
         this.store = store;
+    }
+
+    public void updateCategory(CouponCategory newcategory) {
+        this.category = newcategory;
     }
 
     public void delete() {
