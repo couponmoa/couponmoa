@@ -7,7 +7,7 @@ import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
@@ -73,7 +73,7 @@ public class CouponService {
                 .endDate(requestDto.getEndDate())
                 .expiryDate(requestDto.getExpiryDate())
                 .store(store)
-                .category(CouponCategory.UPCOMING)
+                .status(CouponStatus.UPCOMING)
                 .build();
 
         Coupon savedCoupon = couponRepository.save(newCoupon);
@@ -111,12 +111,12 @@ public class CouponService {
             throw new ApplicationException(ErrorCode.INVALID_DISCOUNT_SETTING);
         }
 
-        // 날짜 변경 감지, 변경된 부분이 있다면 category 변경
+        // 날짜 변경 감지, 변경된 부분이 있다면 Status 변경
         if (!requestDto.getStartDate().isEqual(coupon.getStartDate()) ||
                 !requestDto.getEndDate().isEqual(coupon.getEndDate())) {
 
-            CouponCategory newCategory = editCategory(requestDto.getStartDate(), requestDto.getEndDate());
-            coupon.updateCategory(newCategory); // coupon.setCategory(...) 또는 별도 메서드로 반영
+            CouponStatus newStatus = editStatus(requestDto.getStartDate(), requestDto.getEndDate());
+            coupon.updateStatus(newStatus);
         }
 
         // 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
@@ -201,10 +201,10 @@ public class CouponService {
         LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();
     }
 
-    private CouponCategory editCategory(LocalDateTime startDate, LocalDateTime endDate) {
+    private CouponStatus editStatus(LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(startDate)) return CouponCategory.UPCOMING;
-        if (now.isAfter(endDate)) return CouponCategory.ENDED;
-        return CouponCategory.IN_PROGRESS;
+        if (now.isBefore(startDate)) return CouponStatus.UPCOMING;
+        if (now.isAfter(endDate)) return CouponStatus.ENDED;
+        return CouponStatus.IN_PROGRESS;
     }
 }

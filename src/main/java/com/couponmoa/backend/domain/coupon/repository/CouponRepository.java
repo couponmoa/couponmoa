@@ -4,7 +4,7 @@ import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.common.repository.BaseRepository;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -23,8 +23,8 @@ public interface CouponRepository extends BaseRepository<Coupon,Long> {
     Page<Coupon> findAllSortedByIQ(Pageable pageable);
 
     // CouponCategory에 따라 목록 조회
-    @Query("SELECT c FROM Coupon c WHERE c.category = :category ORDER BY c.issuedQuantity DESC, c.name ASC")
-    Page<Coupon> findAllByCategorySortedByIQ(@Param("category") CouponCategory category, Pageable pageable);
+    @Query("SELECT c FROM Coupon c WHERE c.status = :category ORDER BY c.issuedQuantity DESC, c.name ASC")
+    Page<Coupon> findAllByStatusSortedByIQ(@Param("status") CouponStatus status, Pageable pageable);
 
     Optional<Coupon> findByIdAndDeletedAtIsNull(Long id);
 
