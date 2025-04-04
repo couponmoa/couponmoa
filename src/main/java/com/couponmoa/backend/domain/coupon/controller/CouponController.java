@@ -1,7 +1,7 @@
 package com.couponmoa.backend.domain.coupon.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponSaveRequestDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
@@ -33,7 +33,7 @@ public class CouponController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ApiResponse<CouponResponseDto>> createCoupon(
-            @Valid @RequestBody CouponSaveRequestDto requestDto) {
+            @Valid @RequestBody CouponCreateRequestDto requestDto) {
 
         return ResponseEntity.ok(couponService.createCoupon(requestDto));
     }
