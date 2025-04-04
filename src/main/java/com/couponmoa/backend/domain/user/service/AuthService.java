@@ -2,6 +2,7 @@ package com.couponmoa.backend.domain.user.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
+import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.domain.user.dto.request.SigninRequest;
 import com.couponmoa.backend.domain.user.dto.request.SignupRequest;
@@ -21,6 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RedisService redisService;
 
     @Transactional
     public void signup(SignupRequest signupRequest) {
@@ -66,6 +68,7 @@ public class AuthService {
         jwtUtil.validateToken(refreshToken, userId);
 
         User user = userRepository.findByIdOrElseThrow(Long.valueOf(userId), ErrorCode.USER_NOT_FOUND);
+
         String newAccessToken = jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getUserRole());
 
         return new TokenResponse(newAccessToken, refreshToken);
