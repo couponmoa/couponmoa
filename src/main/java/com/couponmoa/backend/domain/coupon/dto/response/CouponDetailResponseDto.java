@@ -1,7 +1,7 @@
 package com.couponmoa.backend.domain.coupon.dto.response;
 
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
-import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class CouponDetailResponseDto {
     private LocalDateTime expiryDate;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private CouponCategory category;
+    private CouponStatus status;
 
     public static CouponDetailResponseDto toDto(Coupon coupon) {
         return CouponDetailResponseDto.builder()
@@ -51,7 +51,7 @@ public class CouponDetailResponseDto {
                 .expiryDate(coupon.getExpiryDate())
                 .createdAt(coupon.getCreatedAt())
                 .modifiedAt(coupon.getModifiedAt())
-                .category(coupon.getCategory())
+                .status(coupon.getStatus())
                 .build();
     }
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CouponCategory {
+public enum CouponStatus {
     UPCOMING, IN_PROGRESS, ENDED
 }
 
