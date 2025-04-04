@@ -1,0 +1,24 @@
+package com.couponmoa.backend.domain.coupon.dto.request;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Getter
+@NoArgsConstructor
+public class CouponUpdateRequestDto {
+
+    private String name;
+    private int newTotalQuantity;
+    private BigDecimal discountAmount = BigDecimal.ZERO;
+    private BigDecimal discountRate = BigDecimal.ZERO;
+    private BigDecimal minOrderAmount;
+    private BigDecimal maxDiscountAmount = BigDecimal.valueOf(9_999_999);
+    private String description;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime expiryDate;
+    private Long storeId;
+}

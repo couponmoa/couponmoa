@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -64,6 +65,12 @@ public class GlobalExceptionHandler {
         return getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했습니다. 관리자에게 문의하세요.");
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        log.error("AccessDeniedException: " + ex.getMessage());
+        return getErrorResponse(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+    }
+
     private ResponseEntity<ErrorResponse> getErrorResponse(HttpStatus status, String message) {
         ErrorResponse response = new ErrorResponse(
                 status.name(),
@@ -73,4 +80,6 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(response, status);
     }
+
+
 }
