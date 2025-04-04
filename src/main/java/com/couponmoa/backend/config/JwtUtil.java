@@ -40,15 +40,16 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Long userId, String email, UserRole userRole, Long validTime) {
+    public String createToken(Long userId, String email, UserRole userRole, Long validTime, String tokenType) {
         Date date = new Date();
-        log.info("JWT 생성 - userId: {}, email: {}, 역할: {}", userId, email, userRole.name()); //
+        log.info("JWT 생성 - userId: {}, email: {}, 역할: {}, 토큰 타입: {}", userId, email, userRole.name(), tokenType); //
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .subject(String.valueOf(userId))
                         .claim("email", email)
                         .claim("userRole", userRole.getUserRole())
+                        .claim("tokenType", tokenType)
                         .expiration(new Date(date.getTime() + validTime))
                         .issuedAt(date)
                         .signWith(key)
@@ -56,11 +57,11 @@ public class JwtUtil {
     }
 
     public String createAccessToken(Long userId, String email, UserRole userRole) {
-        return this.createToken(userId, email, userRole, ACCESS_TOKEN_TIME);
+        return this.createToken(userId, email, userRole, ACCESS_TOKEN_TIME, "access");
     }
 
     public String createRefreshToken(Long userId, String email, UserRole userRole) {
-        String refreshToken =  this.createToken(userId, email, userRole, REFRESH_TOKEN_TIME);
+        String refreshToken = this.createToken(userId, email, userRole, REFRESH_TOKEN_TIME, "refresh");
         redisService.save(userId.toString(), refreshToken, Duration.ofMillis(REFRESH_TOKEN_TIME));
         return refreshToken;
     }
@@ -79,7 +80,7 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        log.info("JWT 검증 완료 - userRole: {}", claims.get("userRole"));
+        log.info("JWT 검증 완료 - userRole: {}, tokenType: {}", claims.get("userRole"), claims.get("tokenType"));
         return claims;
     }
 

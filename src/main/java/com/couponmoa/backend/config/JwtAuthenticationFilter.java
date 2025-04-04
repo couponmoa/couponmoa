@@ -39,6 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 Claims claims = jwtUtil.extractClaims(jwt);
 
+                String tokenType = claims.get("tokenType", String.class);
+                if ("refresh".equals(tokenType)) {
+                    throw new ApplicationException(ErrorCode.REFRESH_TOKEN_FORBIDDEN);
+                }
+
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     setAuthentication(claims);
                 }
@@ -48,6 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new ApplicationException(ErrorCode.EXPIRED_JWT);
             } catch (UnsupportedJwtException e) {
                 throw new ApplicationException(ErrorCode.UNSUPPORTED_JWT);
+            } catch (ApplicationException e) {
+                throw e;
             } catch (Exception e) {
                 throw new ApplicationException(ErrorCode.EXCEPTION);
             }
