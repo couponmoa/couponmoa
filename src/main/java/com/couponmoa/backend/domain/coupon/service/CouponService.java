@@ -7,6 +7,7 @@ import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
+import com.couponmoa.backend.domain.coupon.enums.CouponCategory;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
@@ -58,16 +59,7 @@ public class CouponService {
         }
 
         // 날짜 검증
-        LocalDateTime now = LocalDateTime.now();
-        if (requestDto.getStartDate().isBefore(now)) {
-            throw new ApplicationException(ErrorCode.INVALID_START_DATE);
-        }
-        if (!requestDto.getStartDate().isBefore(requestDto.getEndDate())) {
-            throw new ApplicationException(ErrorCode.INVALID_DATE_ORDER);
-        }
-        if (!requestDto.getEndDate().isBefore(requestDto.getExpiryDate())) {
-            throw new ApplicationException(ErrorCode.INVALID_EXPIRY_DATE);
-        }
+        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(),true);
 
         Coupon newCoupon = Coupon.builder()
                 .name(requestDto.getName())
@@ -81,6 +73,7 @@ public class CouponService {
                 .endDate(requestDto.getEndDate())
                 .expiryDate(requestDto.getExpiryDate())
                 .store(store)
+                .category(CouponCategory.UPCOMING)
                 .build();
 
         Coupon savedCoupon = couponRepository.save(newCoupon);
@@ -99,24 +92,31 @@ public class CouponService {
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
 
-        // 쿠폰 시작일 이후에도 수정 가능, 만료일만 검증
-        if (requestDto.getEndDate() != null && requestDto.getExpiryDate() != null) {
-            if (!requestDto.getEndDate().isBefore(requestDto.getExpiryDate())) {
-                throw new ApplicationException(ErrorCode.INVALID_EXPIRY_DATE);
-            }
-        }
+        // update 요청데이터의 dates null 검증, null 일 경우 이전 데이터로.
+        resolveDates(requestDto, coupon);
+
+        // 날짜 검증
+        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(),false);
 
         // newTotalQuantity 검증 및 반영
         if (requestDto.getNewTotalQuantity() > 0) {
             coupon.updateQuantity(requestDto.getNewTotalQuantity());
         }
 
-        // 할인율과 할인 금액 검증
+        // 할인율과 할인금액 검증
         boolean isDiscountAmountSet = requestDto.getDiscountAmount().compareTo(BigDecimal.ZERO) > 0;
         boolean isDiscountRateSet = requestDto.getDiscountRate().compareTo(BigDecimal.ZERO) > 0;
 
         if (isDiscountAmountSet && isDiscountRateSet) {
             throw new ApplicationException(ErrorCode.INVALID_DISCOUNT_SETTING);
+        }
+
+        // 날짜 변경 감지, 변경된 부분이 있다면 category 변경
+        if (!requestDto.getStartDate().isEqual(coupon.getStartDate()) ||
+                !requestDto.getEndDate().isEqual(coupon.getEndDate())) {
+
+            CouponCategory newCategory = editCategory(requestDto.getStartDate(), requestDto.getEndDate());
+            coupon.updateCategory(newCategory); // coupon.setCategory(...) 또는 별도 메서드로 반영
         }
 
         // 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
@@ -174,5 +174,37 @@ public class CouponService {
                 expiryDate,
                 coupon.getStore()
         );
+    }
+
+    private static void validateDates(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, boolean isCreate) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (startDate.isAfter(endDate)) {
+            throw new ApplicationException(ErrorCode.INVALID_END_DATE);
+        }
+
+        if (expiryDate.isBefore(endDate)) {
+            throw new ApplicationException(ErrorCode.INVALID_EXPIRY_DATE);
+        }
+
+        if (isCreate) {
+            // 생성일 경우에만 현재 시간 기준 검증
+            if (startDate.isBefore(now)) {
+                throw new ApplicationException(ErrorCode.INVALID_START_DATE);
+            }
+        }
+    }
+
+    private static void resolveDates(CouponUpdateRequestDto requestDto, Coupon coupon) {
+        LocalDateTime startDate = requestDto.getStartDate() != null ? requestDto.getStartDate() : coupon.getStartDate();
+        LocalDateTime endDate = requestDto.getEndDate() != null ? requestDto.getEndDate() : coupon.getEndDate();
+        LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();
+    }
+
+    private CouponCategory editCategory(LocalDateTime startDate, LocalDateTime endDate) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(startDate)) return CouponCategory.UPCOMING;
+        if (now.isAfter(endDate)) return CouponCategory.ENDED;
+        return CouponCategory.IN_PROGRESS;
     }
 }

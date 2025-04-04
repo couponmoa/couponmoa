@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import jakarta.validation.constraints.NotBlank;
@@ -32,15 +31,12 @@ public class CouponCreateRequestDto {
     private BigDecimal maxDiscountAmount = BigDecimal.valueOf(9_999_999);
     private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonSetter(nulls = Nulls.SKIP)
     private LocalDateTime startDate = LocalDateTime.now().plusHours(1);
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonSetter(nulls = Nulls.SKIP)
     private LocalDateTime endDate = LocalDateTime.now().plusHours(2);
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonSetter(nulls = Nulls.SKIP)
     private LocalDateTime expiryDate = LocalDateTime.now().plusMonths(1);
 
