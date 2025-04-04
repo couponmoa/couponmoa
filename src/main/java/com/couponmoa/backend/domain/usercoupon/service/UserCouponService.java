@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.usercoupon.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
@@ -41,6 +42,12 @@ public class UserCouponService {
         validateCouponNotAlreadyIssued(userId, couponId);
 
         coupon.availableQuantityDown();
+
+        // 발급 가능 수량이 다 소진되면 쿠폰의 상태를 ENDED로 전환.
+        if (coupon.getAvailableQuantity() == 0) {
+            coupon.updateStatus(CouponStatus.ENDED);
+        }
+
         couponRepository.flush();
 
         User user = userRepository.getReferenceById(userId);
