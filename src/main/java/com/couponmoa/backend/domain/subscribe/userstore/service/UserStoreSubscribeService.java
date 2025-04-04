@@ -52,6 +52,7 @@ public class UserStoreSubscribeService {
         userStoreSubRepo.delete(userCouponSubscribe);
     }
 
+    @Transactional(readOnly = true)
     public List<FindStoreSubscribeListResponse> findSubscribeList(Long userId, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         User user = getUser(userId);
@@ -62,6 +63,7 @@ public class UserStoreSubscribeService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<String> sendAlert(Long storeId) {
         Store store = storeRepo.findByIdOrElseThrow(storeId, STORE_NOT_FOUND);
 
