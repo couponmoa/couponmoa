@@ -11,6 +11,7 @@ import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.repository.projection.UserCouponProjection;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
@@ -171,8 +172,8 @@ class UserCouponServiceTest {
         @Order(1)
         void 발급받은_쿠폰_목록_조회_성공() {
             Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-            List<UserCouponResponse> responseList = List.of(mock(UserCouponResponse.class), mock(UserCouponResponse.class));
-            Page<UserCouponResponse> responsePage = new PageImpl<>(responseList, pageable, responseList.size());
+            List<UserCouponProjection> responseList = List.of(mock(UserCouponProjection.class), mock(UserCouponProjection.class));
+            Page<UserCouponProjection> responsePage = new PageImpl<>(responseList, pageable, responseList.size());
             given(userCouponRepository.findByUserIdAndStatus(anyLong(), any(), any(Pageable.class)))
                     .willReturn(responsePage);
 
@@ -298,7 +299,7 @@ class UserCouponServiceTest {
         @Order(1)
         void 쿠폰_사용_처리_쿠폰_없음_실패() {
             ErrorCode errorCode = ErrorCode.USER_COUPON_NOT_FOUND;
-            given(userCouponRepository.findByCode(anyString())).willReturn(Optional.empty());
+            given(userCouponRepository.findByCodeWithCouponAndStore(anyString())).willReturn(Optional.empty());
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
                     () -> userCouponService.useUserCoupon(userId, userCouponRequest));
@@ -320,7 +321,7 @@ class UserCouponServiceTest {
             given(coupon.getStore()).willReturn(store);
             UserCoupon userCoupon = mock();
             given(userCoupon.getCoupon()).willReturn(coupon);
-            given(userCouponRepository.findByCode(anyString())).willReturn(Optional.of(userCoupon));
+            given(userCouponRepository.findByCodeWithCouponAndStore(anyString())).willReturn(Optional.of(userCoupon));
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
                     () -> userCouponService.useUserCoupon(userId, userCouponRequest));
@@ -343,7 +344,7 @@ class UserCouponServiceTest {
             UserCoupon userCoupon = mock();
             given(userCoupon.getStatus()).willReturn(UserCouponStatus.USED);
             given(userCoupon.getCoupon()).willReturn(coupon);
-            given(userCouponRepository.findByCode(anyString())).willReturn(Optional.of(userCoupon));
+            given(userCouponRepository.findByCodeWithCouponAndStore(anyString())).willReturn(Optional.of(userCoupon));
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
                     () -> userCouponService.useUserCoupon(userId, userCouponRequest));
@@ -366,7 +367,7 @@ class UserCouponServiceTest {
             UserCoupon userCoupon = mock();
             given(userCoupon.getStatus()).willReturn(UserCouponStatus.EXPIRED);
             given(userCoupon.getCoupon()).willReturn(coupon);
-            given(userCouponRepository.findByCode(anyString())).willReturn(Optional.of(userCoupon));
+            given(userCouponRepository.findByCodeWithCouponAndStore(anyString())).willReturn(Optional.of(userCoupon));
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
                     () -> userCouponService.useUserCoupon(userId, userCouponRequest));
@@ -392,7 +393,7 @@ class UserCouponServiceTest {
             given(userCoupon.getId()).willReturn(userCouponId);
             given(userCoupon.getStatus()).willReturn(UserCouponStatus.UNUSED);
             given(userCoupon.getCoupon()).willReturn(coupon);
-            given(userCouponRepository.findByCode(anyString())).willReturn(Optional.of(userCoupon));
+            given(userCouponRepository.findByCodeWithCouponAndStore(anyString())).willReturn(Optional.of(userCoupon));
 
             UseUserCouponResponse result = userCouponService.useUserCoupon(userId, userCouponRequest);
 
