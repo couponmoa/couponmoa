@@ -22,7 +22,6 @@ import static com.couponmoa.backend.common.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserCouponSubscribeService {
 
     private final UserRepository userRepo;
@@ -30,6 +29,7 @@ public class UserCouponSubscribeService {
     private final UserCouponSubscribeRepository userCouponSubRepo;
     private final JavaMailSender mailSender;
 
+    @Transactional
     public void subscribeCoupon(Long userId, Long couponId) {
         Coupon coupon = getCoupon(couponId);
         User user = getUser(userId);
@@ -42,6 +42,7 @@ public class UserCouponSubscribeService {
         userCouponSubRepo.save(userCouponSubscribe).getId();
     }
 
+    @Transactional
     public void unSubscribeCoupon(Long userId, Long couponId) {
         Coupon coupon = getCoupon(couponId);
         User user = getUser(userId);
