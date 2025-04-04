@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.store.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
+import com.couponmoa.backend.domain.store.dto.response.SimpleStoreResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
@@ -42,8 +43,8 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreResponse> getStoreList() {
-        List<Store> stores = storeRepository.findAll();
+    public List<StoreResponse> getMyStore(Long userId) {
+        List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(userId);
         List<StoreResponse> responses = new ArrayList<>();
         for (Store store : stores) {
             responses.add(new StoreResponse(
@@ -52,6 +53,16 @@ public class StoreService {
                     store.getDescription(),
                     store.getAddress()
             ));
+        }
+        return responses;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleStoreResponse> getMySimpleStores(Long userId) {
+        List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(userId);
+        List<SimpleStoreResponse> responses = new ArrayList<>();
+        for (Store store : stores) {
+            responses.add(new SimpleStoreResponse(store.getId(), store.getName()));
         }
         return responses;
     }

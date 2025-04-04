@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface StoreRepository extends BaseRepository<Store, Long> {
 
+    List<Store> findByUserIdAndDeletedAtIsNull(Long userId); // 가게 목록을 userId로 필터링
 }
