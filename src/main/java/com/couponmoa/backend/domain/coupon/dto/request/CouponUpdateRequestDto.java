@@ -12,10 +12,10 @@ public class CouponUpdateRequestDto {
 
     private String name;
     private int newTotalQuantity;
-    private BigDecimal discountAmount = BigDecimal.ZERO;
-    private BigDecimal discountRate = BigDecimal.ZERO;
+    private BigDecimal discountAmount;
+    private BigDecimal discountRate;
     private BigDecimal minOrderAmount;
-    private BigDecimal maxDiscountAmount = BigDecimal.valueOf(9_999_999);
+    private BigDecimal maxDiscountAmount;
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
