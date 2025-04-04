@@ -24,6 +24,7 @@ public class Coupon extends BaseEntity {
     private String name;
     private int totalQuantity;  // 반드시 availableQuantity와 함께 수정되어야 함.
     private int availableQuantity; // 서버에서 자동으로 설정.
+    private int issuedQuantity;
     private BigDecimal discountAmount;
     private BigDecimal discountRate;
     private BigDecimal minOrderAmount;
@@ -47,6 +48,7 @@ public class Coupon extends BaseEntity {
         this.name = name;
         this.totalQuantity = totalQuantity;
         this.availableQuantity = totalQuantity; // totalQuantity와 같은 값으로 자동 초기화
+        this.issuedQuantity = 0;
         this.discountAmount = discountAmount;
         this.discountRate = discountRate;
         this.minOrderAmount = minOrderAmount;
@@ -61,16 +63,16 @@ public class Coupon extends BaseEntity {
     public void updateQuantity(int newTotalQuantity) {
         int issuedCouponQuantity = this.totalQuantity - this.availableQuantity;
 
+        //이 부분 트래픽증가시 동시성이슈로 인해 예외 발생 가능성 매우 높음.
         if (newTotalQuantity < issuedCouponQuantity) {
             throw new ApplicationException(ErrorCode.INVALID_TOTAL_QUANTITY);
         }
 
-//        이미 발급된 쿠폰 개수(issuedCouponQuantity)보다 적은 총 수량(newTotalQuantity)을 입력해
-//        발급 가능한 총수량(newAvailableQuantity)을 줄이려고 시도하면 예외발생하기 때문에 추가
         int newAvailableQuantity = Math.max(0, newTotalQuantity - issuedCouponQuantity);
 
         this.totalQuantity = newTotalQuantity;
-        this.availableQuantity = newTotalQuantity - issuedCouponQuantity; // 자동으로 설정
+        this.availableQuantity = newAvailableQuantity;
+        this.issuedQuantity = issuedCouponQuantity;
     }
 
     public void update(String name, BigDecimal discountAmount, BigDecimal discountRate,
@@ -97,5 +99,6 @@ public class Coupon extends BaseEntity {
             throw new IllegalStateException("쿠폰 잔여 개수는 음수일 수 없습니다.");
         }
         availableQuantity--;
+        issuedQuantity++;
     }
 }

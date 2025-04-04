@@ -16,10 +16,7 @@ public interface CouponRepository extends BaseRepository<Coupon,Long> {
         return BaseRepository.super.findByIdOrElseThrow(aLong, errorCode);
     }
 
-    // c.total_quantity - c.available_quantity << 계산식 사용을 위해 네이티브 쿼리로 변경, 네이티브 쿼리를 사용하는게 좋을지, 그냥 issuedQ 필드를 추가할지 물어볼 것.
-    @Query(value = "SELECT * FROM coupons c ORDER BY (c.total_quantity - c.available_quantity) DESC, c.name ASC",
-            countQuery = "SELECT COUNT(*) FROM coupons",
-            nativeQuery = true)
+    @Query("SELECT c FROM Coupon c ORDER BY c.issuedQuantity DESC, c.name ASC")
     Page<Coupon> findAllSortedByIssuedQuantity(Pageable pageable);
 
     Optional<Coupon> findByIdAndDeletedAtIsNull(Long id);
