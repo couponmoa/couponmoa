@@ -57,12 +57,18 @@ public class JwtUtil {
     }
 
     public String createAccessToken(Long userId, String email, UserRole userRole) {
-        return this.createToken(userId, email, userRole, ACCESS_TOKEN_TIME, "access");
+        String accessToken = this.createToken(userId, email, userRole, ACCESS_TOKEN_TIME, "access");
+        String accessTokenKey = "access:"+userId;
+        redisService.delete(accessTokenKey);
+        redisService.save(accessTokenKey,accessToken,Duration.ofMillis(ACCESS_TOKEN_TIME));
+        return accessToken;
     }
+
 
     public String createRefreshToken(Long userId, String email, UserRole userRole) {
         String refreshToken = this.createToken(userId, email, userRole, REFRESH_TOKEN_TIME, "refresh");
-        redisService.save(userId.toString(), refreshToken, Duration.ofMillis(REFRESH_TOKEN_TIME));
+        String refreshTokenKey = "refresh:"+userId;
+        redisService.save(refreshTokenKey, refreshToken, Duration.ofMillis(REFRESH_TOKEN_TIME));
         return refreshToken;
     }
 
@@ -86,7 +92,7 @@ public class JwtUtil {
 
     public void validateToken(String refreshToken, String userId) {
         try {
-            String redisToken = redisService.get(userId);
+            String redisToken = redisService.get("refresh:"+userId);
             if (!refreshToken.equals(substringToken(redisToken))) {
                 throw new ApplicationException(ErrorCode.INVALID_JWT);
             }
