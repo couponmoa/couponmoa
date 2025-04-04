@@ -1,6 +1,8 @@
 package com.couponmoa.backend.domain.coupon.dto.response;
 
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,8 +17,13 @@ public class CouponSimpleResponseDto {
     private int availableQuantity;
     private BigDecimal discountAmount;
     private BigDecimal discountRate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDate;
+    private CouponStatus status;
 
     public static CouponSimpleResponseDto toDto(Coupon coupon) {
         return CouponSimpleResponseDto.builder()
@@ -27,6 +34,7 @@ public class CouponSimpleResponseDto {
                 .discountRate(coupon.getDiscountRate())
                 .startDate(coupon.getStartDate())
                 .endDate(coupon.getEndDate())
+                .status(coupon.getStatus())
                 .build();
     }
 }
