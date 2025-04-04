@@ -22,4 +22,5 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    private LocalDateTime deletedAt; // 소프트 삭제 필드
 }
