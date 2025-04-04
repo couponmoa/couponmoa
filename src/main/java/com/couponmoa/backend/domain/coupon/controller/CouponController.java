@@ -9,14 +9,13 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.service.CouponReadService;
 import com.couponmoa.backend.domain.coupon.service.CouponService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
-import com.couponmoa.backend.domain.user.enums.UserRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +30,11 @@ public class CouponController {
     private final CouponReadService couponReadService;
 
     @Operation(summary = "쿠폰 생성", description = "관리자가 새로운 쿠폰을 생성함.")
-    @Secured(UserRole.Authority.ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ApiResponse<CouponResponseDto>> createCoupon(
             @Valid @RequestBody CouponSaveRequestDto requestDto) {
+
         return ResponseEntity.ok(couponService.createCoupon(requestDto));
     }
 
@@ -58,7 +58,7 @@ public class CouponController {
     }
 
     @Operation(summary = "쿠폰 수정", description = "관리자가 특정 쿠폰 정보를 수정함.")
-    @Secured(UserRole.Authority.ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{couponId}")
     public ResponseEntity<ApiResponse<CouponResponseDto>> updateCoupon(
             @PathVariable Long couponId,
@@ -67,7 +67,7 @@ public class CouponController {
     }
 
     @Operation(summary = "쿠폰 삭제", description = "관리자가 특정 쿠폰을 삭제함.")
-    @Secured(UserRole.Authority.ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{couponId}")
     public ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
         couponService.deleteCoupon(couponId);

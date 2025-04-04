@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.dto.request;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,21 +20,5 @@ public class CouponUpdateRequestDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime expiryDate;
-
-    @Builder
-    public CouponUpdateRequestDto(String name, int newTotalQuantity,
-                                BigDecimal discountAmount, BigDecimal discountRate,
-                                BigDecimal minOrderAmount, BigDecimal maxDiscountAmount,
-                                String description, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate) {
-        this.name = name;
-        this.newTotalQuantity = newTotalQuantity;
-        this.discountAmount = discountAmount;
-        this.discountRate = discountRate;
-        this.minOrderAmount = minOrderAmount;
-        this.maxDiscountAmount = maxDiscountAmount;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.expiryDate = expiryDate;
-    }
+    private Long storeId;
 }
