@@ -3,7 +3,7 @@ package com.couponmoa.backend.domain.coupon.service;
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponSaveRequestDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
@@ -30,12 +30,10 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final StoreRepository storeRepository;
 
-    public ApiResponse<CouponResponseDto> createCoupon(CouponSaveRequestDto requestDto) {
+    public ApiResponse<CouponResponseDto> createCoupon(CouponCreateRequestDto requestDto) {
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
-        validateStoreOwner(requestDto.getStoreId());
-
-        Store store = storeRepository.findByIdOrElseThrow(requestDto.getStoreId(), ErrorCode.STORE_NOT_FOUND);
+        Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
 
         // 할인 로직 검증
         // discountAmount와 discountRate 중 하나는 반드시 0이어야 함 (변액 할인과 정액 할인을 동시에 제공하는 쿠폰은 없다.)
@@ -91,6 +89,7 @@ public class CouponService {
                 savedCoupon.getId()));
     }
 
+    // 일단 update시에 store는 변경할 수 없다고 가정.
     public ApiResponse<CouponResponseDto> updateCoupon(Long couponId,CouponUpdateRequestDto requestDto) {
 
         // 아직 존재하는 쿠폰인지 검증
@@ -98,7 +97,7 @@ public class CouponService {
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
-        validateStoreOwner(requestDto.getStoreId());
+        Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
 
         // 쿠폰 시작일 이후에도 수정 가능, 만료일만 검증
         if (requestDto.getEndDate() != null && requestDto.getExpiryDate() != null) {
@@ -120,18 +119,8 @@ public class CouponService {
             throw new ApplicationException(ErrorCode.INVALID_DISCOUNT_SETTING);
         }
 
-        coupon.update(
-                requestDto.getName(),
-                requestDto.getDiscountAmount(),
-                requestDto.getDiscountRate(),
-                requestDto.getMinOrderAmount(),
-                requestDto.getMaxDiscountAmount(),
-                requestDto.getDescription(),
-                requestDto.getStartDate(),
-                requestDto.getEndDate(),
-                requestDto.getExpiryDate(),
-                coupon.getStore()
-        );
+        // 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
+        updateIfPresent(coupon, requestDto);
 
         return ApiResponse.success(new CouponResponseDto(coupon.getId()));
     }
@@ -141,12 +130,12 @@ public class CouponService {
         Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
-        validateStoreOwner(coupon.getStore().getId());
+        validateStoreOwnerAndGetStore(coupon.getStore().getId());
 
         coupon.delete();
     }
 
-    private void validateStoreOwner(Long storeId) {
+    private Store validateStoreOwnerAndGetStore(Long storeId) {
         Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -154,8 +143,36 @@ public class CouponService {
         if (!(principal instanceof AuthUser authUSer)) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
+
         if (!store.getUser().getEmail().equals(authUSer.getEmail())) {
             throw new ApplicationException(ErrorCode.NOT_VALIDATE_STORE_OWNER);
         }
+
+        return store;
+    }
+
+    private void updateIfPresent(Coupon coupon, CouponUpdateRequestDto requestDto) {
+        String name = requestDto.getName() != null ? requestDto.getName() : coupon.getName();
+        BigDecimal discountAmount = requestDto.getDiscountAmount() != null ? requestDto.getDiscountAmount() : coupon.getDiscountAmount();
+        BigDecimal discountRate = requestDto.getDiscountRate() != null ? requestDto.getDiscountRate() : coupon.getDiscountRate();
+        BigDecimal minOrderAmount = requestDto.getMinOrderAmount() != null ? requestDto.getMinOrderAmount() : coupon.getMinOrderAmount();
+        BigDecimal maxDiscountAmount = requestDto.getMaxDiscountAmount() != null ? requestDto.getMaxDiscountAmount() : coupon.getMaxDiscountAmount();
+        String description = requestDto.getDescription() != null ? requestDto.getDescription() : coupon.getDescription();
+        LocalDateTime startDate = requestDto.getStartDate() != null ? requestDto.getStartDate() : coupon.getStartDate();
+        LocalDateTime endDate = requestDto.getEndDate() != null ? requestDto.getEndDate() : coupon.getEndDate();
+        LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();
+
+        coupon.update(
+                name,
+                discountAmount,
+                discountRate,
+                minOrderAmount,
+                maxDiscountAmount,
+                description,
+                startDate,
+                endDate,
+                expiryDate,
+                coupon.getStore()
+        );
     }
 }
