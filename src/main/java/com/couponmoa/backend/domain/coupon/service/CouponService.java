@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static com.couponmoa.backend.domain.coupon.enums.CouponStatus.editStatus;
+
 
 @Slf4j
 @Service
@@ -199,12 +201,5 @@ public class CouponService {
         LocalDateTime startDate = requestDto.getStartDate() != null ? requestDto.getStartDate() : coupon.getStartDate();
         LocalDateTime endDate = requestDto.getEndDate() != null ? requestDto.getEndDate() : coupon.getEndDate();
         LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();
-    }
-
-    private CouponStatus editStatus(LocalDateTime startDate, LocalDateTime endDate) {
-        LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(startDate)) return CouponStatus.UPCOMING;
-        if (now.isAfter(endDate)) return CouponStatus.ENDED;
-        return CouponStatus.IN_PROGRESS;
     }
 }

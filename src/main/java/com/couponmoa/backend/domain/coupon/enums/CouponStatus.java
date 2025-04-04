@@ -3,10 +3,23 @@ package com.couponmoa.backend.domain.coupon.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @RequiredArgsConstructor
 public enum CouponStatus {
-    UPCOMING, IN_PROGRESS, ENDED
+    UPCOMING, IN_PROGRESS, ENDED;
+
+    public static CouponStatus editStatus(LocalDateTime startDate, LocalDateTime endDate) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(startDate)) {
+            return CouponStatus.UPCOMING;
+        }
+        if (now.isAfter(endDate)) {
+            return CouponStatus.ENDED;
+        }
+        return CouponStatus.IN_PROGRESS;
+    }
 }
 
 // 생성 시점에는 이미 날짜 검증 로직이 존재하기 때문에,
