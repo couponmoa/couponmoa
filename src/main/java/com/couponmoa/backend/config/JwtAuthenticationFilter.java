@@ -2,6 +2,7 @@ package com.couponmoa.backend.config;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
+import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import io.jsonwebtoken.Claims;
@@ -25,6 +26,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final RedisService redisService;
 
     @Override
     protected void doFilterInternal(
@@ -38,6 +40,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = jwtUtil.substringToken(authorizationHeader);
             try {
                 Claims claims = jwtUtil.extractClaims(jwt);
+                String tokenType = claims.get("tokenType", String.class);
+                String redisAccessToken = redisService.get("access:" + claims.getSubject());
+
+                if ("refresh".equals(tokenType)) {
+                    throw new ApplicationException(ErrorCode.REFRESH_TOKEN_FORBIDDEN);
+                }
+
+                if(redisAccessToken == null || !jwt.equals(jwtUtil.substringToken(redisAccessToken))) {
+                    throw new ApplicationException(ErrorCode.INVALID_JWT);
+                }
 
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     setAuthentication(claims);
@@ -48,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new ApplicationException(ErrorCode.EXPIRED_JWT);
             } catch (UnsupportedJwtException e) {
                 throw new ApplicationException(ErrorCode.UNSUPPORTED_JWT);
+            } catch (ApplicationException e) {
+                throw e;
             } catch (Exception e) {
                 throw new ApplicationException(ErrorCode.EXCEPTION);
             }

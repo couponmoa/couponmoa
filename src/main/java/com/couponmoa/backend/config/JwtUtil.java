@@ -40,15 +40,16 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Long userId, String email, UserRole userRole, Long validTime) {
+    public String createToken(Long userId, String email, UserRole userRole, Long validTime, String tokenType) {
         Date date = new Date();
-        log.info("JWT 생성 - userId: {}, email: {}, 역할: {}", userId, email, userRole.name()); //
+        log.info("JWT 생성 - userId: {}, email: {}, 역할: {}, 토큰 타입: {}", userId, email, userRole.name(), tokenType); //
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .subject(String.valueOf(userId))
                         .claim("email", email)
                         .claim("userRole", userRole.getUserRole())
+                        .claim("tokenType", tokenType)
                         .expiration(new Date(date.getTime() + validTime))
                         .issuedAt(date)
                         .signWith(key)
@@ -56,12 +57,18 @@ public class JwtUtil {
     }
 
     public String createAccessToken(Long userId, String email, UserRole userRole) {
-        return this.createToken(userId, email, userRole, ACCESS_TOKEN_TIME);
+        String accessToken = this.createToken(userId, email, userRole, ACCESS_TOKEN_TIME, "access");
+        String accessTokenKey = "access:"+userId;
+        redisService.delete(accessTokenKey);
+        redisService.save(accessTokenKey,accessToken,Duration.ofMillis(ACCESS_TOKEN_TIME));
+        return accessToken;
     }
 
+
     public String createRefreshToken(Long userId, String email, UserRole userRole) {
-        String refreshToken =  this.createToken(userId, email, userRole, REFRESH_TOKEN_TIME);
-        redisService.save(userId.toString(), refreshToken, Duration.ofMillis(REFRESH_TOKEN_TIME));
+        String refreshToken = this.createToken(userId, email, userRole, REFRESH_TOKEN_TIME, "refresh");
+        String refreshTokenKey = "refresh:"+userId;
+        redisService.save(refreshTokenKey, refreshToken, Duration.ofMillis(REFRESH_TOKEN_TIME));
         return refreshToken;
     }
 
@@ -79,13 +86,13 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        log.info("JWT 검증 완료 - userRole: {}", claims.get("userRole"));
+        log.info("JWT 검증 완료 - userRole: {}, tokenType: {}", claims.get("userRole"), claims.get("tokenType"));
         return claims;
     }
 
     public void validateToken(String refreshToken, String userId) {
         try {
-            String redisToken = redisService.get(userId);
+            String redisToken = redisService.get("refresh:"+userId);
             if (!refreshToken.equals(substringToken(redisToken))) {
                 throw new ApplicationException(ErrorCode.INVALID_JWT);
             }
