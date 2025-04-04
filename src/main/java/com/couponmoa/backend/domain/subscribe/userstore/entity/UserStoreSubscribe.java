@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class UserStoreSubscribe extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_store_subscribe_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

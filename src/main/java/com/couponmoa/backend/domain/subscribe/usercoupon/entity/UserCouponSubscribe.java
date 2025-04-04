@@ -14,7 +14,6 @@ public class UserCouponSubscribe extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_coupon_subscribe_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
