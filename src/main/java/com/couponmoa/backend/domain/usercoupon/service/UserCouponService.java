@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserCouponService {
 
@@ -47,13 +48,12 @@ public class UserCouponService {
         userCouponRepository.save(userCoupon);
     }
 
-    @Transactional(readOnly = true)
     public Page<UserCouponResponse> findUserCoupons(Long userId, UserCouponStatus status, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        return userCouponRepository.findByUserIdAndStatus(userId, status, pageable);
+        return userCouponRepository.findByUserIdAndStatus(userId, status, pageable)
+                .map(UserCouponResponse::from);
     }
 
-    @Transactional(readOnly = true)
     public UserCouponCodeResponse findUserCouponCode(Long userId, Long userCouponId) {
         UserCoupon userCoupon = userCouponRepository.findByIdOrElseThrow(userCouponId, ErrorCode.USER_COUPON_NOT_FOUND);
 
@@ -65,7 +65,7 @@ public class UserCouponService {
 
     @Transactional
     public UseUserCouponResponse useUserCoupon(Long userId, UserCouponRequest request) {
-        UserCoupon userCoupon = userCouponRepository.findByCode(request.getCode())
+        UserCoupon userCoupon = userCouponRepository.findByCodeWithCouponAndStore(request.getCode())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_COUPON_NOT_FOUND));
 
         validateCouponStoreOwner(userCoupon.getCoupon().getStore(), userId);

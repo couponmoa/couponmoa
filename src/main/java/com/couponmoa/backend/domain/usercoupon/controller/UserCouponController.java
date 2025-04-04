@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자 쿠폰 API", description = "쿠폰을 발급받고, 발급받은 쿠폰을 관리할 수 있는 API")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class UserCouponController {
 
@@ -32,7 +32,7 @@ public class UserCouponController {
 
     @Operation(summary = "쿠폰 발급")
     @Secured(UserRole.Authority.USER)
-    @PostMapping("/v1/coupons/{couponId}/issue")
+    @PostMapping("/coupons/{couponId}/issue")
     public ApiResponse<Void> createUserCoupon(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long couponId
@@ -43,7 +43,7 @@ public class UserCouponController {
 
     @Operation(summary = "발급받은 쿠폰 목록 조회")
     @Secured(UserRole.Authority.USER)
-    @GetMapping("/v1/user-coupons")
+    @GetMapping("/user-coupons")
     public ApiResponse<Page<UserCouponResponse>> findUserCoupons(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestParam(required = false) UserCouponStatus status,
@@ -56,7 +56,7 @@ public class UserCouponController {
 
     @Operation(summary = "쿠폰 코드 조회")
     @Secured(UserRole.Authority.USER)
-    @GetMapping("/v1/user-coupons/{userCouponId}/code")
+    @GetMapping("/user-coupons/{userCouponId}/code")
     public ApiResponse<UserCouponCodeResponse> findUserCouponCode(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long userCouponId
@@ -67,7 +67,7 @@ public class UserCouponController {
 
     @Operation(summary = "쿠폰 사용 처리")
     @Secured(UserRole.Authority.ADMIN)
-    @PostMapping("/v1/user-coupons/use")
+    @PostMapping("/user-coupons/use")
     public ApiResponse<UseUserCouponResponse> useUserCoupon(
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserCouponRequest request
