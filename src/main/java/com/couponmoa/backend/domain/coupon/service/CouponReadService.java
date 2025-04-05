@@ -27,13 +27,15 @@ public class CouponReadService {
     public ApiResponse<Page<CouponSimpleResponseDto>> findAllCoupons(int page, int size) {
         Pageable pageable = PageRequest.of(page-1, size);
 
-        Page<Coupon> coupons = couponRepository.findAllSortedByIssuedQuantity(pageable);
+        Page<Coupon> coupons = couponRepository.findAllSortedByIQ(pageable);
 
         //테스트 로깅
         log.info("조회된 쿠폰 개수: {}",coupons.getTotalElements());
         for (Coupon coupon : coupons) {
             log.info("쿠폰 id: {}, 쿠폰 이름: {}", coupon.getId(), coupon.getName());
         }
+        log.info("첫 번째 쿠폰: {}", coupons.getContent().get(0));  // 실제 쿠폰 확인
+        log.info("첫 번째 DTO: {}", CouponSimpleResponseDto.toDto(coupons.getContent().get(0)));  // 변환된 DTO 확인
 
         return ApiResponse.success(coupons.map(CouponSimpleResponseDto::toDto));
     }
