@@ -7,14 +7,6 @@ services:
     ports:
       - "8080:8080"
     restart: on-failure
-#    environment:
-#      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-#      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-#      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-#      SPRING_REDIS_HOST: ${SPRING_REDIS_HOST}
-#      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-#    volumes:
-#      - ./application-local.properties:/app/application-local.properties
     depends_on:
       db:
         condition: service_healthy
@@ -34,6 +26,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - backend
 
