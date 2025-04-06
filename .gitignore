@@ -38,4 +38,5 @@ out/
 *-local.properties
 *.yml
 !docker-compose.yml
+!ci-cd.yml
 .env
