@@ -102,33 +102,29 @@ public class CouponService {
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
 
         // update 요청데이터의 dates null 검증, null 일 경우 이전 데이터로.
-        resolveDates(requestDto, coupon);
+        ResolvedDates resolvedDates = resolveDates(requestDto, coupon);
 
         // 날짜 검증
-        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(), false);
+        validateDates(resolvedDates.startDate(), resolvedDates.endDate(),resolvedDates.expiryDate(),false);
 
-        // newTotalQuantity 검증 및 반영
+        // newTotalQuantity 검증 및 반영, availableQuantity가 0이 되면 status도 ENDED로 업데이트됨
         if (requestDto.getNewTotalQuantity() > 0) {
             coupon.updateQuantity(requestDto.getNewTotalQuantity());
         }
 
         // 할인율과 할인금액 검증
-        boolean isDiscountAmountSet = requestDto.getDiscountAmount().compareTo(BigDecimal.ZERO) > 0;
-        boolean isDiscountRateSet = requestDto.getDiscountRate().compareTo(BigDecimal.ZERO) > 0;
+        boolean isDiscountAmountSet = requestDto.getDiscountAmount() != null && requestDto.getDiscountAmount().compareTo(BigDecimal.ZERO) > 0;
+        boolean isDiscountRateSet = requestDto.getDiscountRate() != null && requestDto.getDiscountRate().compareTo(BigDecimal.ZERO) > 0;
 
         if (isDiscountAmountSet && isDiscountRateSet) {
             throw new ApplicationException(ErrorCode.INVALID_DISCOUNT_SETTING);
         }
 
-        // 날짜 변경 감지, 변경된 부분이 있다면 Status 변경
-        if (!requestDto.getStartDate().isEqual(coupon.getStartDate()) ||
-                !requestDto.getEndDate().isEqual(coupon.getEndDate())) {
+        // 쿠폰 상태 업데이트 (날짜, 발급수량에 따라)
+        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate, coupon.getAvailableQuantity());
+        coupon.updateStatus(newStatus);
 
-            CouponStatus newStatus = editStatus(requestDto.getStartDate(), requestDto.getEndDate());
-            coupon.updateStatus(newStatus);
-        }
-
-        // 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
+        // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
 
         return ApiResponse.success(new CouponResponseDto(coupon.getId()));
@@ -203,10 +199,19 @@ public class CouponService {
         }
     }
 
-    private static void resolveDates(CouponUpdateRequestDto requestDto, Coupon coupon) {
+    // 쿠폰 수정시에 요청 dto의 값과 기존 날짜 값을 고려해 실제 수정될 날짜 값을 담는 내부 record 클래스.
+    private static record ResolvedDates(
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            LocalDateTime expiryDate
+    ) {}
+
+    private static ResolvedDates resolveDates(CouponUpdateRequestDto requestDto, Coupon coupon) {
         LocalDateTime startDate = requestDto.getStartDate() != null ? requestDto.getStartDate() : coupon.getStartDate();
         LocalDateTime endDate = requestDto.getEndDate() != null ? requestDto.getEndDate() : coupon.getEndDate();
         LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();
+
+        return new ResolvedDates(startDate, endDate, expiryDate);
     }
 
     /**

@@ -11,6 +11,7 @@ import com.couponmoa.backend.domain.coupon.service.CouponService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,10 @@ public class CouponController {
 	//현재 정렬 순서는 issuedQuantity, 이후에 검색어 or 정렬 기준 추가, 모든 데이터의 issuedQ가 0일때 조회 기준도 있어야함.
 	@GetMapping
 	public ResponseEntity<ApiResponse<Page<CouponSimpleResponseDto>>> findAllCoupons(
-		@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+			@Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1")
+			@RequestParam(defaultValue = "1") int page,
+			@Parameter(description = "페이지당 쿠폰 수", example = "10")
+			@RequestParam(defaultValue = "10") int size) {
 
 		ApiResponse<Page<CouponSimpleResponseDto>> response = couponReadService.findAllCoupons(page,
 			size);
@@ -54,7 +58,8 @@ public class CouponController {
 	@Operation(summary = "쿠폰 상세 조회", description = "특정 쿠폰의 상세 정보를 조회함.")
 	@GetMapping("/{couponId}")
 	public ResponseEntity<ApiResponse<CouponDetailResponseDto>> findCoupon(
-		@PathVariable Long couponId, @AuthenticationPrincipal AuthUser authUser) {
+			@Parameter(description = "조회할 쿠폰의 ID", example = "5")
+			@PathVariable Long couponId, @AuthenticationPrincipal AuthUser authUser) {
 		ApiResponse<CouponDetailResponseDto> response = couponReadService.findCoupon(couponId,
 			authUser);
 		return ResponseEntity.ok(response);
@@ -63,15 +68,19 @@ public class CouponController {
 	@Operation(summary = "쿠폰 수정", description = "관리자가 특정 쿠폰 정보를 수정함.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{couponId}")
-	public ResponseEntity<ApiResponse<CouponResponseDto>> updateCoupon(@PathVariable Long couponId,
-		@Valid @RequestBody CouponUpdateRequestDto requestDto) {
+	public ResponseEntity<ApiResponse<CouponResponseDto>> updateCoupon(
+			@Parameter(description = "수정할 쿠폰의 ID", example = "5")
+			@PathVariable Long couponId,
+			@Valid @RequestBody CouponUpdateRequestDto requestDto) {
 		return ResponseEntity.ok(couponService.updateCoupon(couponId, requestDto));
 	}
 
 	@Operation(summary = "쿠폰 삭제", description = "관리자가 특정 쿠폰을 삭제함.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{couponId}")
-	public ResponseEntity<Void> deleteCoupon(@PathVariable Long couponId) {
+	public ResponseEntity<Void> deleteCoupon(
+			@Parameter(description = "삭제할 쿠폰의 ID", example = "5")
+			@PathVariable Long couponId) {
 		couponService.deleteCoupon(couponId);
 		return ResponseEntity.noContent().build();
 	}
