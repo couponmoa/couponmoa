@@ -2,6 +2,10 @@ package com.couponmoa.backend.domain.user.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
+import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
+import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
+import com.couponmoa.backend.domain.subscribe.userstore.entity.UserStoreSubscribe;
+import com.couponmoa.backend.domain.subscribe.userstore.repository.UserStoreSubscribeRepository;
 import com.couponmoa.backend.domain.user.dto.request.UserDeleteRequest;
 import com.couponmoa.backend.domain.user.dto.request.UserUpdatePasswordRequest;
 import com.couponmoa.backend.domain.user.dto.request.UserUpdateRequest;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +26,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserCouponSubscribeRepository userCouponSubRepo;
+    private final UserStoreSubscribeRepository userStoreSubRepo;
 
     @Transactional(readOnly = true)
     public UserResponse findUser(Long userId) {
@@ -57,6 +64,18 @@ public class UserService {
         User user = getUserById(userId);
         checkPasswordMatches(userDeleteRequest.getPassword(), user);
         user.setDeletedAt(LocalDateTime.now());
+
+        userCouponSubRepo.findByUser(user)
+                .stream()
+                .map(UserCouponSubscribe::getId)
+                .toList()
+                .forEach(userCouponSubRepo::deleteById);
+
+        userStoreSubRepo.findByUser(user)
+                .stream()
+                .map(UserStoreSubscribe::getId)
+                .toList()
+                .forEach(userStoreSubRepo::deleteById);
     }
 
     private User getUserById(Long userId) {

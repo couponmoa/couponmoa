@@ -16,6 +16,8 @@ public interface UserStoreSubscribeRepository extends BaseRepository<UserStoreSu
 
     List<UserStoreSubscribe> findByStore_Id(Long storeId);
 
+    List<UserStoreSubscribe> findByUser(User user);
+
     @EntityGraph(attributePaths = {"user"})
     Page<UserStoreSubscribe> findByUser(User user, Pageable pageable);
 
