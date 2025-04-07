@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.subscribe.userstore.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
 import com.couponmoa.backend.domain.subscribe.userstore.dto.response.FindStoreSubscribeListResponse;
 import com.couponmoa.backend.domain.subscribe.userstore.entity.UserStoreSubscribe;
 import com.couponmoa.backend.domain.subscribe.userstore.repository.UserStoreSubscribeRepository;
@@ -16,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.couponmoa.backend.common.exception.ErrorCode.*;
@@ -27,6 +29,7 @@ public class UserStoreSubscribeService {
     private final UserRepository userRepo;
     private final StoreRepository storeRepo;
     private final UserStoreSubscribeRepository userStoreSubRepo;
+    private final UserCouponSubscribeRepository userCouponSubRepo;
     private final JavaMailSender mailSender;
 
     @Transactional
@@ -40,7 +43,7 @@ public class UserStoreSubscribeService {
         }
 
         UserStoreSubscribe userCouponSubscribe = new UserStoreSubscribe(user, store);
-        userStoreSubRepo.save(userCouponSubscribe).getId();
+        userStoreSubRepo.save(userCouponSubscribe);
     }
 
     @Transactional
@@ -77,13 +80,17 @@ public class UserStoreSubscribeService {
                 .map(User::getEmail)
                 .toList();
 
+        if (emailList.isEmpty()) {
+            return emailList;
+        }
+
         String[] emailArray = userList.stream()
                 .map(User::getEmail)
                 .toList().toArray(new String[0]);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailArray);
-        message.setSubject("가게 새 쿠폰이 발행 안내");
+        message.setSubject("가게 새 쿠폰 발행 안내");
         message.setText(store.getName() + "에서 새 쿠폰이 발행되었습니다!");
         mailSender.send(message);
 

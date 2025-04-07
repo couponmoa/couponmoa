@@ -39,7 +39,7 @@ public class UserCouponSubscribeService {
         }
 
         UserCouponSubscribe userCouponSubscribe = new UserCouponSubscribe(user, coupon);
-        userCouponSubRepo.save(userCouponSubscribe).getId();
+        userCouponSubRepo.save(userCouponSubscribe);
     }
 
     @Transactional
@@ -74,6 +74,10 @@ public class UserCouponSubscribeService {
         List<String> emailList = userList.stream()
                 .map(User::getEmail)
                 .toList();
+
+        if (emailList.isEmpty()) {
+            return emailList;
+        }
 
         String[] emailArray = userList.stream()
                 .map(User::getEmail)
