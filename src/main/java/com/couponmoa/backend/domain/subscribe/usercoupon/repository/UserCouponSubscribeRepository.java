@@ -16,6 +16,8 @@ public interface UserCouponSubscribeRepository extends BaseRepository<UserCoupon
 
     Page<UserCouponSubscribe> findByUser(User user, Pageable pageable);
 
+    List<UserCouponSubscribe> findByUser(User user);
+
     boolean existsByUserAndCoupon(User user, Coupon coupon);
 
     @EntityGraph(attributePaths = {"user"})

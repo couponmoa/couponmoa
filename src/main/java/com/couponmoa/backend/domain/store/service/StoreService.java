@@ -9,8 +9,10 @@ import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
+import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,21 @@ public class StoreService {
 
     @Transactional
     public StoreResponse createStore(StoreRequest request, AuthUser authUser) {
+
+        if (authUser == null) {
+            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 되어 있지 않습니다");
+        }
+        boolean isAdmin = false;
+        for (GrantedAuthority authority : authUser.getAuthorities()) {
+            if (authority.getAuthority().equals(UserRole.ROLE_ADMIN.name())) {
+                isAdmin = true;
+                break;
+            }
+        }
+        if (!isAdmin) {
+            throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY, "관리자만 가게를 생성할 수 있습니다");
+        }
+
         User user = userRepository.findByIdOrElseThrow(authUser.getId(), ErrorCode.USER_NOT_FOUND);
         Store store = new Store(
                 user,
@@ -44,6 +61,9 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public List<StoreResponse> getMyStore(Long userId) {
+        if (userId == null) {
+            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
+        }
         List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(userId);
         List<StoreResponse> responses = new ArrayList<>();
         for (Store store : stores) {
@@ -59,6 +79,9 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public List<SimpleStoreResponse> getMySimpleStores(Long userId) {
+        if (userId == null) {
+            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
+        }
         List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(userId);
         List<SimpleStoreResponse> responses = new ArrayList<>();
         for (Store store : stores) {
