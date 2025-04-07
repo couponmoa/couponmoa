@@ -113,15 +113,11 @@ public class CouponService {
             throw new ApplicationException(ErrorCode.INVALID_DISCOUNT_SETTING);
         }
 
-        // 날짜 변경 감지, 변경된 부분이 있다면 Status 변경
-        if (!resolvedDates.startDate().isEqual(coupon.getStartDate()) ||
-                !resolvedDates.endDate().isEqual(coupon.getEndDate())) {
+        // 쿠폰 상태 업데이트 (날짜, 발급수량에 따라)
+        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate, coupon.getAvailableQuantity());
+        coupon.updateStatus(newStatus);
 
-            CouponStatus newStatus = editStatus(resolvedDates.startDate(), resolvedDates.endDate(), coupon.getAvailableQuantity());
-            coupon.updateStatus(newStatus);
-        }
-
-        // 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
+        // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
 
         return ApiResponse.success(new CouponResponseDto(coupon.getId()));
