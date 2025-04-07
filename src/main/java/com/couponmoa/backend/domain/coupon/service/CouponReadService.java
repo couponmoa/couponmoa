@@ -41,7 +41,6 @@ public class CouponReadService {
     }
 
     public ApiResponse<CouponDetailResponseDto> findCoupon(Long couponId, AuthUser authUser) {
-
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
 
