@@ -71,13 +71,13 @@ public class UserCouponSubscribeService {
                 .map(UserCouponSubscribe::getUser)
                 .toList();
 
-        if (userList.isEmpty()) {
-            return null;
-        }
-
         List<String> emailList = userList.stream()
                 .map(User::getEmail)
                 .toList();
+
+        if (emailList.isEmpty()) {
+            return emailList;
+        }
 
         String[] emailArray = userList.stream()
                 .map(User::getEmail)
