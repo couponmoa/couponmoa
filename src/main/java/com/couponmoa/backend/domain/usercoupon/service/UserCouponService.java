@@ -43,11 +43,6 @@ public class UserCouponService {
 
         coupon.availableQuantityDown();
 
-        // 발급 가능 수량이 다 소진되면 쿠폰의 상태를 ENDED로 전환.
-        if (coupon.getAvailableQuantity() == 0) {
-            coupon.updateStatus(CouponStatus.ENDED);
-        }
-
         couponRepository.flush();
 
         User user = userRepository.getReferenceById(userId);
@@ -83,20 +78,13 @@ public class UserCouponService {
     }
 
     private void validateCouponIssuable(Coupon coupon) {
-        validateCouponActivePeriod(coupon.getStartDate(), coupon.getEndDate());
-        validateCouponAvailableQuantity(coupon.getAvailableQuantity());
-    }
-
-    private void validateCouponActivePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        LocalDateTime now = LocalDateTime.now();
-        if (startDate.isAfter(now) || endDate.isBefore(now)) {
+        CouponStatus currentStatus = CouponStatus.editStatus(
+                coupon.getStartDate(),
+                coupon.getEndDate(),
+                coupon.getAvailableQuantity()
+        );
+        if (currentStatus != CouponStatus.IN_PROGRESS) {
             throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
-        }
-    }
-
-    private void validateCouponAvailableQuantity(Integer availableQuantity) {
-        if (availableQuantity <= 0) {
-            throw new ApplicationException(ErrorCode.COUPON_SOLE_OUT);
         }
     }
 
