@@ -105,8 +105,7 @@ class UserCouponServiceTest {
         void 쿠폰_발급_수량_없음_실패() {
             ErrorCode errorCode = ErrorCode.COUPON_SOLE_OUT;
             Coupon coupon = mock();
-            given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
-            given(coupon.getAvailableQuantity()).willReturn(0);
+            given(coupon.getStatus()).willReturn(CouponStatus.SOLD_OUT);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
@@ -123,7 +122,6 @@ class UserCouponServiceTest {
             ErrorCode errorCode = ErrorCode.USER_COUPON_ALREADY_ISSUED;
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
-            given(coupon.getAvailableQuantity()).willReturn(100);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRepository.existsByUserIdAndCouponId(anyLong(), anyLong())).willReturn(true);
 
@@ -141,7 +139,6 @@ class UserCouponServiceTest {
             User user = mock();
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
-            given(coupon.getAvailableQuantity()).willReturn(100);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRepository.existsByUserIdAndCouponId(anyLong(), anyLong())).willReturn(false);
             given(userRepository.getReferenceById(anyLong())).willReturn(user);

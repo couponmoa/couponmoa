@@ -36,7 +36,7 @@ public class UserCouponService {
     public void createUserCoupon(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
 
-        validateCouponIssuable(coupon);
+        validateCouponIssuable(coupon.getStatus());
         validateCouponNotAlreadyIssued(userId, couponId);
 
         coupon.availableQuantityDown();
@@ -74,20 +74,13 @@ public class UserCouponService {
         return UseUserCouponResponse.from(userCoupon);
     }
 
-    private void validateCouponIssuable(Coupon coupon) {
-        validateCouponActivePeriod(coupon.getStatus());
-        validateCouponAvailableQuantity(coupon.getAvailableQuantity());
-    }
-
-    private void validateCouponActivePeriod(CouponStatus status) {
-        if (!status.equals(CouponStatus.IN_PROGRESS)) {
-            throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
-        }
-    }
-
-    private void validateCouponAvailableQuantity(Integer availableQuantity) {
-        if (availableQuantity <= 0) {
+    private void validateCouponIssuable(CouponStatus status) {
+        if (status == CouponStatus.SOLD_OUT) {
             throw new ApplicationException(ErrorCode.COUPON_SOLE_OUT);
+        }
+
+        if (status != CouponStatus.IN_PROGRESS) {
+            throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
         }
     }
 
