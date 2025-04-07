@@ -9,9 +9,9 @@ import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
@@ -22,8 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,12 +40,6 @@ public class UserCouponService {
         validateCouponNotAlreadyIssued(userId, couponId);
 
         coupon.availableQuantityDown();
-
-        // 발급 가능 수량이 다 소진되면 쿠폰의 상태를 ENDED로 전환.
-        if (coupon.getAvailableQuantity() == 0) {
-            coupon.updateStatus(CouponStatus.ENDED);
-        }
-
         couponRepository.flush();
 
         User user = userRepository.getReferenceById(userId);
@@ -83,13 +75,12 @@ public class UserCouponService {
     }
 
     private void validateCouponIssuable(Coupon coupon) {
-        validateCouponActivePeriod(coupon.getStartDate(), coupon.getEndDate());
+        validateCouponActivePeriod(coupon.getStatus());
         validateCouponAvailableQuantity(coupon.getAvailableQuantity());
     }
 
-    private void validateCouponActivePeriod(LocalDateTime startDate, LocalDateTime endDate) {
-        LocalDateTime now = LocalDateTime.now();
-        if (startDate.isAfter(now) || endDate.isBefore(now)) {
+    private void validateCouponActivePeriod(CouponStatus status) {
+        if (!status.equals(CouponStatus.IN_PROGRESS)) {
             throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
         }
     }
