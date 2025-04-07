@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public enum CouponStatus {
-    UPCOMING, IN_PROGRESS, SOLE_OUT, ENDED;
+    UPCOMING, IN_PROGRESS, SOLD_OUT, ENDED;
 
     public static CouponStatus editStatus(LocalDateTime startDate, LocalDateTime endDate, int availableQuantity) {
         if (availableQuantity == 0) {
-            return CouponStatus.SOLE_OUT;
+            return CouponStatus.SOLD_OUT;
         }
 
         LocalDateTime now = LocalDateTime.now();
