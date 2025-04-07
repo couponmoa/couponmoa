@@ -79,10 +79,6 @@ public class Coupon extends BaseEntity {
         this.totalQuantity = newTotalQuantity;
         this.availableQuantity = newAvailableQuantity;
         this.issuedQuantity = issuedCouponQuantity;
-
-        if (this.availableQuantity == 0) {
-            this.status = CouponStatus.ENDED;
-        }
     }
 
     public void update(String name, BigDecimal discountAmount, BigDecimal discountRate,
