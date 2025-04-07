@@ -30,19 +30,6 @@ public class StoreController {
     public ResponseEntity<ApiResponse<StoreResponse>> createStore(
             @RequestBody StoreRequest request,
             @AuthenticationPrincipal AuthUser authUser) {
-        if (authUser == null) {
-            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 되어 있지 않습니다");
-        }
-        boolean isAdmin = false;
-        for (GrantedAuthority authority : authUser.getAuthorities()) {
-            if (authority.getAuthority().equals(UserRole.ROLE_ADMIN.name())) {
-                isAdmin = true;
-                break;
-            }
-        }
-        if (!isAdmin) {
-            throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY, "관리자만 가게를 생성할 수 있습니다");
-        }
         StoreResponse response = storeService.createStore(request, authUser);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response, "가게가 성공적으로 등록되었습니다"));
@@ -52,9 +39,6 @@ public class StoreController {
     @GetMapping("/my")
     public ResponseEntity<ApiResponse<List<StoreResponse>>> getMyStore(
             @AuthenticationPrincipal AuthUser authUser) {
-        if (authUser == null) {
-            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
-        }
         List<StoreResponse> response = storeService.getMyStore(authUser.getId()); // category 제거
         return ResponseEntity.ok(ApiResponse.success(response, "가게 목록 조회 성공"));
     }
@@ -62,9 +46,6 @@ public class StoreController {
     @GetMapping("/my/simple")
     public ResponseEntity<ApiResponse<List<SimpleStoreResponse>>> getMySimpleStores(
             @AuthenticationPrincipal AuthUser authUser) {
-        if (authUser == null) {
-            throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
-        }
         List<SimpleStoreResponse> response = storeService.getMySimpleStores(authUser.getId());
         return ResponseEntity.ok(ApiResponse.success(response, "내 가게 간단 목록 조회 성공"));
     }
