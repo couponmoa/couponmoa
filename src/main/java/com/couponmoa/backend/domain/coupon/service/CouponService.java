@@ -122,7 +122,7 @@ public class CouponService {
             coupon.updateStatus(newStatus);
             // 상태가 IN_PROGRESS로 변경된 경우에만 알림 전송
             if (newStatus == CouponStatus.IN_PROGRESS) {
-//                구독알람발송클래스.알람발송메서드(coupon);
+
             }
         }
 
