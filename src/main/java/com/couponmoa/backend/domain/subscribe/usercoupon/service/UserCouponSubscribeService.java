@@ -39,7 +39,7 @@ public class UserCouponSubscribeService {
         }
 
         UserCouponSubscribe userCouponSubscribe = new UserCouponSubscribe(user, coupon);
-        userCouponSubRepo.save(userCouponSubscribe).getId();
+        userCouponSubRepo.save(userCouponSubscribe);
     }
 
     @Transactional

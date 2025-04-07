@@ -11,6 +11,8 @@ import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubscribeService;
+import com.couponmoa.backend.domain.subscribe.userstore.service.UserStoreSubscribeService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ public class CouponService {
 
     private final CouponRepository couponRepository;
     private final StoreRepository storeRepository;
+    private final UserCouponSubscribeService userCouponSubServ;
+    private final UserStoreSubscribeService userStoreSubServ;
 
     public ApiResponse<CouponResponseDto> createCoupon(CouponCreateRequestDto requestDto) {
 
@@ -61,7 +65,7 @@ public class CouponService {
         }
 
         // 날짜 검증
-        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(),true);
+        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(), true);
 
         Coupon newCoupon = Coupon.builder()
                 .name(requestDto.getName())
@@ -80,12 +84,15 @@ public class CouponService {
 
         Coupon savedCoupon = couponRepository.save(newCoupon);
 
+        sendEmail(savedCoupon);
+
         return ApiResponse.success(new CouponResponseDto(
                 savedCoupon.getId()));
     }
 
     // 일단 update시에 store는 변경할 수 없다고 가정.
-    public ApiResponse<CouponResponseDto> updateCoupon(Long couponId,CouponUpdateRequestDto requestDto) {
+
+    public ApiResponse<CouponResponseDto> updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
 
         // 아직 존재하는 쿠폰인지 검증
         Coupon coupon = couponRepository.findById(couponId)
@@ -98,7 +105,7 @@ public class CouponService {
         resolveDates(requestDto, coupon);
 
         // 날짜 검증
-        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(),false);
+        validateDates(requestDto.getStartDate(), requestDto.getEndDate(), requestDto.getExpiryDate(), false);
 
         // newTotalQuantity 검증 및 반영
         if (requestDto.getNewTotalQuantity() > 0) {
@@ -126,7 +133,6 @@ public class CouponService {
 
         return ApiResponse.success(new CouponResponseDto(coupon.getId()));
     }
-
     public void deleteCoupon(Long couponId) {
         // 존재하는 쿠폰인지 검증
         Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
@@ -201,5 +207,13 @@ public class CouponService {
         LocalDateTime startDate = requestDto.getStartDate() != null ? requestDto.getStartDate() : coupon.getStartDate();
         LocalDateTime endDate = requestDto.getEndDate() != null ? requestDto.getEndDate() : coupon.getEndDate();
         LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();
+    }
+
+    /**
+     * 새로 쿠폰이 발행 될 경우의 로직
+     * > 해당 가게를 구독한 사람에게 이메일로 알림이 전송된다
+     */
+    private void sendEmail(Coupon savedCoupon) {
+        userStoreSubServ.sendAlert(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
     }
 }

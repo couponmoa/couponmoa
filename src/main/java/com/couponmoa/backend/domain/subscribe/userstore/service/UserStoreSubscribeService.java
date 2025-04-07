@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.subscribe.userstore.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
 import com.couponmoa.backend.domain.subscribe.userstore.dto.response.FindStoreSubscribeListResponse;
 import com.couponmoa.backend.domain.subscribe.userstore.entity.UserStoreSubscribe;
 import com.couponmoa.backend.domain.subscribe.userstore.repository.UserStoreSubscribeRepository;
@@ -27,6 +28,7 @@ public class UserStoreSubscribeService {
     private final UserRepository userRepo;
     private final StoreRepository storeRepo;
     private final UserStoreSubscribeRepository userStoreSubRepo;
+    private final UserCouponSubscribeRepository userCouponSubRepo;
     private final JavaMailSender mailSender;
 
     @Transactional
