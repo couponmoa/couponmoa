@@ -52,7 +52,7 @@ public class Coupon extends BaseEntity {
 
         this.name = name;
         this.totalQuantity = totalQuantity;
-        this.availableQuantity = totalQuantity; // totalQuantity와 같은 값으로 자동 초기화
+        this.availableQuantity = totalQuantity;
         this.issuedQuantity = 0;
         this.discountAmount = discountAmount;
         this.discountRate = discountRate;
