@@ -112,7 +112,7 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
 # 쿠폰 수량 개념 정리 
 - totalQuantity : 생생된 쿠폰의 총 개수. (create,update시 변경가능)
 - availableQuantity : 현재 발급 가능한 쿠폰의 잔여 개수.
-- issuedCouponQuantity : (주의 : coupon entity의 필드 변수가 아님 )totalQuantity-availableQuantity, 즉 사용자에게 발급된 쿠폰의 총 개수.
+- issuedCouponQuantity : totalQuantity-availableQuantity, 즉 사용자에게 발급된 쿠폰의 총 개수.
 
 - 쿠폰 생성 시 : totalQuantity의 경우 요청 값으로 생성, availableQuantity는 tQ의 값으로 생성(초기 생성시 총 개수만큼 발급이 가능)
 - 쿠폰 사용 시 : 사용자가 쿠폰을 발급받으면 useCoupon() 메서드를 통해 availableQuantity 감소 (동시성 제어 예정)
@@ -120,3 +120,9 @@ public ResponseEntity<ApiResponse<AccessTokenResponse>> signin(@Valid @RequestBo
   availableQuantity는 new TotalQuantity - issuedQuantity로 자동 설정됨.
   newTotalQuantity는 이미 발급된 쿠폰 개수(issuedCouponQuantity) 보다 작을 수 없음.
   단, availableQuantity가 아직 남아있을때, 이전의 totalQuantity보다 작은 값을 넣어, availableQuantity를 줄이는 방식으로는 동작가능.
+
+  # 쿠폰 Status 변경되는 시점 정리
+  - 1. 생성될 시, 날짜 검증(제약) 조건으로 UPCOMING으로만 생성됨
+    2. update 시, date 값들의 변경에따라 Status값이 변경될 수 있음.
+    3. 조회한 값을 반환할 때, dto 단에서 Status값이 변경되어 반환 됨
+    4. availableQuantity가 0이 되었을때 ( 모두 발급되어, 소진되었을 떄) ENDED로 변경됨. 
