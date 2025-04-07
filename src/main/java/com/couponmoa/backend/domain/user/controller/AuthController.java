@@ -5,12 +5,15 @@ import com.couponmoa.backend.domain.user.dto.request.SigninRequest;
 import com.couponmoa.backend.domain.user.dto.request.SignupRequest;
 import com.couponmoa.backend.domain.user.dto.response.TokenResponse;
 import com.couponmoa.backend.domain.user.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "회원가입 로그인 API", description = "회원가입 및 로그인 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -18,18 +21,21 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "회원가입", description = "ROLE_USER, ROLE_ADMIN으로 회원가입")
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupRequest signupRequest) {
         authService.signup(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("회원가입 완료"));
     }
 
+    @Operation(summary = "로그인")
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<TokenResponse>> signup(@Valid @RequestBody SigninRequest signinRequest) {
         TokenResponse response = authService.signin(signinRequest);
         return ResponseEntity.ok(ApiResponse.success(response, "로그인 완료"));
     }
 
+    @Operation(summary = "토큰 재발급", description = "토큰 만료시 refresh token을 통해 access token을 재발급함")
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<TokenResponse>> refreshToken(@RequestHeader("Authorization") String refreshToken) {
         TokenResponse response = authService.refreshToken(refreshToken);
