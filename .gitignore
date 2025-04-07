@@ -36,7 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 *-local.properties
-*.yml
-!docker-compose.yml
-!ci-cd.yml
+*-local.yml
 .env
