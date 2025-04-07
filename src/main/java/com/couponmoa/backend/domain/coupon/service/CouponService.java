@@ -121,8 +121,17 @@ public class CouponService {
         }
 
         // 쿠폰 상태 업데이트 (날짜, 발급수량에 따라)
+        CouponStatus oldStatus = coupon.getStatus();
         CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate, coupon.getAvailableQuantity());
-        coupon.updateStatus(newStatus);
+
+        // 상태가 실제로 변경되었을때만 updateStatus
+        if (oldStatus != newStatus) {
+            coupon.updateStatus(newStatus);
+            // 상태가 IN_PROGRESS로 변경된 경우에만 알림 전송
+            if (newStatus == CouponStatus.IN_PROGRESS) {
+                //구독알람발송클래스.알람발송메서드(coupon);
+            }
+        }
 
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
