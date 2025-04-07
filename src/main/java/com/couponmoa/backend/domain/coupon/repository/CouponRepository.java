@@ -18,12 +18,14 @@ public interface CouponRepository extends BaseRepository<Coupon,Long> {
         return BaseRepository.super.findByIdOrElseThrow(aLong, errorCode);
     }
 
-    // 모든 CouponCategory의 쿠폰 조회
-    @Query("SELECT c FROM Coupon c ORDER BY c.issuedQuantity DESC, c.name ASC")
+    // 모든 CouponCategory의 쿠폰 조회 (deletedAt 제외)
+    @Query("SELECT c FROM Coupon c WHERE c.deletedAt IS NULL " +
+            "ORDER BY c.issuedQuantity DESC, c.name ASC")
     Page<Coupon> findAllSortedByIQ(Pageable pageable);
 
-    // CouponCategory에 따라 목록 조회
-    @Query("SELECT c FROM Coupon c WHERE c.status = :category ORDER BY c.issuedQuantity DESC, c.name ASC")
+    // CouponCategory에 따라 목록 조회 (deletedAt 제외)
+    @Query("SELECT c FROM Coupon c WHERE c.status = :category AND c.deletedAt IS NULL " +
+            "ORDER BY c.issuedQuantity DESC, c.name ASC")
     Page<Coupon> findAllByStatusSortedByIQ(@Param("status") CouponStatus status, Pageable pageable);
 
     Optional<Coupon> findByIdAndDeletedAtIsNull(Long id);
