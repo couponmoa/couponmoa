@@ -29,14 +29,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    //actuator
+    // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    //lombok
+    // prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -63,6 +67,10 @@ dependencies {
 
     //SMTP(send mail)
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //test lombok 사용
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
