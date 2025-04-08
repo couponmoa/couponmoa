@@ -66,6 +66,9 @@ dependencies {
 
     // jobrunr
     implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:7.4.1'
+
+    //h2 test db
+    testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
