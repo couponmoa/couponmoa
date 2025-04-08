@@ -37,7 +37,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build Spring Boot App
+      - name: Build Spring Boot App (not build test)
         run: |
           chmod +x ./gradlew
           ./gradlew clean build -x test
@@ -56,3 +56,6 @@ jobs:
           docker-compose up -d --build
           docker ps
           docker logs spring-app || true
+
+      - name: Run Tests
+        run: ./gradlew test
