@@ -23,6 +23,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
@@ -62,7 +64,7 @@ public class UserControllerTest {
         User user = new User(email, "password", "name", UserRole.ROLE_USER);
         ReflectionTestUtils.setField(user, "id", userId);
         UserResponse mockResponse = UserResponse.fromEntity(user);
-        given(userService.findUser(userId)).willReturn(mockResponse);
+        given(userService.findUser(anyLong())).willReturn(mockResponse);
 
         //when&then
         mockMvc.perform(get("/api/v1/users")
@@ -77,7 +79,7 @@ public class UserControllerTest {
         //given
         long userId = 1L;
         UserUpdateRequest userUpdateRequest = new UserUpdateRequest("change@email.com", "changename");
-        willDoNothing().given(userService).updateUser(userId, userUpdateRequest);
+        willDoNothing().given(userService).updateUser(anyLong(), any(UserUpdateRequest.class));
 
         //when&then
         mockMvc.perform(patch("/api/v1/users")
@@ -93,7 +95,7 @@ public class UserControllerTest {
         long userId = 1L;
         UserUpdatePasswordRequest request = new UserUpdatePasswordRequest(
                 "Password1234!", "Password12345!");
-        willDoNothing().given(userService).updateUserPassword(userId, request);
+        willDoNothing().given(userService).updateUserPassword(anyLong(), any(UserUpdatePasswordRequest.class));
 
         //when&then
         mockMvc.perform(put("/api/v1/users/password")
@@ -108,7 +110,7 @@ public class UserControllerTest {
         //given
         long userId = 1L;
         UserDeleteRequest request = new UserDeleteRequest("Password1234!");
-        willDoNothing().given(userService).deleteUser(userId, request);
+        willDoNothing().given(userService).deleteUser(anyLong(), any(UserDeleteRequest.class));
 
         //when&then
         mockMvc.perform(delete("/api/v1/users")
