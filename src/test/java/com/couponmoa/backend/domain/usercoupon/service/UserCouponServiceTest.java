@@ -35,7 +35,6 @@ import static org.mockito.Mockito.*;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 class UserCouponServiceTest {
 
     @Mock

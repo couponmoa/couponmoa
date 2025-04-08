@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
-@ActiveProfiles("test") // 테스트에서는 test 설정을 타도록
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
