@@ -9,9 +9,9 @@ import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
@@ -22,8 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,11 +36,10 @@ public class UserCouponService {
     public void createUserCoupon(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
 
-        validateCouponIssuable(coupon);
+        validateCouponIssuable(coupon.getStatus());
         validateCouponNotAlreadyIssued(userId, couponId);
 
         coupon.availableQuantityDown();
-
         couponRepository.flush();
 
         User user = userRepository.getReferenceById(userId);
@@ -77,13 +74,12 @@ public class UserCouponService {
         return UseUserCouponResponse.from(userCoupon);
     }
 
-    private void validateCouponIssuable(Coupon coupon) {
-        CouponStatus currentStatus = CouponStatus.editStatus(
-                coupon.getStartDate(),
-                coupon.getEndDate(),
-                coupon.getAvailableQuantity()
-        );
-        if (currentStatus != CouponStatus.IN_PROGRESS) {
+    private void validateCouponIssuable(CouponStatus status) {
+        if (status == CouponStatus.SOLD_OUT) {
+            throw new ApplicationException(ErrorCode.COUPON_SOLE_OUT);
+        }
+
+        if (status != CouponStatus.IN_PROGRESS) {
             throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
         }
     }
