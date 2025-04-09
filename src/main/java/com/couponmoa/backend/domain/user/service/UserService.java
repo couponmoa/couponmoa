@@ -65,17 +65,17 @@ public class UserService {
         checkPasswordMatches(userDeleteRequest.getPassword(), user);
         user.setDeletedAt(LocalDateTime.now());
 
-        userCouponSubRepo.findByUser(user)
-                .stream()
-                .map(UserCouponSubscribe::getId)
-                .toList()
-                .forEach(userCouponSubRepo::deleteById);
-
-        userStoreSubRepo.findByUser(user)
-                .stream()
-                .map(UserStoreSubscribe::getId)
-                .toList()
-                .forEach(userStoreSubRepo::deleteById);
+//        userCouponSubRepo.findByUser(user)
+//                .stream()
+//                .map(UserCouponSubscribe::getId)
+//                .toList()
+//                .forEach(userCouponSubRepo::deleteById);
+//
+//        userStoreSubRepo.findByUser(user)
+//                .stream()
+//                .map(UserStoreSubscribe::getId)
+//                .toList()
+//                .forEach(userStoreSubRepo::deleteById);
     }
 
     private User getUserById(Long userId) {
