@@ -10,7 +10,6 @@ import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
-import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubscribeService;
 import com.couponmoa.backend.domain.subscribe.userstore.service.UserStoreSubscribeService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
@@ -132,7 +131,7 @@ class CouponServiceTest {
                 .startDate(LocalDateTime.now().plusDays(1))
                 .endDate(LocalDateTime.now().plusDays(10))
                 .expiryDate(LocalDateTime.now().plusDays(30))
-                .store(store) // 꼭 넣어줘야 함!
+                .store(store)
                 .status(CouponStatus.UPCOMING)
                 .build();
 
