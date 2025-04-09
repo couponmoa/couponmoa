@@ -2,6 +2,15 @@ package com.couponmoa.backend.notification.repository;
 
 import com.couponmoa.backend.common.repository.BaseRepository;
 import com.couponmoa.backend.notification.entity.Notification;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface NotificationRepository extends BaseRepository<Notification, Long> {
+
+    @Query("SELECT n FROM Notification n WHERE n.isNotified = false AND n.userCoupon.coupon.expiryDate BETWEEN :start AND :end")
+    List<Notification> findNotificationsExpireTomorrow(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
 }
