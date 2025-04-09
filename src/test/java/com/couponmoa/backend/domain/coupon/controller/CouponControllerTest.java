@@ -9,7 +9,6 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
-import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.service.CouponReadService;
 import com.couponmoa.backend.domain.coupon.service.CouponService;
 import com.fasterxml.jackson.databind.ObjectMapper;
