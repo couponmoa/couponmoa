@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,4 +43,31 @@ public class CouponCreateRequestDto {
 
     @NotNull
     private Long storeId;
+
+    @Builder
+    public CouponCreateRequestDto(
+            String name,
+            int totalQuantity,
+            BigDecimal discountAmount,
+            BigDecimal discountRate,
+            BigDecimal minOrderAmount,
+            BigDecimal maxDiscountAmount,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            LocalDateTime expiryDate,
+            Long storeId
+    ) {
+        this.name = name;
+        this.totalQuantity = totalQuantity;
+        this.discountAmount = discountAmount != null ? discountAmount : BigDecimal.ZERO;
+        this.discountRate = discountRate != null ? discountRate : BigDecimal.ZERO;
+        this.minOrderAmount = minOrderAmount;
+        this.maxDiscountAmount = maxDiscountAmount != null ? maxDiscountAmount : BigDecimal.valueOf(9_999_999);
+        this.description = description;
+        this.startDate = startDate != null ? startDate : LocalDateTime.now().plusHours(1);
+        this.endDate = endDate != null ? endDate : LocalDateTime.now().plusHours(2);
+        this.expiryDate = expiryDate != null ? expiryDate : LocalDateTime.now().plusMonths(1);
+        this.storeId = storeId;
+    }
 }

@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.usercoupon.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
@@ -11,18 +12,18 @@ import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
-import com.couponmoa.backend.domain.usercoupon.repository.projection.UserCouponProjection;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
+import com.couponmoa.backend.domain.usercoupon.repository.projection.UserCouponProjection;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,8 +74,7 @@ class UserCouponServiceTest {
         void 쿠폰_발급_기간_전_요청_실패() {
             ErrorCode errorCode = ErrorCode.COUPON_NOT_ACTIVE;
             Coupon coupon = mock();
-            given(coupon.getStartDate()).willReturn(LocalDateTime.now().plusDays(1));
-            given(coupon.getEndDate()).willReturn(LocalDateTime.now().plusDays(2));
+            given(coupon.getStatus()).willReturn(CouponStatus.UPCOMING);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
@@ -90,8 +90,7 @@ class UserCouponServiceTest {
         void 쿠폰_발급_기간_후_요청_실패() {
             ErrorCode errorCode = ErrorCode.COUPON_NOT_ACTIVE;
             Coupon coupon = mock();
-            given(coupon.getStartDate()).willReturn(LocalDateTime.now().minusDays(2));
-            given(coupon.getEndDate()).willReturn(LocalDateTime.now().minusDays(1));
+            given(coupon.getStatus()).willReturn(CouponStatus.ENDED);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
@@ -107,9 +106,7 @@ class UserCouponServiceTest {
         void 쿠폰_발급_수량_없음_실패() {
             ErrorCode errorCode = ErrorCode.COUPON_SOLE_OUT;
             Coupon coupon = mock();
-            given(coupon.getStartDate()).willReturn(LocalDateTime.now().minusDays(1));
-            given(coupon.getEndDate()).willReturn(LocalDateTime.now().plusDays(1));
-            given(coupon.getAvailableQuantity()).willReturn(0);
+            given(coupon.getStatus()).willReturn(CouponStatus.SOLD_OUT);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
@@ -125,9 +122,7 @@ class UserCouponServiceTest {
         void 쿠폰_발급_중복_요청_실패() {
             ErrorCode errorCode = ErrorCode.USER_COUPON_ALREADY_ISSUED;
             Coupon coupon = mock();
-            given(coupon.getStartDate()).willReturn(LocalDateTime.now().minusDays(1));
-            given(coupon.getEndDate()).willReturn(LocalDateTime.now().plusDays(1));
-            given(coupon.getAvailableQuantity()).willReturn(100);
+            given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRepository.existsByUserIdAndCouponId(anyLong(), anyLong())).willReturn(true);
 
@@ -144,9 +139,7 @@ class UserCouponServiceTest {
         void 쿠폰_발급_성공() {
             User user = mock();
             Coupon coupon = mock();
-            given(coupon.getStartDate()).willReturn(LocalDateTime.now().minusDays(1));
-            given(coupon.getEndDate()).willReturn(LocalDateTime.now().plusDays(1));
-            given(coupon.getAvailableQuantity()).willReturn(100);
+            given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRepository.existsByUserIdAndCouponId(anyLong(), anyLong())).willReturn(false);
             given(userRepository.getReferenceById(anyLong())).willReturn(user);
