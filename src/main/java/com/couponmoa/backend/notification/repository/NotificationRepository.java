@@ -10,7 +10,15 @@ import java.util.List;
 
 public interface NotificationRepository extends BaseRepository<Notification, Long> {
 
-    @Query("SELECT n FROM Notification n WHERE n.isNotified = false AND n.userCoupon.coupon.expiryDate BETWEEN :start AND :end")
+    @Query("""
+            SELECT n FROM Notification n
+            JOIN FETCH n.userCoupon uc
+            JOIN FETCH uc.user
+            JOIN FETCH uc.coupon
+            WHERE n.isNotified = false
+            AND uc.status = 'UNUSED'
+            AND n.userCoupon.coupon.expiryDate BETWEEN :start AND :end
+            """)
     List<Notification> findNotificationsExpireTomorrow(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
 }
