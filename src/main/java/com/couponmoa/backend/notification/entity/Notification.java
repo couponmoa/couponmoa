@@ -21,8 +21,6 @@ public class Notification extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String contents;
-
     @NotNull
     private boolean isNotified;
 
@@ -34,10 +32,13 @@ public class Notification extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
-    public Notification(String contents, boolean isNotified, UserCoupon userCoupon, NotificationType type) {
-        this.contents = contents;
+    public Notification(boolean isNotified, UserCoupon userCoupon, NotificationType type) {
         this.isNotified = isNotified;
         this.userCoupon = userCoupon;
         this.type = type;
+    }
+
+    public void setIsNotified() {
+        isNotified = true;
     }
 }
