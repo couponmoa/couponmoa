@@ -60,7 +60,7 @@ class CouponServiceTest {
         );
 
         // User mock 객체 생성
-        User mockUser = new User("admin@example.com", "password", "nickname", UserRole.ROLE_USER);
+        User mockUser = new User("admin@example.com", "테스트_비밀번호", "테스트_닉네임", UserRole.ROLE_USER);
 
         // Store mock 객체 생성 및 설정
         Store mockStore = mock(Store.class);
@@ -96,13 +96,13 @@ class CouponServiceTest {
                 "테스트용_할인_쿠폰", 100,
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(10),
                 BigDecimal.valueOf(0), BigDecimal.valueOf(2000),
-                "할인로직_예외_발생해야한다", LocalDateTime.now().plusDays(1),
+                "할인로직_관련_예외_발생해야한다", LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(5),
                 LocalDateTime.now().plusDays(10),
                 1L
         );
 
-        User mockUser = new User("admin@example.com", "password", "nickname", UserRole.ROLE_USER);
+        User mockUser = new User("admin@example.com", "테스트_비밀번호", "테스트_닉네임", UserRole.ROLE_USER);
         Store mockStore = mock(Store.class);
         when(mockStore.getUser()).thenReturn(mockUser);
 
@@ -117,11 +117,11 @@ class CouponServiceTest {
     @Test
     void 쿠폰_삭제_성공() {
         // given
-        User user = new User("admin@example.com", "password", "닉네임",UserRole.ROLE_USER); // User 생성자 필요
-        Store store = new Store(user, "가게이름", "설명", "주소");         // Store 생성자 사용
+        User user = new User("admin@example.com", "테스트_비밀번호", "테스트_닉네임",UserRole.ROLE_USER);
+        Store store = new Store(user, "테스트_가게", "테스트_가게_설명", "서울시_어쩌구");
 
         Coupon coupon = Coupon.builder()
-                .name("테스트 쿠폰")
+                .name("테스트_쿠폰")
                 .totalQuantity(100)
                 .discountAmount(BigDecimal.valueOf(1000))
                 .discountRate(BigDecimal.ZERO)
@@ -137,7 +137,6 @@ class CouponServiceTest {
 
         when(couponRepository.findByIdOrElseThrow(1L, ErrorCode.COUPON_NOT_FOUND)).thenReturn(coupon);
 
-        // mock 인증 유저 (SecurityContext)
         AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getUserRole());
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(authUser, null, new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authToken);
