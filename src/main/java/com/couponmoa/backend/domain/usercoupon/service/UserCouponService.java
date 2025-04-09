@@ -15,6 +15,7 @@ import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
+import com.couponmoa.backend.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,7 @@ public class UserCouponService {
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public void createUserCoupon(Long userId, Long couponId) {
@@ -45,6 +47,9 @@ public class UserCouponService {
         User user = userRepository.getReferenceById(userId);
         UserCoupon userCoupon = new UserCoupon(user, coupon);
         userCouponRepository.save(userCoupon);
+
+        // 쿠폰 만료 알림 생성
+        notificationService.createCouponExpireNotification(userCoupon);
     }
 
     public Page<UserCouponResponse> findUserCoupons(Long userId, UserCouponStatus status, Integer page, Integer size) {
