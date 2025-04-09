@@ -10,7 +10,6 @@ import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -22,7 +21,7 @@ public class UserCouponLockService {
     private static final String LOCK_KEY_PREFIX = "coupon-issue-lock";
 
     @NamedLock(LOCK_KEY_PREFIX)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void updateCouponWithLock(Long userId, @LockKey Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
 
