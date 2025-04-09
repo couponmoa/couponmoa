@@ -4,11 +4,12 @@ import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
 import com.couponmoa.backend.domain.subscribe.userstore.repository.UserStoreSubscribeRepository;
-import com.couponmoa.backend.domain.user.dto.request.*;
+import com.couponmoa.backend.domain.user.dto.request.UserDeleteRequest;
+import com.couponmoa.backend.domain.user.dto.request.UserUpdatePasswordRequest;
+import com.couponmoa.backend.domain.user.dto.request.UserUpdateRequest;
 import com.couponmoa.backend.domain.user.dto.response.UserResponse;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
-import jakarta.persistence.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.couponmoa.backend.domain.user.enums.UserRole.ROLE_USER;
@@ -71,8 +71,8 @@ public class UserServiceTest {
 
             UserResponse userResponse = userService.findUser(userId);
 
-            assertEquals(user.getEmail(),userResponse.getEmail());
-            assertEquals(user.getNickname(),userResponse.getNickname());
+            assertEquals(user.getEmail(), userResponse.getEmail());
+            assertEquals(user.getNickname(), userResponse.getNickname());
         }
     }
 
@@ -81,7 +81,7 @@ public class UserServiceTest {
         @Test
         void 변경하려는_이메일이_이미_존재할_시_예외() {
             Long userId = 1L;
-            UserUpdateRequest request = new UserUpdateRequest("change@email.com","changeName");
+            UserUpdateRequest request = new UserUpdateRequest("change@email.com", "changeName");
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
             given(userRepository.existsByEmail(anyString())).willReturn(true);
 
@@ -93,14 +93,14 @@ public class UserServiceTest {
         void 사용자_정보_수정_성공() {
             Long userId = 1L;
             ReflectionTestUtils.setField(user, "id", userId);
-            UserUpdateRequest request = new UserUpdateRequest("change@email.com","changeName");
+            UserUpdateRequest request = new UserUpdateRequest("change@email.com", "changeName");
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
             given(userRepository.existsByEmail(anyString())).willReturn(false);
 
-            userService.updateUser(userId,request);
+            userService.updateUser(userId, request);
 
-            assertEquals(user.getEmail(),request.getEmail());
-            assertEquals(user.getNickname(),request.getNickname());
+            assertEquals(user.getEmail(), request.getEmail());
+            assertEquals(user.getNickname(), request.getNickname());
         }
     }
 
@@ -109,10 +109,10 @@ public class UserServiceTest {
         @Test
         void 변경하려는_비밀번호가_이전과_동일할_시_예외() {
             Long userId = 1L;
-            UserUpdatePasswordRequest request = new UserUpdatePasswordRequest("oldPassword","newPassword");
+            UserUpdatePasswordRequest request = new UserUpdatePasswordRequest("oldPassword", "newPassword");
 
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
-            given(passwordEncoder.matches(anyString(),anyString())).willReturn(true);
+            given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
             ApplicationException exception = assertThrows(ApplicationException.class,
                     () -> userService.updateUserPassword(userId, request));
@@ -122,10 +122,10 @@ public class UserServiceTest {
         @Test
         void 기존_비밀번호_불일치_시_예외() {
             Long userId = 1L;
-            UserUpdatePasswordRequest request = new UserUpdatePasswordRequest("oldPassword","newPassword");
+            UserUpdatePasswordRequest request = new UserUpdatePasswordRequest("oldPassword", "newPassword");
 
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
-            given(passwordEncoder.matches(anyString(),anyString())).willReturn(false,false);
+            given(passwordEncoder.matches(anyString(), anyString())).willReturn(false, false);
 
             ApplicationException exception = assertThrows(ApplicationException.class,
                     () -> userService.updateUserPassword(userId, request));
@@ -135,15 +135,15 @@ public class UserServiceTest {
         @Test
         void 비밀번호_변경_성공() {
             Long userId = 1L;
-            UserUpdatePasswordRequest request = new UserUpdatePasswordRequest("oldPassword","newPassword");
+            UserUpdatePasswordRequest request = new UserUpdatePasswordRequest("oldPassword", "newPassword");
 
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
-            given(passwordEncoder.matches(anyString(),anyString())).willReturn(false,true);
+            given(passwordEncoder.matches(anyString(), anyString())).willReturn(false, true);
             given(passwordEncoder.encode(anyString())).willReturn("encodedPassword");
 
-            userService.updateUserPassword(userId,request);
+            userService.updateUserPassword(userId, request);
 
-            assertEquals("encodedPassword",user.getPassword());
+            assertEquals("encodedPassword", user.getPassword());
         }
     }
 
@@ -153,7 +153,7 @@ public class UserServiceTest {
         UserDeleteRequest request = new UserDeleteRequest("password");
 
         given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
-        given(passwordEncoder.matches(anyString(),anyString())).willReturn(true);
+        given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
         userService.deleteUser(userId, request);
 
