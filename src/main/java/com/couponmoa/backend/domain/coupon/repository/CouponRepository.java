@@ -1,12 +1,13 @@
 package com.couponmoa.backend.domain.coupon.repository;
 
-import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.common.repository.BaseRepository;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,10 +29,7 @@ public interface CouponRepository extends BaseRepository<Coupon,Long> {
             "ORDER BY c.issuedQuantity DESC, c.name ASC")
     Page<Coupon> findAllByStatusSortedByIQ(@Param("status") CouponStatus status, Pageable pageable);
 
-    Optional<Coupon> findByIdAndDeletedAtIsNull(Long id);
-
-    default Coupon findActiveByIdOrElseThrow(Long id, ErrorCode errorCode) {
-        return findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ApplicationException(errorCode, errorCode.getMessage() + " id = " + id));
-    }
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT c FROM Coupon c WHERE c.id = :id AND c.deletedAt IS NULL")
+    Optional<Coupon> findActiveByIdForUpdate(Long id);
 }
