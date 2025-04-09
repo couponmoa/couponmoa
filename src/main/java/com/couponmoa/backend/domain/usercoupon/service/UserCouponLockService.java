@@ -8,7 +8,6 @@ import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -18,7 +17,7 @@ public class UserCouponLockService {
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void updateCouponWithLock(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdForUpdate(couponId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
