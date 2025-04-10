@@ -110,9 +110,5 @@ public class Coupon extends BaseEntity {
         }
         availableQuantity--;
         issuedQuantity++;
-
-        if (availableQuantity == 0) {
-            this.status = CouponStatus.SOLD_OUT;
-        }
     }
 }

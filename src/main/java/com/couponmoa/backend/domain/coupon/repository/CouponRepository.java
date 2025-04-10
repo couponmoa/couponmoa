@@ -10,9 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface CouponRepository extends BaseRepository<Coupon,Long> {
+public interface CouponRepository extends BaseRepository<Coupon, Long> {
     @Override
     default Coupon findByIdOrElseThrow(Long aLong, ErrorCode errorCode) {
         return BaseRepository.super.findByIdOrElseThrow(aLong, errorCode);
@@ -34,4 +35,10 @@ public interface CouponRepository extends BaseRepository<Coupon,Long> {
         return findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ApplicationException(errorCode, errorCode.getMessage() + " id = " + id));
     }
+
+    @Query("SELECT c FROM Coupon c WHERE c.status = 'UPCOMING' AND c.startDate <= CURRENT_TIMESTAMP AND c.deletedAt IS NULL")
+    List<Coupon> findCouponsToActivate();
+
+    @Query("SELECT c FROM Coupon c WHERE c.status = 'IN_PROGRESS' AND c.endDate <= CURRENT_TIMESTAMP AND c.deletedAt IS NULL")
+    List<Coupon> findCouponsToEnd();
 }

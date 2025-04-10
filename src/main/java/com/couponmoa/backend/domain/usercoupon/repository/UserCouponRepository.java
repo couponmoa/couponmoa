@@ -33,5 +33,5 @@ public interface UserCouponRepository extends BaseRepository<UserCoupon, Long> {
                  WHERE uc.status = 'UNUSED'
                  AND uc.coupon.id IN (SELECT c.id FROM Coupon c WHERE c.expiryDate <= CURRENT_TIMESTAMP)
             """)
-    void updateCouponStatusExpired();
+    void expireUnusedUserCoupons();
 }

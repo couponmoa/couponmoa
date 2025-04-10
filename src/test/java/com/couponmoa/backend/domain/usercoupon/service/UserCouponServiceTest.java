@@ -22,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Optional;
@@ -104,9 +103,8 @@ class UserCouponServiceTest {
         @Test
         @Order(4)
         void 쿠폰_발급_수량_없음_실패() {
-            ErrorCode errorCode = ErrorCode.COUPON_SOLE_OUT;
+            ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
             Coupon coupon = mock();
-            given(coupon.getStatus()).willReturn(CouponStatus.SOLD_OUT);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
