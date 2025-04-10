@@ -5,7 +5,6 @@ import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.common.repository.BaseRepository;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
