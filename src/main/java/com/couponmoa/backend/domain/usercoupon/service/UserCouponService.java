@@ -15,7 +15,7 @@ import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
-import com.couponmoa.backend.notification.service.NotificationService;
+import com.couponmoa.backend.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,11 +1,12 @@
-package com.couponmoa.backend.notification.service;
+package com.couponmoa.backend.domain.notification.service;
 
-import com.couponmoa.backend.domain.user.entity.User;
+import com.couponmoa.backend.common.dto.MessageQueueDto;
+import com.couponmoa.backend.common.sender.AlertQueueSender;
+import com.couponmoa.backend.domain.notification.entity.Notification;
+import com.couponmoa.backend.domain.notification.enums.NotificationType;
+import com.couponmoa.backend.domain.notification.repository.NotificationJdbcRepository;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
-import com.couponmoa.backend.notification.entity.Notification;
-import com.couponmoa.backend.notification.enums.NotificationType;
-import com.couponmoa.backend.notification.repository.NotificationJdbcRepository;
-import com.couponmoa.backend.notification.repository.NotificationRepository;
+import com.couponmoa.backend.domain.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class NotificationService {
 
     private final NotificationJdbcRepository notificationJdbcRepository;
     private final NotificationRepository notificationRepository;
-    private final EmailNotificationService emailNotificationService;
+    private final AlertQueueSender alertQueueSender;
 
     // 만료 알림 생성
     @Transactional
@@ -59,13 +60,7 @@ public class NotificationService {
 
             log.info("처리 중인 쿠폰: {}, 사용자 수: {}", couponName, notiList.size());
 
-            // 메일 전송에 필요한 정보
-            List<User> users = notiList.stream().map(n -> n.getUserCoupon().getUser()).toList();
-            String subject = "쿠폰 만료일 하루 전 알림";
-            String text = String.format("%s 쿠폰이 하루 뒤 만료됩니다!", couponName);
-
-            // 메일 전송
-            emailNotificationService.sendEmail(users, subject, text);
+            alertQueueSender.sendMessageToQueue(createMessageQueueDto(notiList, couponName));
 
             // isNotified true로 변경. 전송 확인
             updateNotificationsAsNotified(notiList);
@@ -74,11 +69,8 @@ public class NotificationService {
 
     // 다음날에 만료되는 쿠폰 조회
     private List<Notification> findNotificationsExpireTomorrow() {
-        LocalDate tomorrowDate = LocalDate.now().plusDays(1);
-
-        LocalDateTime start = tomorrowDate.atStartOfDay();
-        LocalDateTime end = tomorrowDate.plusDays(1).atStartOfDay();
-
+        LocalDateTime start = LocalDate.now().plusDays(1).atStartOfDay();
+        LocalDateTime end = start.plusDays(1);
         return notificationRepository.findNotificationsExpireTomorrow(start, end);
     }
 
@@ -87,4 +79,15 @@ public class NotificationService {
         notificationJdbcRepository.updateIsNotified(notifications);
     }
 
+    // 메일 전송에 필요한 메시지큐 dto 생성
+    private MessageQueueDto createMessageQueueDto(List<Notification> notiList, String couponName) {
+        List<String> emails = notiList.stream().map(n -> n.getUserCoupon().getUser().getEmail()).toList();
+
+        return new MessageQueueDto(
+                couponName,
+                "쿠폰 만료일 하루 전 알림",
+                "쿠폰이 하루 뒤 만료됩니다!",
+                emails
+        );
+    }
 }

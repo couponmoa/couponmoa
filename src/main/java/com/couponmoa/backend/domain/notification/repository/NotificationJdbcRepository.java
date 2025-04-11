@@ -1,6 +1,6 @@
-package com.couponmoa.backend.notification.repository;
+package com.couponmoa.backend.domain.notification.repository;
 
-import com.couponmoa.backend.notification.entity.Notification;
+import com.couponmoa.backend.domain.notification.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

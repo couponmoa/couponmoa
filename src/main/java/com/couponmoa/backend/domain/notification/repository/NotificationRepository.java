@@ -1,7 +1,7 @@
-package com.couponmoa.backend.notification.repository;
+package com.couponmoa.backend.domain.notification.repository;
 
 import com.couponmoa.backend.common.repository.BaseRepository;
-import com.couponmoa.backend.notification.entity.Notification;
+import com.couponmoa.backend.domain.notification.entity.Notification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 

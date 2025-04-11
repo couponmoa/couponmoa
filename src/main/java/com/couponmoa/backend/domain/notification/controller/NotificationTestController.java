@@ -1,4 +1,4 @@
-package com.couponmoa.backend.notification.controller;
+package com.couponmoa.backend.domain.notification.controller;
 
 import com.couponmoa.backend.scheduler.notification.NotificationScheduler;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.couponmoa.backend.notification.entity;
+package com.couponmoa.backend.domain.notification.entity;
 
 import com.couponmoa.backend.common.entity.BaseEntity;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
-import com.couponmoa.backend.notification.enums.NotificationType;
+import com.couponmoa.backend.domain.notification.enums.NotificationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
