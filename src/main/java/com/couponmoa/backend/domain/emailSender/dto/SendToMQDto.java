@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.emailSender.dto;
 
-import com.couponmoa.backend.domain.emailSender.service.SqsService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

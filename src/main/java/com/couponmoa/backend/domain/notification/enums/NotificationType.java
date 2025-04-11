@@ -1,5 +1,5 @@
 package com.couponmoa.backend.domain.notification.enums;
 
 public enum NotificationType {
-    EXPIRE_SOON
+    ISSUED_COUPON, EXPIRE_SOON
 }

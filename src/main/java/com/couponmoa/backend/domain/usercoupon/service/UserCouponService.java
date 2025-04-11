@@ -48,6 +48,9 @@ public class UserCouponService {
         UserCoupon userCoupon = new UserCoupon(user, coupon);
         userCouponRepository.save(userCoupon);
 
+        // 쿠폰 발급 알림 생성
+        notificationService.createIssuedNotification(userId, userCoupon);
+
         // 쿠폰 만료 알림 생성
         notificationService.createCouponExpireNotification(userCoupon);
     }
