@@ -5,7 +5,7 @@ spring:
     aws:
       sqs:
         queue:
-          email-alert: https://sqs.ap-northeast-2.amazonaws.com/588738590244/couponmoa-queue
+          email-alert: ${SQS_EMAIL_ALERT_QUEUE_URL}
       region:
         static: ap-northeast-2
       credentials:

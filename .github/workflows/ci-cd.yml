@@ -14,16 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create application-prop.properties file
+      - name: Create application-local.properties file
         run: |
           mkdir -p src/main/resources
           echo "${{ secrets.LOCAL_PROPERTIES }}" > src/main/resources/application-local.properties
 
       - name: Create .env file
         run: |
-          echo "${{ secrets.DB_PASSWORD }}" > .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MYSQL_DATABASE=${{ secrets.DB_NAME }}" >> .env
+          echo "SQS_EMAIL_ALERT_QUEUE_URL=${{ secrets.SQS_EMAIL_ALERT_QUEUE_URL }}" >> .env
 
-      - name: Create application-prop.yml file
+      - name: Create application-local.yml file
         run: |
           mkdir -p src/main/resources
           echo "${{ secrets.LOCAL_PROPERTIES_YML }}" > src/main/resources/application-local.yml
