@@ -76,7 +76,7 @@ public class UserCouponService {
 
     private void validateCouponIssuable(CouponStatus status) {
         if (status == CouponStatus.SOLD_OUT) {
-            throw new ApplicationException(ErrorCode.COUPON_SOLE_OUT);
+            throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
         }
 
         if (status != CouponStatus.IN_PROGRESS) {
