@@ -122,7 +122,7 @@ public class CouponService {
 
         // 쿠폰 상태 업데이트 (날짜, 발급수량에 따라)
         CouponStatus oldStatus = coupon.getStatus();
-        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate, coupon.getAvailableQuantity());
+        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate);
 
         // 상태가 실제로 변경되었을때만 updateStatus
         if (oldStatus != newStatus) {
