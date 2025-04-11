@@ -1,7 +1,7 @@
 package com.couponmoa.backend.domain.notification.service;
 
-import com.couponmoa.backend.common.dto.MessageQueueDto;
-import com.couponmoa.backend.common.sender.AlertQueueSender;
+import com.couponmoa.backend.domain.emailSender.dto.SendToMQDto;
+import com.couponmoa.backend.domain.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.notification.entity.Notification;
 import com.couponmoa.backend.domain.notification.enums.NotificationType;
 import com.couponmoa.backend.domain.notification.repository.NotificationJdbcRepository;
@@ -26,9 +26,9 @@ public class NotificationService {
 
     private final NotificationJdbcRepository notificationJdbcRepository;
     private final NotificationRepository notificationRepository;
-    private final AlertQueueSender alertQueueSender;
+    private final SqsService sqsService;
 
-    // 만료 알림 생성
+    // 만료 전 알림 생성
     @Transactional
     public void createCouponExpireNotification(UserCoupon userCoupon) {
         LocalDateTime notifyAvailableTime = userCoupon.getCoupon().getExpiryDate().minusDays(1);
@@ -60,7 +60,7 @@ public class NotificationService {
 
             log.info("처리 중인 쿠폰: {}, 사용자 수: {}", couponName, notiList.size());
 
-            alertQueueSender.sendMessageToQueue(createMessageQueueDto(notiList, couponName));
+            sqsService.sendMessage(createMessageQueueDto(notiList, couponName));
 
             // isNotified true로 변경. 전송 확인
             updateNotificationsAsNotified(notiList);
@@ -80,14 +80,14 @@ public class NotificationService {
     }
 
     // 메일 전송에 필요한 메시지큐 dto 생성
-    private MessageQueueDto createMessageQueueDto(List<Notification> notiList, String couponName) {
+    private SendToMQDto createMessageQueueDto(List<Notification> notiList, String couponName) {
         List<String> emails = notiList.stream().map(n -> n.getUserCoupon().getUser().getEmail()).toList();
 
-        return new MessageQueueDto(
-                couponName,
+        return new SendToMQDto(
+                emails,
                 "쿠폰 만료일 하루 전 알림",
                 "쿠폰이 하루 뒤 만료됩니다!",
-                emails
+                couponName
         );
     }
 }

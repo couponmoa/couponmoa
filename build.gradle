@@ -29,14 +29,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    //actuator
+    // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    //lombok
+    // prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -57,18 +61,28 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
-    //SMTP(send mail)
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+//    SMTP(send mail)
+//    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //AWS SQS
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+
+    //test lombok
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     // jobrunr
     implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:7.4.1'
 
     //h2 test db
     testImplementation 'com.h2database:h2'
+
 }
 
 tasks.named('test') {
