@@ -7,7 +7,6 @@ import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
-import com.couponmoa.backend.domain.user.repository.UserRepository;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
@@ -27,10 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserCouponService {
 
-    private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
     private final UserCouponRedisService userCouponRedisService;
+    private final UserCouponAsyncService userCouponAsyncService;
 
     public void createUserCoupon(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
@@ -39,10 +38,7 @@ public class UserCouponService {
         Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
         validateIssueResultCode(resultCode);
 
-        // TODO: 쿠폰 발급 수량 및 발급한 사용자 정보 업데이트 비동기 처리
-        User user = userRepository.getReferenceById(userId);
-        UserCoupon userCoupon = new UserCoupon(user, coupon);
-        userCouponRepository.save(userCoupon);
+        userCouponAsyncService.saveUserCoupon(userId, couponId);
     }
 
     @Transactional(readOnly = true)
