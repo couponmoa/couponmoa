@@ -1,5 +1,6 @@
 package com.couponmoa.backend.domain.emailSender.service;
 
+import com.couponmoa.backend.domain.emailSender.SqsProperties;
 import com.couponmoa.backend.domain.emailSender.dto.SendToMQDto;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.Getter;
@@ -12,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Getter
 public class SqsService {
     private final SqsTemplate sqsTemplate;
-
-    @Value("${cloud.aws.sqs.queue.email-alert}")
+    private final SqsProperties sqsProperties;
     private String queueUrl;
 
     public void sendMessage(SendToMQDto message) {
+        queueUrl = sqsProperties.getEmailAlert();
         sqsTemplate.send(queueUrl, message);
     }
 }
