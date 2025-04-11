@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     // subscribe
     DUPLICATED_USER_COUPON(CONFLICT, "이미 구독한 쿠폰입니다."),
+    NO_SUBSCRIBER(NOT_FOUND, "구독한 유저가 없습니다."),
 
     // common
     FORBIDDEN_ADMIN_ONLY(FORBIDDEN, "ADMIN 권한을 가진 유저만 접근할 수 있습니다."),
