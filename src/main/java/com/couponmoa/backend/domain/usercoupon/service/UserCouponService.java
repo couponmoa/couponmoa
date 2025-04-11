@@ -39,7 +39,7 @@ public class UserCouponService {
         validateCouponIssuable(coupon.getStatus());
         validateCouponNotAlreadyIssued(userId, couponId);
 
-        coupon.availableQuantityDown();
+        coupon.issuedQuantityUp();
         couponRepository.flush();
 
         User user = userRepository.getReferenceById(userId);
@@ -75,10 +75,6 @@ public class UserCouponService {
     }
 
     private void validateCouponIssuable(CouponStatus status) {
-        if (status == CouponStatus.SOLD_OUT) {
-            throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
-        }
-
         if (status != CouponStatus.IN_PROGRESS) {
             throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
         }

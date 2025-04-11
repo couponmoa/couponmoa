@@ -105,7 +105,6 @@ class UserCouponServiceTest {
         void 쿠폰_발급_수량_없음_실패() {
             ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
             Coupon coupon = mock();
-            given(coupon.getStatus()).willReturn(CouponStatus.SOLD_OUT);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
@@ -145,7 +144,7 @@ class UserCouponServiceTest {
 
             userCouponService.createUserCoupon(userId, couponId);
 
-            verify(coupon, times(1)).availableQuantityDown();
+            verify(coupon, times(1)).issuedQuantityUp();
             verify(couponRepository, times(1)).flush();
             verify(userCouponRepository, times(1)).save(any(UserCoupon.class));
         }
