@@ -230,6 +230,6 @@ public class CouponService {
      * > 해당 가게를 구독한 사람에게 이메일로 알림이 전송된다
      */
     private void sendEmail(Coupon savedCoupon) {
-        userStoreSubServ.sendAlert(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
+        userStoreSubServ.sendToSQS(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
     }
 }
