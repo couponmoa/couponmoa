@@ -57,5 +57,11 @@ jobs:
           docker ps
           docker logs spring-app || true
 
+      - name: Check if test yml exists
+        run: |
+          echo "==== application-test.yml 내용 ===="
+          cat src/test/resources/application-test.yml || echo "❌ 파일 없음"
+          echo "==== 끝 ===="
+
       - name: Run Tests
         run: ./gradlew test -Dspring.profiles.active=test
