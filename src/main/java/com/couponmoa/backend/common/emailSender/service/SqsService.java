@@ -1,11 +1,10 @@
-package com.couponmoa.backend.domain.emailSender.service;
+package com.couponmoa.backend.common.emailSender.service;
 
-import com.couponmoa.backend.domain.emailSender.SqsProperties;
-import com.couponmoa.backend.domain.emailSender.dto.SendToMQDto;
+import com.couponmoa.backend.common.emailSender.SqsProperties;
+import com.couponmoa.backend.common.emailSender.dto.SendToMQDto;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service

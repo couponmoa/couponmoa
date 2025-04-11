@@ -1,9 +1,8 @@
 package com.couponmoa.backend.domain.subscribe.userstore.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
-import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.domain.emailSender.dto.SendToMQDto;
-import com.couponmoa.backend.domain.emailSender.service.SqsService;
+import com.couponmoa.backend.common.emailSender.dto.SendToMQDto;
+import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.subscribe.userstore.dto.response.FindStoreSubscribeListResponse;

@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.emailSender.dto;
+package com.couponmoa.backend.common.emailSender.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +19,6 @@ public class SendToMQDto {
         this.text = text;
         this.subject = subject;
         this.emailList = emailList;
+        this.name = name;
     }
 }
