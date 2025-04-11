@@ -37,8 +37,4 @@ public class Notification extends BaseEntity {
         this.userCoupon = userCoupon;
         this.type = type;
     }
-
-    public void setIsNotified() {
-        isNotified = true;
-    }
 }
