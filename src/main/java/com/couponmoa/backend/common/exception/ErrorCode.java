@@ -33,7 +33,6 @@ public enum ErrorCode {
 
     // user coupon
     USER_COUPON_NOT_FOUND(NOT_FOUND, "사용자 쿠폰을 찾을 수 없습니다."),
-    USER_COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급받은 쿠폰입니다."),
     USER_COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰에 대한 권한이 없습니다."),
     USER_COUPON_CODE_UNAVAILABLE(BAD_REQUEST, "쿠폰이 이미 사용되었거나 만료되었습니다."),
 

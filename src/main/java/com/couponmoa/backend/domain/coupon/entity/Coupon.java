@@ -95,13 +95,6 @@ public class Coupon extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-    public void issuedQuantityUp() {
-        if (issuedQuantity >= totalQuantity) {
-            throw new IllegalStateException("쿠폰 발급 수량은 전체 수량을 초과할 수 없습니다.");
-        }
-        issuedQuantity++;
-    }
-
     public int getAvailableQuantity() {
         return totalQuantity - issuedQuantity;
     }
