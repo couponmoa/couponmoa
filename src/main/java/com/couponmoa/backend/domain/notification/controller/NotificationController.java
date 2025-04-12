@@ -17,7 +17,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     // 알림 전송 완료시 상태 변경(알림서버에서 호출하는 api)
-    @PostMapping("/notifications/{id}/notified")
+    @PostMapping("/{id}/notified")
     public ResponseEntity<ApiResponse<Void>> markAsNotified(@PathVariable Long id) {
         notificationService.markAsNotified(id);
         return ResponseEntity.ok(ApiResponse.success());
