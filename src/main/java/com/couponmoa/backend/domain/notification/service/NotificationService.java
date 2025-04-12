@@ -1,7 +1,7 @@
 package com.couponmoa.backend.domain.notification.service;
 
+import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.emailSender.dto.SendToMQDto;
-import com.couponmoa.backend.domain.emailSender.dto.CouponAlertDto;
 import com.couponmoa.backend.domain.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.notification.entity.Notification;
 import com.couponmoa.backend.domain.notification.enums.NotificationType;
@@ -37,8 +37,8 @@ public class NotificationService {
     public void createIssuedNotification(Long userId, UserCoupon userCoupon) {
         Notification notification = new Notification(
                 false, userCoupon, NotificationType.ISSUED_COUPON);
-        notificationRepository.save(notification);
-        eventPublisher.publishEvent(new CouponIssuedEvent(userId, userCoupon));
+        Notification savedNotification = notificationRepository.save(notification);
+        eventPublisher.publishEvent(new CouponIssuedEvent(userId, userCoupon, savedNotification.getId()));
     }
 
     // 만료 전 알림 생성
@@ -48,11 +48,7 @@ public class NotificationService {
 
         // 발급받은 쿠폰의 만료일이 하루 이상 남은 경우 스케줄러를 통해 전송하기 위해 알림 저장
         if (notifyAvailableTime.isAfter(LocalDateTime.now())) {
-            Notification notification = new Notification(
-                    false,
-                    userCoupon,
-                    NotificationType.EXPIRE_SOON
-            );
+            Notification notification = new Notification(false, userCoupon, NotificationType.EXPIRE_SOON);
             notificationRepository.save(notification);
         }
     }
@@ -80,6 +76,13 @@ public class NotificationService {
         }
     }
 
+    // 알림 상태 변경
+    @Transactional
+    public void markAsNotified(Long id) {
+        Notification notification = notificationRepository.findByIdOrElseThrow(id, ErrorCode.NOTIFICATION_NOT_FOUND);
+        notification.markAsNotified();
+    }
+
     // 다음날에 만료되는 쿠폰 조회
     private List<Notification> findNotificationsExpireTomorrow() {
         LocalDateTime start = LocalDate.now().plusDays(1).atStartOfDay();
@@ -87,7 +90,7 @@ public class NotificationService {
         return notificationRepository.findNotificationsExpireTomorrow(start, end);
     }
 
-    // 알림 상태 업데이트
+    // 알림 상태 업데이트(전체)
     private void updateNotificationsAsNotified(List<Notification> notifications) {
         notificationJdbcRepository.updateIsNotified(notifications);
     }
@@ -96,11 +99,7 @@ public class NotificationService {
     private SendToMQDto createMessageQueueDto(List<Notification> notiList, String couponName) {
         List<String> emails = notiList.stream().map(n -> n.getUserCoupon().getUser().getEmail()).toList();
 
-        return new SendToMQDto(
-                emails,
-                "쿠폰 만료일 하루 전 알림",
-                "쿠폰이 하루 뒤 만료됩니다!",
-                couponName
-        );
+        return new SendToMQDto(emails, "쿠폰 만료일 하루 전 알림", "쿠폰이 하루 뒤 만료됩니다!", couponName);
     }
+
 }

@@ -1,8 +1,8 @@
 package com.couponmoa.backend.domain.notification.entity;
 
 import com.couponmoa.backend.common.entity.BaseEntity;
-import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.notification.enums.NotificationType;
+import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -36,5 +36,9 @@ public class Notification extends BaseEntity {
         this.isNotified = isNotified;
         this.userCoupon = userCoupon;
         this.type = type;
+    }
+
+    public void markAsNotified() {
+        this.isNotified = true;
     }
 }

@@ -12,4 +12,5 @@ import lombok.Setter;
 public class CouponAlertDto {
     private Long userId;
     private String message;
+    private Long notificationId;
 }

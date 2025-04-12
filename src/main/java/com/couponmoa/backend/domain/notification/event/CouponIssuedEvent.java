@@ -9,4 +9,5 @@ import lombok.Getter;
 public class CouponIssuedEvent {
     private final Long userId;
     private final UserCoupon userCoupon;
+    private final Long notificationId;
 }
