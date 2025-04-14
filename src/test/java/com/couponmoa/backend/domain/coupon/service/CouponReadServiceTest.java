@@ -1,18 +1,15 @@
 package com.couponmoa.backend.domain.coupon.service;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
