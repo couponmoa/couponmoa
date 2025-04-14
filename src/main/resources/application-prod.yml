@@ -1,9 +1,0 @@
-cloud:
-  aws:
-    region:
-      static: ap-northeast-2
-    credentials:
-      instance-profile: true
-    sqs:
-      queue:
-        emailAlert: couponmoa-queue
