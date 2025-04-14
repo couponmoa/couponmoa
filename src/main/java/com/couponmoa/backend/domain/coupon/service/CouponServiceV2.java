@@ -108,7 +108,6 @@ public class CouponServiceV2 {
         // 날짜 검증
         validateDates(resolvedDates.startDate(), resolvedDates.endDate(), resolvedDates.expiryDate(), false);
 
-        // newTotalQuantity 검증 및 반영, availableQuantity가 0이 되면 status도 ENDED로 업데이트됨
         if (requestDto.getNewTotalQuantity() > 0) {
             coupon.updateQuantity(requestDto.getNewTotalQuantity());
         }
@@ -123,7 +122,7 @@ public class CouponServiceV2 {
 
         // 쿠폰 상태 업데이트 (날짜, 발급수량에 따라)
         CouponStatus oldStatus = coupon.getStatus();
-        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate, coupon.getAvailableQuantity());
+        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate);
 
         // 상태가 실제로 변경되었을때만 updateStatus
         if (oldStatus != newStatus) {
@@ -233,6 +232,6 @@ public class CouponServiceV2 {
      * > 해당 가게를 구독한 사람에게 이메일로 알림이 전송된다
      */
     private void sendEmail(Coupon savedCoupon) {
-        userStoreSubServ.sendAlert(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
+        userStoreSubServ.sendToSQS(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
     }
 }

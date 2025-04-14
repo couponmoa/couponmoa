@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class CouponSimpleResponseDto implements Serializable {// implements Serializable 캐싱을 위해 Redis에 객체를 저장할 때, 직렬화 필요
     private Long id;
     private String name;
-    private int availableQuantity;
     private BigDecimal discountAmount;
     private BigDecimal discountRate;
 
@@ -27,19 +26,17 @@ public class CouponSimpleResponseDto implements Serializable {// implements Seri
     private CouponStatus status;
 
     @Builder
-    public CouponSimpleResponseDto(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate, int availableQuantity) {
+    public CouponSimpleResponseDto(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.discountRate = discountRate;
-        this.availableQuantity = availableQuantity;
     }
 
     @Builder
-    public CouponSimpleResponseDto(Long id, String name, int availableQuantity, BigDecimal discountAmount, BigDecimal discountRate, LocalDateTime startDate, LocalDateTime endDate, CouponStatus status) {
+    public CouponSimpleResponseDto(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate, LocalDateTime startDate, LocalDateTime endDate, CouponStatus status) {
         this.id = id;
         this.name = name;
-        this.availableQuantity = availableQuantity;
         this.discountAmount = discountAmount;
         this.discountRate = discountRate;
         this.startDate = startDate;
@@ -51,12 +48,11 @@ public class CouponSimpleResponseDto implements Serializable {// implements Seri
         return CouponSimpleResponseDto.builder()
                 .id(coupon.getId())
                 .name(coupon.getName())
-                .availableQuantity(coupon.getAvailableQuantity())
                 .discountAmount(coupon.getDiscountAmount())
                 .discountRate(coupon.getDiscountRate())
                 .startDate(coupon.getStartDate())
                 .endDate(coupon.getEndDate())
-                .status(CouponStatus.editStatus(coupon.getStartDate(), coupon.getEndDate(), coupon.getAvailableQuantity()))
+                .status(coupon.getStatus())
                 .build();
     }
 }

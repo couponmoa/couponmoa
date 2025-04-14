@@ -155,6 +155,7 @@ public class UserServiceTest {
         given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
+
         userService.deleteUser(userId, request);
 
         assertNotNull(user.getDeletedAt());

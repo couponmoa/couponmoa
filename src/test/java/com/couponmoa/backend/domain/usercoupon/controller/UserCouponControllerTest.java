@@ -83,7 +83,7 @@ class UserCouponControllerTest {
             AuthUser authUser = new AuthUser(1L, "temp@gmail.com", UserRole.ROLE_USER);
             JwtAuthenticationToken authentication = new JwtAuthenticationToken(authUser);
 
-            ErrorCode errorCode = ErrorCode.COUPON_SOLE_OUT;
+            ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
             doThrow(new ApplicationException(errorCode))
                     .when(userCouponService).createUserCoupon(anyLong(), anyLong());
 

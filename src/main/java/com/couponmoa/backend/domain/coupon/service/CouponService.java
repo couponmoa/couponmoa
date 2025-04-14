@@ -118,7 +118,7 @@ public class CouponService {
 
         // 쿠폰 상태 업데이트 (날짜, 발급수량에 따라)
         CouponStatus oldStatus = coupon.getStatus();
-        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate, coupon.getAvailableQuantity());
+        CouponStatus newStatus = editStatus(resolvedDates.startDate, resolvedDates.endDate);
 
         // 상태가 실제로 변경되었을때만 updateStatus
         if (oldStatus != newStatus) {
@@ -226,6 +226,6 @@ public class CouponService {
      * > 해당 가게를 구독한 사람에게 이메일로 알림이 전송된다
      */
     private void sendEmail(Coupon savedCoupon) {
-        userStoreSubServ.sendAlert(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
+        userStoreSubServ.sendToSQS(savedCoupon.getStore().getId()); // 가게 구독 메일 전송
     }
 }
