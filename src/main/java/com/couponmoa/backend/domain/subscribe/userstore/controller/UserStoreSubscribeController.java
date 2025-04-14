@@ -55,7 +55,7 @@ public class UserStoreSubscribeController {
     @Operation(summary = "알림서비스", description = "가게 쿠폰이 새로 생기면 이메일을 알림을 보냄")
     @PostMapping("/{storeId}/alert")
     public ResponseEntity<ApiResponse<List<String>>> sendAlert(@PathVariable Long storeId) {
-        List<String> emailList = userStoreSubServ.sendAlert(storeId);
+        List<String> emailList = userStoreSubServ.sendToSQS(storeId);
 
         return ResponseEntity.ok(ApiResponse.success(emailList));
     }
