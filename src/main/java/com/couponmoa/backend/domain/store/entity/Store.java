@@ -5,9 +5,11 @@ import com.couponmoa.backend.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter //테스트 용도
 @Table(name = "stores")
 @NoArgsConstructor
 public class Store extends BaseEntity {
