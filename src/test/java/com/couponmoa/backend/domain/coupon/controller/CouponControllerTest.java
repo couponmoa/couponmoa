@@ -9,6 +9,7 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.service.CouponReadService;
 import com.couponmoa.backend.domain.coupon.service.CouponService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -140,6 +141,7 @@ class CouponControllerTest {
                 .minOrderAmount(new BigDecimal("5000"))
                 .maxDiscountAmount(null)
                 .description("테스트를_위한_쿠폰")
+                .status(CouponStatus.IN_PROGRESS)
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
                 .expiryDate(LocalDateTime.now().plusDays(5))
