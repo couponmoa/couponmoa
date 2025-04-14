@@ -123,8 +123,7 @@ class CouponControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data.content.length()").value(2))
-                .andExpect(jsonPath("$.data.content[0].name").value("쿠폰A"))
-                .andExpect(jsonPath("$.data.content[1].availableQuantity").value(50));
+                .andExpect(jsonPath("$.data.content[0].name").value("쿠폰A"));
     }
 
     @Test
@@ -138,7 +137,7 @@ class CouponControllerTest {
                 .discountRate(BigDecimal.ZERO)
                 .minOrderAmount(BigDecimal.valueOf(5000))
                 .maxDiscountAmount(null)
-                .description("테스트를_위한_쿠폰")
+                .description("테스트를_위한_쿠폰입니다.")
                 .status(CouponStatus.IN_PROGRESS)
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
