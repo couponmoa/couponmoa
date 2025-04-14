@@ -1,7 +1,7 @@
 package com.couponmoa.backend.domain.notification.handler;
 
-import com.couponmoa.backend.domain.emailSender.dto.CouponAlertDto;
-import com.couponmoa.backend.domain.emailSender.service.SqsService;
+import com.couponmoa.backend.common.emailSender.dto.CouponAlertDto;
+import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.notification.event.CouponIssuedEvent;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class NotificationEventHandler {
 
     private final SqsService sqsService;
 
-    @Async("threadPoolTaskExecutor") // 트랜잭션 커밋 후 별도 쓰레드에서 비동기 처리
+    @Async // 트랜잭션 커밋 후 별도 쓰레드에서 비동기 처리
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(CouponIssuedEvent event) {
         sqsService.sendMessage(createCouponAlertDto(event.getUserId(), event.getUserCoupon(), event.getNotificationId()));

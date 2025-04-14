@@ -1,6 +1,6 @@
 package com.couponmoa.backend.scheduler.notification;
 
-import com.couponmoa.backend.domain.notification.service.NotificationService;
+import com.couponmoa.backend.domain.notification.service.ExpiredNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.annotations.Recurring;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationScheduler {
 
-    private final NotificationService notificationService;
+    private final ExpiredNotificationService expiredNotificationService;
 
     @Recurring(id = "coupon-expire-notification-job", cron = "0 0 * * *")
     @Job(name = "Send email notification 1 day before coupon expires", retries = 3)
     public void expireCouponNotifications() {
-        notificationService.sendExpireCouponNotifications();
+        expiredNotificationService.sendExpireCouponNotifications();
     }
 }

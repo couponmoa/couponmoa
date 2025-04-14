@@ -10,4 +10,5 @@ import lombok.Setter;
 @Setter
 public class SqsProperties {
     private String emailAlert;
+    private String couponAlert;
 }
