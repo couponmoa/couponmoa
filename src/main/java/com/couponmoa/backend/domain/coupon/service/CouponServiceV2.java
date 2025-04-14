@@ -15,6 +15,7 @@ import com.couponmoa.backend.domain.subscribe.userstore.service.UserStoreSubscri
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,13 +30,15 @@ import static com.couponmoa.backend.domain.coupon.enums.CouponStatus.editStatus;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CouponService {
+public class CouponServiceV2 {
 
     private final CouponRepository couponRepository;
     private final StoreRepository storeRepository;
     private final UserCouponSubscribeService userCouponSubServ;
     private final UserStoreSubscribeService userStoreSubServ;
 
+    // 새 쿠폰 생성 후 기존 캐시 제거
+    @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponseDto createCoupon(CouponCreateRequestDto requestDto) {
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
@@ -88,6 +91,8 @@ public class CouponService {
         return new CouponResponseDto(savedCoupon.getId());
     }
 
+    // 쿠폰 수정 시 캐시 무효화
+    @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponseDto updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
 
         // 아직 존재하는 쿠폰인지 검증
@@ -136,6 +141,8 @@ public class CouponService {
         return new CouponResponseDto(coupon.getId());
     }
 
+    // 쿠폰 삭제 시 캐시 무효화
+    @CacheEvict(value = "coupons", allEntries = true)
     public void deleteCoupon(Long couponId) {
         // 존재하는 쿠폰인지 검증
         Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
