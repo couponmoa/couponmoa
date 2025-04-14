@@ -66,10 +66,14 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
-    //SMTP(send mail)
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+//    SMTP(send mail)
+//    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    //test lombok 사용
+    //AWS SQS
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+
+    //test lombok
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
@@ -78,8 +82,10 @@ dependencies {
 
     //h2 test db
     testImplementation 'com.h2database:h2'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+test {
+    systemProperty "spring.profiles.active", "test"
 }
