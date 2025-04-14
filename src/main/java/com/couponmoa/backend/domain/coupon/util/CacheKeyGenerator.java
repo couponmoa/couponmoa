@@ -54,4 +54,9 @@ public class CacheKeyGenerator {
 
         return keyBuilder.toString();
     }
+
+    // 쿠폰 ID를 기반으로 고유한 키 생성 ( ex: couponId-123 )
+    public static String generateCacheKey(Long couponId) {
+        return "couponId-" + couponId;
+    }
 }
