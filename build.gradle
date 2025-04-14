@@ -83,8 +83,6 @@ dependencies {
     //h2 test db
     testImplementation 'com.h2database:h2'
 
-}
-
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 

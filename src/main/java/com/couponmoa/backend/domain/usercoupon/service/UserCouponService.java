@@ -14,7 +14,6 @@ import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
 import com.couponmoa.backend.domain.usercoupon.repository.UserCouponRepository;
-import com.couponmoa.backend.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +30,6 @@ public class UserCouponService {
     private final UserCouponRepository userCouponRepository;
     private final UserCouponRedisService userCouponRedisService;
     private final UserCouponAsyncService userCouponAsyncService;
-    private final NotificationService notificationService;
 
     public void createUserCoupon(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
@@ -40,13 +38,7 @@ public class UserCouponService {
         Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
         validateIssueResultCode(resultCode);
 
-        UserCoupon userCoupon = userCouponAsyncService.saveUserCoupon(userId, couponId);
-
-        // 쿠폰 발급 알림 생성
-        notificationService.createIssuedNotification(userId, userCoupon);
-
-        // 쿠폰 만료 알림 생성
-        notificationService.createCouponExpireNotification(userCoupon);
+        userCouponAsyncService.saveUserCoupon(userId, couponId);
     }
 
     @Transactional(readOnly = true)
@@ -86,11 +78,16 @@ public class UserCouponService {
 
     private void validateIssueResultCode(Integer resultCode) {
         switch (resultCode) {
-            case 0: return;
-            case 1: throw new IllegalStateException("쿠폰 재고가 redis에 등록되지 않았습니다.");
-            case 2: throw new ApplicationException(ErrorCode.DUPLICATED_USER_COUPON);
-            case 3: throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
-            default: throw new IllegalStateException("예상하지 못한 값이 반환되었습니다.");
+            case 0:
+                return;
+            case 1:
+                throw new IllegalStateException("쿠폰 재고가 redis에 등록되지 않았습니다.");
+            case 2:
+                throw new ApplicationException(ErrorCode.DUPLICATED_USER_COUPON);
+            case 3:
+                throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
+            default:
+                throw new IllegalStateException("예상하지 못한 값이 반환되었습니다.");
         }
     }
 
