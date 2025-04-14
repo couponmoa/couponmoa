@@ -33,7 +33,7 @@ jobs:
           cp $(find build/libs -name "*.jar" | head -n 1) deploy/app.jar
           cp Dockerfile deploy/
           cp appspec.yml deploy/
-          cp scripts/deploy.sh deploy/
+          cp script/deploy.sh deploy/
           cp src/main/resources/application-prod.yml deploy/
 
       - name: Build Docker image
