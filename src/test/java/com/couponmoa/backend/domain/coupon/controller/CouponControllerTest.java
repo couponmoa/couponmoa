@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.controller;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
@@ -138,7 +137,6 @@ class CouponControllerTest {
                 .minOrderAmount(BigDecimal.valueOf(5000))
                 .maxDiscountAmount(null)
                 .description("테스트를_위한_쿠폰입니다.")
-                .status(CouponStatus.IN_PROGRESS)
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
                 .expiryDate(LocalDateTime.now().plusDays(10))
