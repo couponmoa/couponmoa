@@ -41,8 +41,7 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                         coupon.id,
                         coupon.name,
                         coupon.discountAmount,
-                        coupon.discountRate,
-                        coupon.availableQuantity
+                        coupon.discountRate
                 ))
                 .from(coupon)
                 .join(coupon.store, store)
@@ -91,8 +90,7 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                         coupon.id,
                         coupon.name,
                         coupon.discountAmount,
-                        coupon.discountRate,
-                        coupon.availableQuantity
+                        coupon.discountRate
                 ))
                 .from(coupon)
                 .where(

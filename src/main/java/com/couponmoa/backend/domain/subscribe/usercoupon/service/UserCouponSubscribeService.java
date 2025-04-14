@@ -3,6 +3,8 @@ package com.couponmoa.backend.domain.subscribe.usercoupon.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.common.emailSender.dto.SendToMQDto;
+import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.subscribe.usercoupon.dto.response.FindCouponSubscribeListResponse;
 import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
 import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
@@ -11,8 +13,6 @@ import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class UserCouponSubscribeService {
     private final UserRepository userRepo;
     private final CouponRepository couponRepo;
     private final UserCouponSubscribeRepository userCouponSubRepo;
-    private final JavaMailSender mailSender;
+    private final SqsService sqsService;
 
     @Transactional
     public void subscribeCoupon(Long userId, Long couponId) {
@@ -79,15 +79,13 @@ public class UserCouponSubscribeService {
             return emailList;
         }
 
-        String[] emailArray = userList.stream()
-                .map(User::getEmail)
-                .toList().toArray(new String[0]);
+        SendToMQDto message = new SendToMQDto(
+                emailList,
+                "쿠폰 갱신 안내",
+                coupon.getName(),
+                "쿠폰이 새로 발행되었습니다!");
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(emailArray);
-        message.setSubject("쿠폰 갱신 안내");
-        message.setText(coupon.getName() + "쿠폰이 새로 발행되었습니다!");
-        mailSender.send(message);
+        sqsService.sendMessage(message);
 
         return emailList;
     }
