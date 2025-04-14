@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY build/libs/couponmoa-*-SNAPSHOT.jar app.jar
 
-ENV SPRING_PROFILES_ACTIVE=prop
+ENV SPRING_PROFILES_ACTIVE=prod
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
