@@ -9,6 +9,7 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
+import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.service.CouponReadService;
 import com.couponmoa.backend.domain.coupon.service.CouponService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,7 +64,7 @@ class CouponControllerTest {
         // Given
         CouponCreateRequestDto requestDto = new CouponCreateRequestDto(
                 "테스트용_할인_쿠폰", 100, BigDecimal.valueOf(1000), BigDecimal.ZERO,
-                BigDecimal.valueOf(0), BigDecimal.valueOf(10000), "테스트를_위해_생성된_쿠폰입니다.",
+                BigDecimal.ZERO, BigDecimal.valueOf(10000), "테스트 쿠폰입니다.",
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(5),
                 LocalDateTime.now().plusDays(10),
@@ -73,7 +74,7 @@ class CouponControllerTest {
         CouponResponseDto responseDto = new CouponResponseDto(1L);
 
         given(couponService.createCoupon(any(CouponCreateRequestDto.class)))
-                .willReturn(ApiResponse.success(responseDto));
+                .willReturn(responseDto);
 
         // When
         ResultActions result = mockMvc.perform(post("/api/v1/coupons")
@@ -92,28 +93,28 @@ class CouponControllerTest {
         // Given
         CouponSimpleResponseDto dto1 = CouponSimpleResponseDto.builder()
                 .id(1L)
-                .name("테스트용_쿠폰_A")
+                .name("쿠폰A")
                 .availableQuantity(100)
-                .discountAmount(new BigDecimal("1000"))
-                .discountRate(new BigDecimal("0"))
+                .discountAmount(BigDecimal.valueOf(1000))
+                .discountRate(BigDecimal.ZERO)
                 .startDate(LocalDateTime.now().plusDays(1))
-                .endDate(LocalDateTime.now().plusDays(10))
+                .endDate(LocalDateTime.now().plusDays(5))
                 .build();
 
         CouponSimpleResponseDto dto2 = CouponSimpleResponseDto.builder()
                 .id(2L)
-                .name("테스트용_쿠폰_B")
+                .name("쿠폰B")
                 .availableQuantity(50)
-                .discountAmount(new BigDecimal("2000"))
-                .discountRate(new BigDecimal("0"))
+                .discountAmount(BigDecimal.valueOf(2000))
+                .discountRate(BigDecimal.ZERO)
                 .startDate(LocalDateTime.now().plusDays(2))
-                .endDate(LocalDateTime.now().plusDays(20))
+                .endDate(LocalDateTime.now().plusDays(10))
                 .build();
 
-        Page<CouponSimpleResponseDto> responsePage = new PageImpl<>(List.of(dto1, dto2));
+        Page<CouponSimpleResponseDto> page = new PageImpl<>(List.of(dto1, dto2));
 
         given(couponReadService.findAllCoupons(anyInt(), anyInt()))
-                .willReturn(ApiResponse.success(responsePage));
+                .willReturn(page);
 
         // When
         ResultActions result = mockMvc.perform(get("/api/v1/coupons")
@@ -124,25 +125,26 @@ class CouponControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data.content.length()").value(2))
-                .andExpect(jsonPath("$.data.content[0].name").value("테스트용_쿠폰_A"))
+                .andExpect(jsonPath("$.data.content[0].name").value("쿠폰A"))
                 .andExpect(jsonPath("$.data.content[1].availableQuantity").value(50));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void 쿠폰_상세_조회_성공() throws Exception {
-        // Given: 쿠폰 mock 데이터 만들기
+        // Given
         Coupon coupon = Coupon.builder()
                 .name("테스트용_쿠폰")
                 .totalQuantity(100)
-                .discountAmount(new BigDecimal("1000"))
+                .discountAmount(BigDecimal.valueOf(1000))
                 .discountRate(BigDecimal.ZERO)
-                .minOrderAmount(new BigDecimal("5000"))
+                .minOrderAmount(BigDecimal.valueOf(5000))
                 .maxDiscountAmount(null)
-                .description("테스트를_위한_쿠폰")
+                .description("테스트를_위한_쿠폰입니다.")
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(1))
-                .expiryDate(LocalDateTime.now().plusDays(5))
+                .expiryDate(LocalDateTime.now().plusDays(10))
+                .status(CouponStatus.IN_PROGRESS)
                 .build();
 
         ReflectionTestUtils.setField(coupon, "id", 1L);
@@ -150,7 +152,7 @@ class CouponControllerTest {
         CouponDetailResponseDto responseDto = CouponDetailResponseDto.toDto(coupon);
 
         given(couponReadService.findCoupon(eq(1L), any()))
-                .willReturn(ApiResponse.success(responseDto));
+                .willReturn(responseDto);
 
         // When
         ResultActions result = mockMvc.perform(get("/api/v1/coupons/1"));
@@ -163,7 +165,7 @@ class CouponControllerTest {
                 .andExpect(jsonPath("$.data.totalQuantity").value(100))
                 .andExpect(jsonPath("$.data.discountAmount").value(1000))
                 .andExpect(jsonPath("$.data.minOrderAmount").value(5000))
-                .andExpect(jsonPath("$.data.description").value("테스트를_위한_쿠폰"))
+                .andExpect(jsonPath("$.data.description").value("테스트를_위한_쿠폰입니다."))
                 .andExpect(jsonPath("$.data.status").value("IN_PROGRESS"));
     }
 }
