@@ -23,8 +23,7 @@ public class Coupon extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int totalQuantity;  // 반드시 availableQuantity와 함께 수정되어야 함.
-    private int availableQuantity; // 서버에서 자동으로 설정.
+    private int totalQuantity;
     private int issuedQuantity;
     private BigDecimal discountAmount;
     private BigDecimal discountRate;
@@ -52,7 +51,6 @@ public class Coupon extends BaseEntity {
 
         this.name = name;
         this.totalQuantity = totalQuantity;
-        this.availableQuantity = totalQuantity;
         this.issuedQuantity = 0;
         this.discountAmount = discountAmount;
         this.discountRate = discountRate;
@@ -67,18 +65,11 @@ public class Coupon extends BaseEntity {
     }
 
     public void updateQuantity(int newTotalQuantity) {
-        int issuedCouponQuantity = this.totalQuantity - this.availableQuantity;
-
-        //이 부분 트래픽증가시 동시성이슈로 인해 예외 발생 가능성 매우 높음.
-        if (newTotalQuantity < issuedCouponQuantity) {
+        if (newTotalQuantity < this.issuedQuantity) {
             throw new ApplicationException(ErrorCode.INVALID_TOTAL_QUANTITY);
         }
 
-        int newAvailableQuantity = Math.max(0, newTotalQuantity - issuedCouponQuantity);
-
         this.totalQuantity = newTotalQuantity;
-        this.availableQuantity = newAvailableQuantity;
-        this.issuedQuantity = issuedCouponQuantity;
     }
 
     public void update(String name, BigDecimal discountAmount, BigDecimal discountRate,
@@ -104,15 +95,7 @@ public class Coupon extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-    public void availableQuantityDown() {
-        if (availableQuantity <= 0) {
-            throw new IllegalStateException("쿠폰 잔여 개수는 음수일 수 없습니다.");
-        }
-        availableQuantity--;
-        issuedQuantity++;
-
-        if (availableQuantity == 0) {
-            this.status = CouponStatus.SOLD_OUT;
-        }
+    public int getAvailableQuantity() {
+        return totalQuantity - issuedQuantity;
     }
 }

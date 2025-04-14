@@ -34,7 +34,7 @@ public class CouponSimpleResponseDto {
                 .discountRate(coupon.getDiscountRate())
                 .startDate(coupon.getStartDate())
                 .endDate(coupon.getEndDate())
-                .status(CouponStatus.editStatus(coupon.getStartDate(), coupon.getEndDate(), coupon.getAvailableQuantity()))
+                .status(coupon.getStatus())
                 .build();
     }
 }
