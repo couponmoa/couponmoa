@@ -8,13 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public enum CouponStatus {
-    UPCOMING, IN_PROGRESS, SOLD_OUT, ENDED;
+    UPCOMING, IN_PROGRESS, ENDED;
 
-    public static CouponStatus editStatus(LocalDateTime startDate, LocalDateTime endDate, int availableQuantity) {
-        if (availableQuantity == 0) {
-            return CouponStatus.SOLD_OUT;
-        }
-
+    public static CouponStatus editStatus(LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime now = LocalDateTime.now();
 
         if (now.isBefore(startDate)) {
@@ -31,4 +27,3 @@ public enum CouponStatus {
 // UPCOMING 상태만 유효함.
 // 이후에는 시간의 흐름에 따라 자동으로 변경 or 업데이트 시 자동으로 변경( 카테고리를 직접 변경할 수는 없음)
 // + 조회해서 응답값으로 반환할때도 변경이 되도록 로직 추가. 뭔가 더해야할까 ?
-// Coupon이 다 소진되었을때도 ENDED로 변경됩니다.

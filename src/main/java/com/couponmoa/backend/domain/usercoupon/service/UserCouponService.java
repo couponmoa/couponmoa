@@ -7,7 +7,6 @@ import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
-import com.couponmoa.backend.domain.user.repository.UserRepository;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
@@ -24,35 +23,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserCouponService {
 
-    private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
+    private final UserCouponRedisService userCouponRedisService;
+    private final UserCouponAsyncService userCouponAsyncService;
 
-    @Transactional
     public void createUserCoupon(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
-
         validateCouponIssuable(coupon.getStatus());
-        validateCouponNotAlreadyIssued(userId, couponId);
 
-        coupon.availableQuantityDown();
-        couponRepository.flush();
+        Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
+        validateIssueResultCode(resultCode);
 
-        User user = userRepository.getReferenceById(userId);
-        UserCoupon userCoupon = new UserCoupon(user, coupon);
-        userCouponRepository.save(userCoupon);
+        userCouponAsyncService.saveUserCoupon(userId, couponId);
     }
 
+    @Transactional(readOnly = true)
     public Page<UserCouponResponse> findUserCoupons(Long userId, UserCouponStatus status, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
         return userCouponRepository.findByUserIdAndStatus(userId, status, pageable)
                 .map(UserCouponResponse::from);
     }
 
+    @Transactional(readOnly = true)
     public UserCouponCodeResponse findUserCouponCode(Long userId, Long userCouponId) {
         UserCoupon userCoupon = userCouponRepository.findByIdOrElseThrow(userCouponId, ErrorCode.USER_COUPON_NOT_FOUND);
 
@@ -75,23 +71,22 @@ public class UserCouponService {
     }
 
     private void validateCouponIssuable(CouponStatus status) {
-        if (status == CouponStatus.SOLD_OUT) {
-            throw new ApplicationException(ErrorCode.COUPON_SOLE_OUT);
-        }
-
         if (status != CouponStatus.IN_PROGRESS) {
             throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
         }
     }
 
-    private void validateCouponNotAlreadyIssued(Long userId, Long couponId) {
-        Boolean alreadyIssued = userCouponRepository.existsByUserIdAndCouponId(userId, couponId);
-        if (alreadyIssued) {
-            throw new ApplicationException(ErrorCode.USER_COUPON_ALREADY_ISSUED);
+    private void validateIssueResultCode(Integer resultCode) {
+        switch (resultCode) {
+            case 0: return;
+            case 1: throw new IllegalStateException("쿠폰 재고가 redis에 등록되지 않았습니다.");
+            case 2: throw new ApplicationException(ErrorCode.DUPLICATED_USER_COUPON);
+            case 3: throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
+            default: throw new IllegalStateException("예상하지 못한 값이 반환되었습니다.");
         }
     }
 
-    private static void validateCouponOwner(User userCouponOwner, Long userId) {
+    private void validateCouponOwner(User userCouponOwner, Long userId) {
         if (!userCouponOwner.getId().equals(userId)) {
             throw new ApplicationException(ErrorCode.USER_COUPON_ACCESS_DENIED);
         }
@@ -103,7 +98,7 @@ public class UserCouponService {
         }
     }
 
-    private static void validateCouponStoreOwner(Store store, Long userId) {
+    private void validateCouponStoreOwner(Store store, Long userId) {
         if (!store.getUser().getId().equals(userId)) {
             throw new ApplicationException(ErrorCode.USER_COUPON_ACCESS_DENIED);
         }
