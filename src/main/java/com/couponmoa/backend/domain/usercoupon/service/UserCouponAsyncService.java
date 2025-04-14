@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.usercoupon.service;
 
-import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.notification.service.ExpiredNotificationService;
@@ -25,8 +24,8 @@ public class UserCouponAsyncService {
 
     @Async
     public void saveUserCoupon(Long userId, Long couponId) {
-        User user = userRepository.findByIdOrElseThrow(userId, ErrorCode.USER_NOT_FOUND);
-        Coupon coupon = couponRepository.findByIdOrElseThrow(couponId,ErrorCode.COUPON_NOT_FOUND);
+        User user = userRepository.getReferenceById(userId);
+        Coupon coupon = couponRepository.getReferenceById(couponId);
         UserCoupon userCoupon = new UserCoupon(user, coupon);
         userCouponRepository.save(userCoupon);
         saveNotification(userId, userCoupon);
