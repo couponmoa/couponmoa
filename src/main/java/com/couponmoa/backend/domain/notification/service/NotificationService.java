@@ -1,5 +1,6 @@
 package com.couponmoa.backend.domain.notification.service;
 
+import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.emailSender.dto.SendToMQDto;
 import com.couponmoa.backend.domain.emailSender.service.SqsService;
@@ -11,6 +12,7 @@ import com.couponmoa.backend.domain.notification.repository.NotificationReposito
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final SqsService sqsService;
     private final ApplicationEventPublisher eventPublisher;
+    private final JobScheduler jobScheduler;
 
     // 쿠폰 발급 알림 생성 및 전송
     @Transactional
@@ -54,7 +57,7 @@ public class NotificationService {
     }
 
     // 만료 전 알림 전송
-    @Transactional
+    @Transactional(readOnly = true)
     public void sendExpireCouponNotifications() {
         List<Notification> notifications = findNotificationsExpireTomorrow();
         log.info("조회된 만료 알림 수: {}", notifications.size());
@@ -65,18 +68,28 @@ public class NotificationService {
 
         for (Map.Entry<String, List<Notification>> entry : grouped.entrySet()) {
             String couponName = entry.getKey();
-            List<Notification> notiList = entry.getValue();
+            List<Long> notificationIds = entry.getValue().stream().map(Notification::getId).toList();
 
-            log.info("처리 중인 쿠폰: {}, 사용자 수: {}", couponName, notiList.size());
-
-            sqsService.sendMessage(createMessageQueueDto(notiList, couponName));
-
-            // isNotified true로 변경. 전송 확인
-            updateNotificationsAsNotified(notiList);
+            // 큐에 작업 등록
+            jobScheduler.enqueue(() -> sendGroupedNotification(notificationIds, couponName));
         }
     }
 
-    // 알림 상태 변경
+    // jobrunr 실행 대상, sqs 요청 메서드
+    @Transactional
+    public void sendGroupedNotification(List<Long> notificationIds, String couponName) {
+        List<Notification> notiList = notificationRepository.findAllById(notificationIds);
+        notificationJdbcRepository.updateIsNotified(notiList);
+
+        try { // sqs 메시지 요청 실패시 db 롤백
+            sqsService.sendMessage(createMessageQueueDto(notiList, couponName));
+        } catch (Exception e) {
+            log.error("SQS 메시지 전송 실패", e);
+            throw new ApplicationException(ErrorCode.SQS_SEND_FAILED);
+        }
+    }
+
+    // 알림 상태 변경(아이디별)
     @Transactional
     public void markAsNotified(Long id) {
         Notification notification = notificationRepository.findByIdOrElseThrow(id, ErrorCode.NOTIFICATION_NOT_FOUND);
@@ -88,11 +101,6 @@ public class NotificationService {
         LocalDateTime start = LocalDate.now().plusDays(1).atStartOfDay();
         LocalDateTime end = start.plusDays(1);
         return notificationRepository.findNotificationsExpireTomorrow(start, end);
-    }
-
-    // 알림 상태 업데이트(전체)
-    private void updateNotificationsAsNotified(List<Notification> notifications) {
-        notificationJdbcRepository.updateIsNotified(notifications);
     }
 
     // 메일 전송에 필요한 메시지큐 dto 생성
