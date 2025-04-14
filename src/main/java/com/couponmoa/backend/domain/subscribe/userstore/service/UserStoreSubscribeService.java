@@ -79,7 +79,7 @@ public class UserStoreSubscribeService {
                 .toList();
 
         if (emailList.isEmpty()) {
-            throw new ApplicationException(NO_SUBSCRIBER);
+            return emailList;
         }
 
         SendToMQDto message = new SendToMQDto(
