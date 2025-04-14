@@ -18,4 +18,4 @@ docker run -d \
   -p 8080:8080 \
   couponmoa-prod >> /home/ubuntu/deploy.log 2>> /home/ubuntu/deploy_err.log
 
-echo "✅ Docker 기반 배포 완료" >> /home/ubuntu/deploy.log
+echo "✅ Docker 기반 배포 완료" >> /home/ubuntu/deploy
