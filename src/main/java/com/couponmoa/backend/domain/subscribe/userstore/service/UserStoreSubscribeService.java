@@ -1,9 +1,10 @@
 package com.couponmoa.backend.domain.subscribe.userstore.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
+import com.couponmoa.backend.common.emailSender.dto.SendToMQDto;
+import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
-import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
 import com.couponmoa.backend.domain.subscribe.userstore.dto.response.FindStoreSubscribeListResponse;
 import com.couponmoa.backend.domain.subscribe.userstore.entity.UserStoreSubscribe;
 import com.couponmoa.backend.domain.subscribe.userstore.repository.UserStoreSubscribeRepository;
@@ -12,12 +13,9 @@ import com.couponmoa.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.couponmoa.backend.common.exception.ErrorCode.*;
@@ -29,8 +27,8 @@ public class UserStoreSubscribeService {
     private final UserRepository userRepo;
     private final StoreRepository storeRepo;
     private final UserStoreSubscribeRepository userStoreSubRepo;
-    private final UserCouponSubscribeRepository userCouponSubRepo;
-    private final JavaMailSender mailSender;
+    private final SqsService sqsService;
+//    private final JavaMailSender mailSender;
 
     @Transactional
     public void subscribeStore(Long userId, Long storeId) {
@@ -68,7 +66,7 @@ public class UserStoreSubscribeService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> sendAlert(Long storeId) {
+    public List<String> sendToSQS(Long storeId) {
         Store store = storeRepo.findByIdOrElseThrow(storeId, STORE_NOT_FOUND);
 
         //가게를 구독한 유저 리스트를 꺼내온다
@@ -84,15 +82,13 @@ public class UserStoreSubscribeService {
             return emailList;
         }
 
-        String[] emailArray = userList.stream()
-                .map(User::getEmail)
-                .toList().toArray(new String[0]);
+        SendToMQDto message = new SendToMQDto(
+                emailList,
+                "가게 새 쿠폰 발행 안내",
+                store.getName(),
+                "에서 새 쿠폰이 발행되었습니다!");
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(emailArray);
-        message.setSubject("가게 새 쿠폰 발행 안내");
-        message.setText(store.getName() + "에서 새 쿠폰이 발행되었습니다!");
-        mailSender.send(message);
+        sqsService.sendMessage(message);
 
         return emailList;
     }

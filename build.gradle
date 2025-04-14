@@ -72,7 +72,6 @@ dependencies {
     //AWS SQS
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
 
     //test lombok
     testCompileOnly 'org.projectlombok:lombok'
@@ -86,6 +85,9 @@ dependencies {
 
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}
+
+test {
+    systemProperty "spring.profiles.active", "test"
 }
