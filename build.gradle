@@ -70,6 +70,10 @@ dependencies {
 
     //h2 test db
     testImplementation 'com.h2database:h2'
+
+    //elastic search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-client:8.12.0' // 서버 버전과 맞춤
 }
 
 tasks.named('test') {
