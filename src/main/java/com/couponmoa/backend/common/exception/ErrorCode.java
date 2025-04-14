@@ -19,9 +19,6 @@ public enum ErrorCode {
     FORBIDDEN_ADMIN_ONLY(FORBIDDEN, "ADMIN 권한을 가진 유저만 접근할 수 있습니다."),
     EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다."),
 
-    // subscribe
-    DUPLICATED_USER_COUPON(CONFLICT, "이미 구독한 쿠폰입니다."),
-
     // auth
     TOKEN_NOT_FOUND(NOT_FOUND, "존재하지 않는 토큰입니다."),
     INVALID_JWT(UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),
