@@ -1,12 +1,5 @@
 spring:
   profiles:
-    active: local
-  cloud:
-    aws:
-      sqs:
-        queue:
-          email-alert: ${SQS_EMAIL_ALERT_QUEUE_URL}
-      region:
-        static: ap-northeast-2
-      credentials:
-        instance-profile: true
+    group:
+      local: local
+      prod: prod

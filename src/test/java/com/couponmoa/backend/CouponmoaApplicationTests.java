@@ -11,5 +11,4 @@ class CouponmoaApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

@@ -1,8 +1,11 @@
 spring:
+  config:
+    activate:
+      on-profile: test
+
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
-    password:
     driver-class-name: org.h2.Driver
 
   jpa:
@@ -18,8 +21,6 @@ spring:
     redis:
       host: localhost
       port: 6379
-      connect-timeout: 5s
-      timeout: 5s
 
   mail:
     host: localhost
@@ -29,4 +30,10 @@ spring:
 
 jwt:
   secret:
-    key: "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo="
+    key: "mL03sk8iqOnCQ6/45LTBRRMepx/AVTuZzDPiR0DDHyM="
+
+cloud:
+  aws:
+    sqs:
+      queue:
+        email-alert: dummy-url
