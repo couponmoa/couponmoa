@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
-    password:
+    password: ""
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
@@ -29,15 +29,3 @@ spring:
 jwt:
   secret:
     key: "HULfUlHgYuvQ0YIl9qHyQ0Fq4gZb5ZofLD0isNs7Xb+2FBsrs8HMUQpGyJTEcMNb2vott/0TtiuMkvIcmc/fYg=="
-
-cloud:
-  aws:
-    sqs:
-      queue:
-        email-alert: dummy-url
-
-org:
-  jobrunr:
-    dashboard:
-      enabled: false
-      port: 8999
