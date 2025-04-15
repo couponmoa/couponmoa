@@ -31,14 +31,23 @@ public class UserCouponService {
     private final UserCouponRedisService userCouponRedisService;
     private final UserCouponAsyncService userCouponAsyncService;
 
-    public void createUserCoupon(Long userId, Long couponId) {
+    public void createUserCouponSync(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
-        validateCouponIssuable(coupon.getStatus());
+        validateCouponIssuablePeriod(coupon.getStatus());
 
         Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
         validateIssueResultCode(resultCode);
 
         userCouponAsyncService.saveUserCoupon(userId, couponId);
+    }
+
+    public void createUserCouponAsync(Long userId, Long couponId) {
+        Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
+
+        validateCouponIssuablePeriod(coupon.getStatus());
+        validateCouponNotSoldOut(coupon.getAvailableQuantity());
+
+        userCouponAsyncService.couponIssue(userId, couponId);
     }
 
     @Transactional(readOnly = true)
@@ -70,9 +79,15 @@ public class UserCouponService {
         return UseUserCouponResponse.from(userCoupon);
     }
 
-    private void validateCouponIssuable(CouponStatus status) {
+    private void validateCouponIssuablePeriod(CouponStatus status) {
         if (status != CouponStatus.IN_PROGRESS) {
             throw new ApplicationException(ErrorCode.COUPON_NOT_ACTIVE);
+        }
+    }
+
+    private void validateCouponNotSoldOut(int availableQuantity) {
+        if (availableQuantity <= 0) {
+            throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
         }
     }
 

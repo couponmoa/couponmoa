@@ -85,7 +85,7 @@ class UserCouponControllerTest {
 
             ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
             doThrow(new ApplicationException(errorCode))
-                    .when(userCouponService).createUserCoupon(anyLong(), anyLong());
+                    .when(userCouponService).createUserCouponSync(anyLong(), anyLong());
 
             mockMvc.perform(post(REQUEST_URL, couponId)
                             .with(authentication(authentication)))

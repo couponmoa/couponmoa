@@ -17,6 +17,7 @@ public class UserCouponAsyncService {
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
+    private final UserCouponRedisService userCouponRedisService;
 
     @Async
     public void saveUserCoupon(Long userId, Long couponId) {
@@ -24,5 +25,16 @@ public class UserCouponAsyncService {
         Coupon coupon = couponRepository.getReferenceById(couponId);
         UserCoupon userCoupon = new UserCoupon(user, coupon);
         userCouponRepository.save(userCoupon);
+    }
+
+    @Async
+    public void couponIssue(Long userId, Long couponId) {
+        Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
+
+        // TODO: SSE 구현
+
+        if (resultCode == 0) { // 쿠폰 발급 성공
+            saveUserCoupon(userId, couponId);
+        }
     }
 }

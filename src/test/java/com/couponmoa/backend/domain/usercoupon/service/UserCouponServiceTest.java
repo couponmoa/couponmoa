@@ -62,7 +62,7 @@ class UserCouponServiceTest {
                     .willThrow(new ApplicationException(errorCode));
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
-                    () -> userCouponService.createUserCoupon(userId, couponId));
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
 
             assertNotNull(thrown);
             assertEquals(errorCode.getMessage(), thrown.getMessage());
@@ -78,7 +78,7 @@ class UserCouponServiceTest {
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
-                    () -> userCouponService.createUserCoupon(userId, couponId));
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
 
             assertNotNull(thrown);
             assertEquals(errorCode.getMessage(), thrown.getMessage());
@@ -95,7 +95,7 @@ class UserCouponServiceTest {
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(3);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
-                    () -> userCouponService.createUserCoupon(userId, couponId));
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
 
             assertNotNull(thrown);
             assertEquals(errorCode.getMessage(), thrown.getMessage());
@@ -112,7 +112,7 @@ class UserCouponServiceTest {
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(2);
 
             ApplicationException thrown = assertThrows(ApplicationException.class,
-                    () -> userCouponService.createUserCoupon(userId, couponId));
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
 
             assertNotNull(thrown);
             assertEquals(errorCode.getMessage(), thrown.getMessage());
@@ -128,7 +128,7 @@ class UserCouponServiceTest {
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(1);
 
             IllegalStateException thrown = assertThrows(IllegalStateException.class,
-                    () -> userCouponService.createUserCoupon(userId, couponId));
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
 
             assertNotNull(thrown);
         }
@@ -142,7 +142,7 @@ class UserCouponServiceTest {
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(-1);
 
             IllegalStateException thrown = assertThrows(IllegalStateException.class,
-                    () -> userCouponService.createUserCoupon(userId, couponId));
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
 
             assertNotNull(thrown);
         }
@@ -155,7 +155,7 @@ class UserCouponServiceTest {
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(0);
 
-            userCouponService.createUserCoupon(userId, couponId);
+            userCouponService.createUserCouponSync(userId, couponId);
 
             verify(userCouponAsyncService, times(1)).saveUserCoupon(anyLong(), anyLong());
         }
