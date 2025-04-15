@@ -1,0 +1,546 @@
+* [33m62296aa[m[33m ([m[1;36mHEAD[m[33m)[m fix : test fail
+*   [33md529d63[m[33m ([m[1;31morigin/feat/coupon[m[33m)[m commit for errorFix
+[32m|[m[33m\[m  
+[32m|[m *   [33m2234ad7[m[33m ([m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #88 from sparta-final-organization/feat/store_subscribe
+[32m|[m [34m|[m[35m\[m  
+[32m|[m [34m|[m * [33m0561232[m fix(#43):cd 파이프라인 수정
+[32m|[m * [35m|[m [33m543dd23[m Merge pull request #87 from sparta-final-organization/feat/store_subscribe
+[32m|[m [36m|[m[35m\[m[35m|[m 
+[32m|[m [36m|[m * [33me0aba6b[m test(#43):appspec.yml 오타 수정
+[32m|[m * [1;31m|[m [33m4215a76[m Merge pull request #86 from sparta-final-organization/feat/store_subscribe
+[32m|[m [1;32m|[m[1;31m\[m[1;31m|[m 
+[32m|[m [1;32m|[m * [33m75e868a[m test(#43):CD 정상 작동 테스트
+[32m|[m * [1;33m|[m [33me755f28[m Merge pull request #85 from sparta-final-organization/feat/store_subscribe
+[32m|[m [1;34m|[m[1;33m\[m[1;33m|[m 
+[32m|[m [1;34m|[m * [33m1624e63[m fix(#43):오타수정
+[32m|[m * [1;35m|[m [33mc5e9de8[m Merge pull request #83 from sparta-final-organization/feat/store_subscribe
+[32m|[m [1;36m|[m[1;35m\[m[1;35m|[m 
+[32m|[m [1;36m|[m * [33mb2ac0c8[m fix(#43):오타수정
+[32m|[m * [31m|[m [33m8c78578[m Merge pull request #81 from sparta-final-organization/feat/store_subscribe
+[32m|[m [32m|[m[31m\[m[31m|[m 
+[32m|[m [32m|[m * [33m09fa864[m fix(#43): 빌드 파일 있는지 확인하는 로직 추가
+[32m|[m [32m|[m * [33m5600c57[m fix(#43): cd단계에서 test는 빌드하지 않게끔 변경
+[32m|[m * [33m|[m [33m2e9f333[m Merge pull request #79 from sparta-final-organization/feat/store_subscribe
+[32m|[m [34m|[m[33m\[m[33m|[m 
+[32m|[m [34m|[m *   [33mceee698[m pull(#43):충돌 해결
+[32m|[m [34m|[m [36m|[m[34m\[m  
+[32m|[m [34m|[m [36m|[m[34m/[m  
+[32m|[m [34m|[m[34m/[m[36m|[m   
+[32m|[m * [36m|[m   [33ma00723f[m Merge pull request #77 from sparta-final-organization/plusmate-patch-2
+[32m|[m [1;32m|[m[1;33m\[m [36m\[m  
+[32m|[m [1;32m|[m * [36m|[m [33mb0a5490[m Delete src/main/resources/application-prod.yml
+[32m|[m [1;32m|[m[1;32m/[m [36m/[m  
+[32m|[m * [36m|[m   [33mfcf68fd[m fix&feat(#72): 쿠폰 구독 로직 수정 및 알림 로직 추가 #73
+[32m|[m [1;34m|[m[1;35m\[m [36m\[m  
+[32m|[m [1;34m|[m [1;35m|[m * [33m5b897b3[m feat(#43): cd 파이프라인 작성 및 배포
+[32m|[m [1;34m|[m [1;35m|[m[1;35m/[m  
+[32m|[m [1;34m|[m * [33m0ac8b41[m fix(#72):pull 이후 컴파일 오류 수정
+[32m|[m [1;34m|[m *   [33mfcfb93f[m fix: pull 후 충돌 해결
+[32m|[m [1;34m|[m [1;36m|[m[1;34m\[m  
+[32m|[m [1;34m|[m [1;36m|[m[1;34m/[m  
+[32m|[m [1;34m|[m[1;34m/[m[1;36m|[m   
+[32m|[m * [1;36m|[m   [33mb0bd0cc[m Feature/store #74
+[32m|[m [32m|[m[33m\[m [1;36m\[m  
+[32m|[m [32m|[m * [1;36m|[m [33mec42473[m fix: #8 안돌아가는 로직 제거
+[32m|[m [32m|[m * [1;36m|[m [33m48f8479[m feat: #8 @Setter 테스트 용도 추가
+[32m|[m [32m|[m * [1;36m|[m [33mcd8b942[m feat: #8 StoreControllerTest(50% 채움) 추가
+[32m|[m [32m|[m * [1;36m|[m [33m326e958[m feat: #8 스토어서비스테스트 추가
+[32m|[m * [33m|[m [1;36m|[m   [33m1495918[m 쿠폰 발급 시 동시성 제어 구현 #75
+[32m|[m [34m|[m[35m\[m [33m\[m [1;36m\[m  
+[32m|[m [34m|[m * [33m|[m [1;36m|[m [33m7f46f4c[m feat(#69): 비동기 메서드 예외 발생 시 로그 출력 추가
+[32m|[m [34m|[m * [33m|[m [1;36m|[m [33maf90f61[m test(#69): 쿠폰 발급 동시성 제어 로직을 반영하여 기존 테스트 수정 및 신규 메서드 테스트 추가
+[32m|[m [34m|[m * [33m|[m [1;36m|[m [33m7ba16d6[m feat(#69): 쿠폰 발급 후 userCoupon 비동기 저장 로직 추가
+[32m|[m [34m|[m * [33m|[m [1;36m|[m [33m36290df[m feat(#69): Redis + Lua script를 적용해 쿠폰 발급 시 동시성 제어 구현
+[32m|[m [34m|[m * [33m|[m [1;36m|[m [33m2072884[m refactor(#69): 쿠폰 상태에서 SOLD_OUT 제거 및 availableQuantity 필드 삭제
+[32m|[m [34m|[m * [33m|[m [1;36m|[m [33m5db8b8e[m refactor(#69): ErrorCode 오탈자 수정 및 항목 순서 정리
+[32m|[m [34m|[m[34m/[m [33m/[m [1;36m/[m  
+[32m|[m [34m|[m [33m|[m * [33mb694a84[m fix(#72):테스트환경에서 빌드 안되는 오류 수정
+[32m|[m [34m|[m [33m|[m * [33mdeb0a20[m fix(#72):배포환경/로컬환경 환경설정 나누기 및 mq 메시지 전송 로직 수정
+[32m|[m [34m|[m [33m|[m * [33md961210[m fix(#72):application.yml 환경번수처리 및 .env 관련 ci파이프라인 수정
+[32m|[m [34m|[m [33m|[m * [33meb224a7[m fix(#72):applcation-test.yml이 잘 들어오는지 확인
+[32m|[m [34m|[m [33m|[m * [33m5123ee3[m fix(#72):applcation-test.yml이 잘 들어오는지 확인
+[32m|[m [34m|[m [33m|[m * [33m12b570a[m fix(#72):application-test.yml에서 시크릿키 변경 + 워크플로우 test부분 일부 수정
+[32m|[m [34m|[m [33m|[m * [33m1e9be6f[m fix(#72):application-test.yml에서 시크릿키를 더 길게 설정
+[32m|[m [34m|[m [33m|[m * [33m7402a8e[m application.yml을 읽지 못하는 문제 해결
+[32m|[m [34m|[m [33m|[m * [33mde1816f[m fix&feat(#72): 쿠폰 구독 로직 수정 및 알림 로직 추가
+[32m|[m [34m|[m [33m|[m[34m/[m  
+[32m|[m [34m|[m[34m/[m[33m|[m   
+[32m|[m * [33m|[m   [33m027745e[m 쿠폰 서비스 및 컨트롤러 테스트 코드 작성
+[32m|[m [33m|[m[1;31m\[m [33m\[m  
+[32m|[m [33m|[m [1;31m|[m[33m/[m  
+[32m|[m [33m|[m[33m/[m[1;31m|[m   
+* [33m|[m [1;31m|[m [33m9aec8a1[m fix(#82): fix simpleDto compile error and add findCouponV2 feature
+* [33m|[m [1;31m|[m [33m10da49b[m feat(#82): Coupon searching with cursor-based indexing and caching optimization
+* [33m|[m [1;31m|[m [33me106d28[m chore : clean up imports and comments
+[1;31m|[m [33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[33m|[m   
+* [33m|[m [33mbdcf7ba[m test : add coupon Serivce&Controller tests
+* [33m|[m [33mde495b2[m chore : clean up imports and comments
+* [33m|[m [33m9f57cf3[m chore : clean up imports and comments
+* [33m|[m [33m615f130[m test : add coupon Serivce&Controller tests
+[1;32m|[m[33m\[m[33m|[m 
+[1;32m|[m *   [33m7dd58f9[m UserCoupon 컨트롤러 테스트 코드 작성 #62
+[1;32m|[m [1;34m|[m[1;35m\[m  
+[1;32m|[m [1;34m|[m *   [33m0e64c4d[m Merge branch 'dev' into test/user-coupon
+[1;32m|[m [1;34m|[m [1;36m|[m[1;34m\[m  
+[1;32m|[m [1;34m|[m [1;36m|[m[1;34m/[m  
+[1;32m|[m [1;34m|[m[1;34m/[m[1;36m|[m   
+[1;32m|[m * [1;36m|[m   [33mb1fcc54[m AuthController, UserController 테스트 코드 작성(#63)
+[1;32m|[m [32m|[m[33m\[m [1;36m\[m  
+[1;32m|[m [32m|[m * [1;36m|[m [33mf77446c[m test(#63): 줄 맞춤 및 import 정리
+[1;32m|[m [32m|[m * [1;36m|[m   [33m2f66ea5[m Merge branch 'dev' into feat/user
+[1;32m|[m [32m|[m [34m|[m[32m\[m [1;36m\[m  
+[1;32m|[m [32m|[m [34m|[m[32m/[m [1;36m/[m  
+[1;32m|[m [32m|[m[32m/[m[34m|[m [1;36m|[m   
+[1;32m|[m * [34m|[m [1;36m|[m   [33m6ff721a[m Merge pull request #68 from sparta-final-organization/feat/store_subscribe
+[1;32m|[m [36m|[m[1;31m\[m [34m\[m [1;36m\[m  
+[1;32m|[m [36m|[m * [34m|[m [1;36m|[m [33m73f62b8[m fix(#43):ci @ActiveProfiles추가
+[1;32m|[m [36m|[m * [34m|[m [1;36m|[m [33m6b944b6[m fix(#43):ci 테스트코드 빌드 설정파일 경로 변경
+[1;32m|[m * [1;31m|[m [34m|[m [1;36m|[m [33m84ffcd7[m Merge pull request #67 from sparta-final-organization/feat/store_subscribe
+[1;32m|[m [1;32m|[m[1;31m\[m[1;31m|[m [34m|[m [1;36m|[m 
+[1;32m|[m [1;32m|[m * [34m|[m [1;36m|[m [33m434919f[m fix(#43):ci 테스트코드 빌드시 jwt시크릿키 설정 추가
+[1;32m|[m [1;32m|[m * [34m|[m [1;36m|[m [33m06d9bd0[m fix(#43):테스트코드 빌드시 db설정 추가
+[1;32m|[m [1;32m|[m * [34m|[m [1;36m|[m [33mec6c154[m fix(#43):ci 시에 pr/merge 과젱에서 테스트코드까지 빌드하도록 변경
+[1;32m|[m [1;32m|[m[1;32m/[m [34m/[m [1;36m/[m  
+[1;32m|[m [1;32m|[m * [1;36m|[m [33m5938a79[m test(#63): auth controller 테스트 코드 작성
+[1;32m|[m [1;32m|[m * [1;36m|[m [33m8d6b1d5[m test(#63): 회원 탈퇴 로직 수정에 의한 테스트 코드 수정-> 구독 repo mock 설정
+[1;32m|[m [1;32m|[m * [1;36m|[m [33mba01db1[m test(#63): user controller 테스트 코드 수정 given 메서드 any로 변경
+[1;32m|[m [1;32m|[m * [1;36m|[m [33m1ad4882[m test(#63): user controller 테스트 코드 작성
+[1;32m|[m [1;32m|[m * [1;36m|[m [33m05a1dd4[m test(#63): 코드 기본 세팅
+[1;32m|[m [1;32m|[m[1;32m/[m [1;36m/[m  
+[1;32m|[m [1;32m|[m * [33m8f882f2[m test(#62): UserCoupon 컨트롤러 테스트 코드 작성
+[1;32m|[m [1;32m|[m * [33md53ea28[m feat(#62): HandlerMethodValidationException 예외 처리 핸들러 추가
+[1;32m|[m [1;32m|[m[1;32m/[m  
+[1;32m|[m *   [33m371c511[m 쿠폰 만료 스케줄러 구현 #61
+[1;32m|[m [1;34m|[m[1;35m\[m  
+[1;32m|[m [1;34m|[m * [33m03ea9ea[m feat(#52): JobRunr 설정 정보 추가
+[1;32m|[m [1;34m|[m * [33m5ace970[m feat(#52): 쿠폰 상태 추가에 따른 쿠폰 발급 로직 수정
+[1;32m|[m [1;34m|[m *   [33md8e9ff4[m Merge branch 'dev' into feat/coupon-expiry-scheduler
+[1;32m|[m [1;34m|[m [1;36m|[m[1;34m\[m  
+[1;32m|[m [1;34m|[m [1;36m|[m[1;34m/[m  
+[1;32m|[m [1;34m|[m[1;34m/[m[1;36m|[m   
+[1;32m|[m [1;34m|[m * [33m81848cb[m feat(#52): 쿠폰 만료 스케줄러 구현
+* [1;34m|[m [31m|[m [33m34271db[m add monitoring tool depencies
+[1;34m|[m[1;34m/[m [31m/[m  
+* [31m|[m   [33m023ad2c[m Merge pull request #56 from sparta-final-organization/feat/store_subscribe
+[32m|[m[33m\[m [31m\[m  
+[32m|[m * [31m\[m   [33mb75f5c0[m pull 쿠폰 상태 추가 및 리팩토링(#58)
+[32m|[m [34m|[m[32m\[m [31m\[m  
+[32m|[m [34m|[m[32m/[m [31m/[m  
+[32m|[m[32m/[m[34m|[m [31m|[m   
+* [34m|[m [31m|[m   [33m59a827c[m 쿠폰 상태 추가 및 리팩토링(#58)
+[36m|[m[1;31m\[m [34m\[m [31m\[m  
+[36m|[m * [34m|[m [31m|[m [33m652ff8e[m chore: SOLE_OUT >>> SOLD_OUT
+[36m|[m * [34m|[m [31m|[m   [33ma5a4036[m feat(#33): add SOLE_OUT status and refactor issue user-coupon logic
+[36m|[m [1;32m|[m[36m\[m [34m\[m [31m\[m  
+[36m|[m [1;32m|[m[36m/[m [34m/[m [31m/[m  
+[36m|[m[36m/[m[1;32m|[m [34m|[m [31m|[m   
+[36m|[m * [34m|[m [31m|[m [33m5bf29c2[m feat(#33): add SOLE_OUT status and refactor issue user-coupon logic
+[36m|[m [1;33m|[m * [31m|[m [33m28b3f63[m feat(#60):유저 삭제시 구독 서비스 정보 일괄 삭제 구현
+[36m|[m [1;33m|[m * [31m|[m   [33mc883b35[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[36m|[m [1;33m|[m [1;34m|[m[36m\[m [31m\[m  
+[36m|[m [1;33m|[m[36m_[m[1;34m|[m[36m/[m [31m/[m  
+[36m|[m[36m/[m[1;33m|[m [1;34m|[m [31m|[m   
+* [1;33m|[m [1;34m|[m [31m|[m   [33m6cdedfa[m 쿠폰 재발급 로직 추가(#57)
+[1;36m|[m[31m\[m [1;33m\[m [1;34m\[m [31m\[m  
+[1;36m|[m * [1;33m|[m [1;34m|[m [31m|[m [33m0e27cf0[m Update CouponService.java
+[1;36m|[m [1;33m|[m[1;33m/[m [1;34m/[m [31m/[m  
+[1;36m|[m * [1;34m|[m [31m|[m [33m311680c[m feat(#55): update coupon update logic, fix coupon-repo query for excluding deleteAt
+[1;36m|[m [31m|[m * [31m|[m [33m3135d80[m fix(#55):구독 유저가 없을 시, 예외처리
+[1;36m|[m [31m|[m * [31m|[m   [33mf665ac5[m pull: fix(#42):쿠폰 로직 리팩토링 pull
+[1;36m|[m [31m|[m [32m|[m[1;36m\[m [31m\[m  
+[1;36m|[m [31m|[m[1;36m_[m[32m|[m[1;36m/[m [31m/[m  
+[1;36m|[m[1;36m/[m[31m|[m [32m|[m [31m|[m   
+* [31m|[m [32m|[m [31m|[m [33m12304bb[m fix(#42):쿠폰 로직 리팩토링
+[34m|[m[31m\[m[31m|[m [32m|[m [31m|[m 
+[34m|[m * [32m|[m [31m|[m   [33mfb214a5[m A Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/coupon
+[34m|[m [36m|[m[34m\[m [32m\[m [31m\[m  
+[34m|[m [36m|[m[34m/[m [32m/[m [31m/[m  
+[34m|[m[34m/[m[36m|[m [32m|[m [31m|[m   
+* [36m|[m [32m|[m [31m|[m   [33mdcc306b[m fix(#53) : 검증로직 위치 변경 및 Swagger 설명 추가
+[31m|[m[1;33m\[m [36m\[m [32m\[m [31m\[m  
+[31m|[m [1;33m|[m[31m_[m[36m|[m[31m_[m[32m|[m[31m/[m  
+[31m|[m[31m/[m[1;33m|[m [36m|[m [32m|[m   
+[31m|[m * [36m|[m [32m|[m [33mb99c970[m feat: #8 swagger설명 추가
+[31m|[m * [36m|[m [32m|[m [33m2270710[m fix: #8 컨트롤러 검증 로직 --> 서비스로 옮김
+[31m|[m [1;33m|[m * [32m|[m [33macc3586[m refactor(#42): refactoring update couponStatus logic
+[31m|[m [1;33m|[m * [32m|[m [33m1888abe[m fix(#42): update coupon with null-safe & edit status
+[31m|[m [1;33m|[m [1;33m|[m * [33m4030ba3[m feat(#55):쿠폰 생성 시 가게 구독 유저들에게 알림 전송
+[31m|[m [1;33m|[m[31m_[m[1;33m|[m[31m/[m  
+[31m|[m[31m/[m[1;33m|[m [1;33m|[m   
+* [1;33m|[m [1;33m|[m   [33mb3e7b7f[m 회원 swagger 설명 추가(#51)
+[1;34m|[m[1;35m\[m [1;33m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [1;33m|[m [33m9ac6331[m refactor(#50): 회원 swagger 설명 추가
+[1;34m|[m[1;34m/[m [1;33m/[m [1;33m/[m  
+* [1;33m|[m [1;33m|[m   [33me8f82f5[m Merge pull request #49 from sparta-final-organization/feat/store_subscribe
+[1;36m|[m[31m\[m [1;33m\[m [1;33m\[m  
+[1;36m|[m * [1;33m|[m [1;33m|[m [33m8d93eb7[m fix:(#43):ci-cd.yml에 pr, push 두 경우 모두 ci되도록 변경
+[1;36m|[m * [1;33m|[m [1;33m|[m [33m321d8cb[m fix:(#43):ci-cd.yml에 application-local.yml 설정 추가
+[1;36m|[m * [1;33m|[m [1;33m|[m [33m325ae57[m fix:(#43):ci-cd.yml에 pr시 ci가 되도록 로직 추가
+* [31m|[m [1;33m|[m [1;33m|[m [33m8e35eb6[m Merge pull request #48 from sparta-final-organization/feat/store_subscribe
+[32m|[m[31m\[m[31m|[m [1;33m|[m [1;33m|[m 
+[32m|[m * [1;33m|[m [1;33m|[m [33ma61ba6a[m fix:(#43):ci-cd.yml에 db 헬스체크 로직 추가
+* [33m|[m [1;33m|[m [1;33m|[m [33m1e1e4a4[m Merge pull request #47 from sparta-final-organization/feat/store_subscribe
+[34m|[m[33m\[m[33m|[m [1;33m|[m [1;33m|[m 
+[34m|[m * [1;33m|[m [1;33m|[m [33m29b0ebf[m fix:(#43):ci-cd.yml에 도커 컴포즈 설치 로직 추가
+* [35m|[m [1;33m|[m [1;33m|[m [33mf40f8d9[m Merge pull request #46 from sparta-final-organization/feat/store_subscribe
+[36m|[m[35m\[m[35m|[m [1;33m|[m [1;33m|[m 
+[36m|[m * [1;33m|[m [1;33m|[m [33mdea584c[m feat:(#43):ci까지의 과정 커밋
+[36m|[m * [1;33m|[m [1;33m|[m   [33md585f1b[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[36m|[m [1;32m|[m[36m\[m [1;33m\[m [1;33m\[m  
+[36m|[m [1;32m|[m[36m/[m [1;33m/[m [1;33m/[m  
+[36m|[m[36m/[m[1;32m|[m [1;33m|[m [1;33m|[m   
+* [1;32m|[m [1;33m|[m [1;33m|[m   [33ma05a675[m Merge pull request #44 from sparta-final-organization/feat/coupon
+[1;34m|[m[1;33m\[m [1;32m\[m [1;33m\[m [1;33m\[m  
+[1;34m|[m [1;33m|[m [1;32m|[m[1;33m_[m[1;33m|[m[1;33m/[m  
+[1;34m|[m [1;33m|[m[1;33m/[m[1;32m|[m [1;33m|[m   
+[1;34m|[m * [1;32m|[m [1;33m|[m [33m3fb2644[m feat(#42): add status update feature in CouponStatus enum and responsedto
+[1;34m|[m * [1;32m|[m [1;33m|[m [33m3d32c9d[m feat(#42): update couponStatus when sole_out
+[1;34m|[m * [1;32m|[m [1;33m|[m [33m307c702[m chore(#42): rename 'CouponCategory' to 'CouponStatus'
+[1;34m|[m * [1;32m|[m [1;33m|[m [33m8bda655[m feat(#42): add couponCategory var, and enhance coupon_create&update API)
+* [1;35m|[m [1;32m|[m [1;33m|[m   [33ma7521cf[m Merge pull request #45 from sparta-final-organization/BerensLeap-patch-3
+[1;35m|[m[31m\[m [1;35m\[m [1;32m\[m [1;33m\[m  
+[1;35m|[m [31m|[m[1;35m/[m [1;32m/[m [1;33m/[m  
+[1;35m|[m[1;35m/[m[31m|[m [1;32m|[m [1;33m|[m   
+[1;35m|[m * [1;32m|[m [1;33m|[m [33m9bca40e[m Update README.md
+[1;35m|[m[1;35m/[m [1;32m/[m [1;33m/[m  
+* [1;32m|[m [1;33m|[m   [33m77a18ef[m Merge pull request #41 from sparta-final-organization/feat/store_subscribe
+[32m|[m[33m\[m [1;32m\[m [1;33m\[m  
+[32m|[m [33m|[m * [1;33m|[m [33mb7eaf4f[m feat(#43):docker-compse 환경 구축
+[32m|[m [33m|[m[33m/[m [1;33m/[m  
+[32m|[m * [1;33m/[m [33m8009bfa[m fix: 구독서비스 transactional(readonly) 수정
+[32m|[m[32m/[m [1;33m/[m  
+* [1;33m|[m [33mea133b2[m Merge pull request #39 from sparta-final-organization/feature/store
+[34m|[m[1;33m\[m[1;33m|[m 
+[34m|[m * [33m48922b1[m feat: #8 컨트롤러 로직 변경에 따른 수정
+[34m|[m * [33ma237e81[m feat: #8 가게 목록을 userId로 필터링
+[34m|[m * [33m90da903[m fix: #8 가게 생성을 ADMIN만 가능하게 수정 + 내 가게 조회, 내 가게 목록 조회
+[34m|[m * [33m8603bed[m feat: #8 이름 + ID만 반환 하기 위해 필요한 Dto 추가
+[34m|[m * [33m90d8efa[m feat: #8 소프트 삭제 필드 추가
+[34m|[m *   [33m85b5c1b[m feat: #8 팀원 리펙토링 코드 추가
+[34m|[m [36m|[m[1;31m\[m  
+[34m|[m * [1;31m\[m   [33me5f09aa[m feat: #8 팀원 코드 추가
+[34m|[m [1;32m|[m[1;33m\[m [1;31m\[m  
+[34m|[m * [1;33m\[m [1;31m\[m   [33ma1d17be[m feat: #8 팀원 코드 추가
+[34m|[m [1;34m|[m[1;35m\[m [1;33m\[m [1;31m\[m  
+[34m|[m * [1;35m\[m [1;33m\[m [1;31m\[m   [33ma07f293[m feat: #8 팀원 코드 추가
+[34m|[m [1;36m|[m[31m\[m [1;35m\[m [1;33m\[m [1;31m\[m  
+[34m|[m * [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [33mc32abf5[m feat: #8 팀원 코드 추가
+[34m|[m * [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m   [33m33b0bd4[m fix: #8 어노테이션애 v1추가
+[34m|[m [32m|[m[33m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m  
+[34m|[m * [33m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m   [33mf2b9617[m feat: #8 팀원 코드들 추가
+[34m|[m [34m|[m[35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m  
+[34m|[m * [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [33m0e3152f[m fix: #8 카테고리 필드 삭제
+[34m|[m * [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [33m0d084de[m fix: #8 카테고리 필드 삭제
+* [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m   [33m88ecec2[m Merge pull request #37 from sparta-final-organization/feat/user
+[36m|[m[1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m  
+[36m|[m * [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m   [33m7840577[m Merge branch 'dev' into feat/user
+[36m|[m [1;32m|[m[1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m  
+[36m|[m [1;32m|[m [1;31m|[m [35m|[m[1;31m_[m[35m|[m[1;31m_[m[33m|[m[1;31m_[m[31m|[m[1;31m_[m[1;35m|[m[1;31m_[m[1;33m|[m[1;31m/[m  
+[36m|[m [1;32m|[m [1;31m|[m[1;31m/[m[35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   
+[36m|[m * [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [33m0d4512e[m fix(#36): token 재발급시 이전 토큰 무효화
+[36m|[m * [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [33m6b3f96d[m fix(#36): refresh token으로 api 접근 가능한 문제 수정
+[36m|[m * [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   [33m1300412[m Merge branch 'dev' into feat/user
+[36m|[m [1;34m|[m[1;35m\[m [1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+* [1;34m|[m [1;35m\[m [1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m   [33me6af966[m Merge pull request #38 from sparta-final-organization/feat/coupon
+[1;31m|[m[31m\[m [1;34m\[m [1;35m\[m [1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+[1;31m|[m [31m|[m[1;31m_[m[1;34m|[m[1;31m_[m[1;35m|[m[1;31m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m  
+[1;31m|[m[1;31m/[m[31m|[m [1;34m|[m [1;35m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   
+[1;31m|[m * [1;34m|[m [1;35m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [33mea71ebb[m refactor(#03): refactoring coupon service logics, add request Defaults and null control
+* [31m|[m [1;34m|[m [1;35m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   [33m60a51b0[m Merge pull request #35 from sparta-final-organization/refactor/user-coupon
+[32m|[m[33m\[m [31m\[m [1;34m\[m [1;35m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+[32m|[m * [31m\[m [1;34m\[m [1;35m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m   [33m5a3488c[m Merge branch 'dev' into refactor/user-coupon
+[32m|[m [34m|[m[35m\[m [31m\[m [1;34m\[m [1;35m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+[32m|[m * [35m|[m [31m|[m [1;34m|[m [1;35m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [33m40f2c42[m refactor(#33): 코드 일관성을 위한 사용자 쿠폰 코드 리팩토링
+[32m|[m [1;35m|[m [35m|[m[1;35m_[m[31m|[m[1;35m_[m[1;34m|[m[1;35m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m  
+[32m|[m [1;35m|[m[1;35m/[m[35m|[m [31m|[m [1;34m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   
+* [1;35m|[m [35m|[m [31m|[m [1;34m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   [33m8cdd009[m Merge pull request #34 from sparta-final-organization/feat/coupon
+[35m|[m[31m\[m [1;35m\[m [35m\[m [31m\[m [1;34m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+[35m|[m [31m|[m[35m_[m[1;35m|[m[35m/[m [31m/[m [1;34m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m  
+[35m|[m[35m/[m[31m|[m [1;35m|[m [31m/[m [1;34m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m   
+[35m|[m [31m|[m [1;35m|[m[31m/[m [1;34m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m    
+[35m|[m [31m|[m[31m/[m[1;35m|[m [1;34m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m     
+[35m|[m * [1;35m|[m [1;34m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [33mb7ccdf1[m refactor(#03):add issuedQuantity var
+* [1;31m|[m [1;35m|[m [1;34m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   [33ma09c2a7[m Merge pull request #32 from sparta-final-organization/feat/user
+[1;35m|[m[1;34m\[m [1;31m\[m [1;35m\[m [1;34m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+[1;35m|[m [1;34m|[m[1;35m_[m[1;31m|[m[1;35m/[m [1;34m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m  
+[1;35m|[m[1;35m/[m[1;34m|[m [1;31m|[m [1;34m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m   
+[1;35m|[m [1;34m|[m [1;31m|[m[1;34m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m [1;33m/[m    
+[1;35m|[m [1;34m|[m[1;34m/[m[1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m     
+[1;35m|[m * [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m [33m7ba6d9c[m chore(#4): UserController RequestMapping uri 수정
+* [1;33m|[m [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [1;33m|[m   [33m2c5140f[m Merge pull request #31 from sparta-final-organization/feat/store_subscribe
+[1;33m|[m[1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m [1;33m\[m  
+[1;33m|[m [1;35m|[m[1;33m_[m[1;33m|[m[1;33m_[m[1;31m|[m[1;33m_[m[35m|[m[1;33m_[m[35m|[m[1;33m_[m[33m|[m[1;33m_[m[31m|[m[1;33m_[m[1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m   
+[1;33m|[m * [1;33m|[m [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m [33m135a289[m fix:globalExceptionHandler warn -> error 로 수정
+[1;33m|[m * [1;33m|[m [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m   [33m6556ded[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[1;33m|[m [1;36m|[m[1;33m\[m [1;33m\[m [1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m  
+[1;33m|[m [1;36m|[m[1;33m/[m [1;33m/[m [1;31m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m  
+[1;33m|[m[1;33m/[m[1;36m|[m [1;33m|[m [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m   
+* [1;36m|[m [1;33m|[m [1;31m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m|[m   [33m8db4a1c[m Merge pull request #30 from sparta-final-organization/feat/coupon
+[1;35m|[m[1;31m\[m [1;36m\[m [1;33m\[m [1;31m\[m [35m\[m [35m\[m [33m\[m [31m\[m [1;35m\[m  
+[1;35m|[m [1;31m|[m [1;36m|[m[1;31m_[m[1;33m|[m[1;31m/[m [35m/[m [35m/[m [33m/[m [31m/[m [1;35m/[m  
+[1;35m|[m [1;31m|[m[1;31m/[m[1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m [31m|[m [1;35m/[m   
+[1;35m|[m [1;31m|[m[1;35m_[m[1;36m|[m[1;35m_[m[1;33m|[m[1;35m_[m[35m|[m[1;35m_[m[35m|[m[1;35m_[m[33m|[m[1;35m_[m[31m|[m[1;35m/[m    
+[1;35m|[m[1;35m/[m[1;31m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m [31m|[m     
+[1;35m|[m * [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m [31m|[m   [33m4e9e313[m fix: resolve conflicts for merge
+[1;35m|[m [34m|[m[1;35m\[m [1;36m\[m [1;33m\[m [35m\[m [35m\[m [33m\[m [31m\[m  
+[1;35m|[m [34m|[m[1;35m/[m [1;36m/[m [1;33m/[m [35m/[m [35m/[m [33m/[m [31m/[m  
+[1;35m|[m[1;35m/[m[34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m [31m|[m   
+* [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m [31m|[m   [33md3fbec0[m[33m ([m[1;32mdev[m[33m)[m Merge pull request #27 from sparta-final-organization/feat/user-coupon
+[31m|[m[1;31m\[m [34m\[m [1;36m\[m [1;33m\[m [35m\[m [35m\[m [33m\[m [31m\[m  
+[31m|[m [1;31m|[m[31m_[m[34m|[m[31m_[m[1;36m|[m[31m_[m[1;33m|[m[31m_[m[35m|[m[31m_[m[35m|[m[31m_[m[33m|[m[31m/[m  
+[31m|[m[31m/[m[1;31m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m   
+[31m|[m * [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m [33m345027a[m feat(#2): 충돌 해결
+[31m|[m * [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m   [33m920e212[m Merge branch 'dev' into feat/user-coupon
+[31m|[m [1;32m|[m[31m\[m [34m\[m [1;36m\[m [1;33m\[m [35m\[m [35m\[m [33m\[m  
+[31m|[m [1;32m|[m[31m/[m [34m/[m [1;36m/[m [1;33m/[m [35m/[m [35m/[m [33m/[m  
+[31m|[m[31m/[m[1;32m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m   
+* [1;32m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m [33m|[m   [33m2df05f2[m Merge pull request #29 from sparta-final-organization/feat/store_subscribe
+[33m|[m[1;35m\[m [1;32m\[m [34m\[m [1;36m\[m [1;33m\[m [35m\[m [35m\[m [33m\[m  
+[33m|[m [1;35m|[m[33m_[m[1;32m|[m[33m_[m[34m|[m[33m_[m[1;36m|[m[33m_[m[1;33m|[m[33m_[m[35m|[m[33m_[m[35m|[m[33m/[m  
+[33m|[m[33m/[m[1;35m|[m [1;32m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m   
+* [1;35m|[m [1;32m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m [35m|[m   [33mc0b6d84[m Merge pull request #28 from sparta-final-organization/feat/store_subscribe
+[35m|[m[31m\[m [1;35m\[m [1;32m\[m [34m\[m [1;36m\[m [1;33m\[m [35m\[m [35m\[m  
+[35m|[m [31m|[m[35m_[m[1;35m|[m[35m_[m[1;32m|[m[35m_[m[34m|[m[35m_[m[1;36m|[m[35m_[m[1;33m|[m[35m_[m[35m|[m[35m/[m  
+[35m|[m[35m/[m[31m|[m [1;35m|[m [1;32m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m   
+[35m|[m [31m|[m [1;35m|[m * [34m|[m [1;36m|[m [1;33m|[m [35m|[m [33m98f2084[m feat(#2): Coupon 엔티티 변경에 따른 API 및 테스트 코드 수정
+[35m|[m [31m|[m [1;35m|[m * [34m|[m [1;36m|[m [1;33m|[m [35m|[m   [33mf8bac6d[m Merge branch 'dev' into feat/user-coupon
+[35m|[m [31m|[m [1;35m|[m [32m|[m[33m\[m [34m\[m [1;36m\[m [1;33m\[m [35m\[m  
+[35m|[m [31m|[m [1;35m|[m * [33m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m [33mae2411c[m feat(#2): ErrorCode 및 StoreCategory 충돌 해결
+[35m|[m [31m|[m [1;35m|[m * [33m|[m [34m|[m [1;36m|[m [1;33m|[m [35m|[m   [33m5fa621f[m Merge branch 'dev' into feat/user-coupon
+[35m|[m [31m|[m [1;35m|[m [34m|[m[35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m [35m\[m  
+[35m|[m [31m|[m [1;35m|[m [34m|[m [35m|[m [33m|[m[35m_[m[34m|[m[35m_[m[1;36m|[m[35m_[m[1;33m|[m[35m/[m  
+[35m|[m [31m|[m [1;35m|[m [34m|[m [35m|[m[35m/[m[33m|[m [34m|[m [1;36m|[m [1;33m|[m   
+[35m|[m [31m|[m [1;35m|[m * [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m   [33ma657f73[m Merge branch 'refs/heads/dev' into feat/user-coupon
+[35m|[m [31m|[m [1;35m|[m [36m|[m[1;31m\[m [35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m  
+[35m|[m [31m|[m [1;35m|[m * [1;31m\[m [35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m   [33mde4f203[m Merge branch 'dev' into feat/user-coupon
+[35m|[m [31m|[m [1;35m|[m [1;32m|[m[1;33m\[m [1;31m\[m [35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m  
+[35m|[m [31m|[m [1;35m|[m * [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33m969aa77[m test(#2): 사용자 쿠폰 서비스 테스트 코드 작성
+[35m|[m [31m|[m [1;35m|[m * [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33m1a3021d[m feat(#2): 발급한 쿠폰 목록 조회 시 최신순 정렬 추가
+[35m|[m [31m|[m [1;35m|[m * [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33maebe0d1[m feat(#2): 인증 기능 적용에 따라 userId 처리 방식 변경 및 권한 체크 추가
+[35m|[m [31m|[m [1;35m|[m * [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m   [33ma35acae[m Merge branch 'dev' into feat/user-coupon
+[35m|[m [31m|[m [1;35m|[m [1;34m|[m[1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m  
+[35m|[m [31m|[m [1;35m|[m * [1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m   [33m6d94914[m Merge branch 'dev' into feat/user-coupon
+[35m|[m [31m|[m [1;35m|[m [1;36m|[m[31m\[m [1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [33m\[m [34m\[m [1;36m\[m [1;33m\[m  
+[35m|[m [31m|[m [1;35m|[m * [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33m53ac293[m feat(#2): 쿠폰 코드 사용 처리 API 구현
+[35m|[m [31m|[m [1;35m|[m * [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33m5b2ff75[m feat(#2): 쿠폰 코드 조회 API 구현
+[35m|[m [31m|[m [1;35m|[m * [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33m2889df3[m feat(#2): 발급받은 쿠폰 목록 조회 API 구현
+[35m|[m [31m|[m [1;35m|[m * [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [34m|[m [1;36m|[m [1;33m|[m [33m49baa07[m feat(#2): 쿠폰 발급 API 구현
+[35m|[m [31m|[m [1;35m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m * [1;36m|[m [1;33m|[m [33m8fc75ab[m chore(#03): remove unused imports
+[35m|[m [31m|[m [1;35m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m * [1;36m|[m [1;33m|[m [33mafbd73c[m chore(#03): delete logging codes
+[35m|[m [31m|[m [1;35m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m * [1;36m|[m [1;33m|[m [33mf1a407d[m feat(#03): add validateStoreOwner & refactor dtos
+[35m|[m [31m|[m [1;35m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [31m|[m * [1;33m|[m [33m7be69f9[m pull 적용
+[35m|[m [31m|[m [1;35m|[m [31m|[m[1;35m_[m[31m|[m[1;35m_[m[1;35m|[m[1;35m_[m[1;33m|[m[1;35m_[m[1;31m|[m[1;35m_[m[35m|[m[1;35m_[m[33m|[m[1;35m_[m[31m|[m[1;35m/[m [1;33m/[m  
+[35m|[m [31m|[m [1;35m|[m[1;35m/[m[31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [31m|[m [1;33m|[m   
+[35m|[m [31m|[m * [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [31m|[m [1;33m|[m [33m792a5e9[m fix(#24):transactional readonly 수정
+[35m|[m [31m|[m[31m/[m [31m/[m [31m/[m [1;35m/[m [1;33m/[m [1;31m/[m [35m/[m [33m/[m [31m/[m [1;33m/[m  
+[35m|[m * [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [31m|[m [1;33m|[m   [33mf01c51b[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[35m|[m [32m|[m[35m\[m [31m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [33m\[m [31m\[m [1;33m\[m  
+[35m|[m [32m|[m[35m/[m [31m/[m [31m/[m [1;35m/[m [1;33m/[m [1;31m/[m [35m/[m [33m/[m [31m/[m [1;33m/[m  
+[35m|[m[35m/[m[32m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [31m|[m [1;33m|[m   
+* [32m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [33m|[m [31m|[m [1;33m|[m   [33mfdc2230[m Merge pull request #25 from sparta-final-organization/feat/store_subscribe
+[33m|[m[35m\[m [32m\[m [31m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [33m\[m [31m\[m [1;33m\[m  
+[33m|[m [35m|[m[33m_[m[32m|[m[33m_[m[31m|[m[33m_[m[31m|[m[33m_[m[1;35m|[m[33m_[m[1;33m|[m[33m_[m[1;31m|[m[33m_[m[35m|[m[33m/[m [31m/[m [1;33m/[m  
+[33m|[m[33m/[m[35m|[m [32m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [31m|[m [1;33m|[m   
+[33m|[m [35m|[m * [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [31m|[m [1;33m|[m [33ma48658f[m fix(#16):알림Api url 오타 수정
+[33m|[m [35m|[m * [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [31m|[m [1;33m|[m [33m11e6392[m fix(#16):쿠폰 구독 알림 메시지 수정
+[33m|[m [35m|[m * [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [31m|[m [1;33m|[m   [33m10b4a94[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[33m|[m [35m|[m [36m|[m[33m\[m [31m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [31m\[m [1;33m\[m  
+[33m|[m [35m|[m[33m_[m[36m|[m[33m/[m [31m/[m [31m/[m [1;35m/[m [1;33m/[m [1;31m/[m [35m/[m [31m/[m [1;33m/[m  
+[33m|[m[33m/[m[35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [31m|[m [1;33m|[m   
+* [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [35m|[m [31m|[m [1;33m|[m   [33m28f8190[m Merge pull request #19 from sparta-final-organization/feat/coupon
+[35m|[m[31m\[m [35m\[m [36m\[m [31m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m [35m\[m [31m\[m [1;33m\[m  
+[35m|[m [31m|[m[35m_[m[35m|[m[35m_[m[36m|[m[35m_[m[31m|[m[35m_[m[31m|[m[35m_[m[1;35m|[m[35m_[m[1;33m|[m[35m_[m[1;31m|[m[35m/[m [31m/[m [1;33m/[m  
+[35m|[m[35m/[m[31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [31m/[m [1;33m/[m   
+[35m|[m [31m|[m [35m|[m[31m_[m[36m|[m[31m_[m[31m|[m[31m_[m[31m|[m[31m_[m[1;35m|[m[31m_[m[1;33m|[m[31m_[m[1;31m|[m[31m/[m [1;33m/[m    
+[35m|[m [31m|[m[31m/[m[35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [1;33m|[m     
+[35m|[m * [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;31m|[m [1;33m|[m   [33mbb61aed[m fix(#03):fix merge conflicts
+[35m|[m [1;34m|[m[1;31m\[m [35m\[m [36m\[m [31m\[m [31m\[m [1;35m\[m [1;33m\[m [1;31m\[m [1;33m\[m  
+[35m|[m [1;34m|[m [1;31m|[m [35m|[m[1;31m_[m[36m|[m[1;31m_[m[31m|[m[1;31m_[m[31m|[m[1;31m_[m[1;35m|[m[1;31m_[m[1;33m|[m[1;31m/[m [1;33m/[m  
+[35m|[m [1;34m|[m [1;31m|[m[1;31m/[m[35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m   
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33mb2ee389[m chore(#03): edit CouponRepo query
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33mdee302c[m chore(#03): Delete MockStoreEntity
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33md505310[m chore(#03): Delete MockStoreRepository
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33mc5f5032[m chore(#03): Delete MockStoreController
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33m045a15d[m fix(#03): fix paging default value
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33m98fae19[m feat(#03): Coupon Api findOne,findAll
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33ma03a071[m chore(#03): variable 수정
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33m779b33b[m chore(#3):package 정리
+[35m|[m * [1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;35m|[m [1;33m|[m [1;33m|[m [33maf8198e[m feat(#3): couponApi 생성, 수정, 삭제 기능 구현
+[35m|[m [1;35m|[m [1;31m|[m[1;35m_[m[35m|[m[1;35m_[m[36m|[m[1;35m_[m[31m|[m[1;35m_[m[31m|[m[1;35m/[m [1;33m/[m [1;33m/[m  
+[35m|[m [1;35m|[m[1;35m/[m[1;31m|[m [35m|[m [36m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m   
+[35m|[m [1;35m|[m [1;31m|[m [35m|[m * [31m|[m [31m|[m [1;33m|[m [1;33m|[m [33m96afee1[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[35m|[m [1;35m|[m [1;31m|[m [35m|[m[35m/[m[35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m 
+[35m|[m [1;35m|[m[35m_[m[1;31m|[m[35m_[m[35m|[m[35m/[m [31m/[m [31m/[m [1;33m/[m [1;33m/[m  
+[35m|[m[35m/[m[1;35m|[m [1;31m|[m [35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m   
+* [1;35m|[m [1;31m|[m [35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m   [33m0f6a444[m Merge pull request #26 from sparta-final-organization/feature/store
+[1;31m|[m[33m\[m [1;35m\[m [1;31m\[m [35m\[m [31m\[m [31m\[m [1;33m\[m [1;33m\[m  
+[1;31m|[m [33m|[m[1;31m_[m[1;35m|[m[1;31m/[m [35m/[m [31m/[m [31m/[m [1;33m/[m [1;33m/[m  
+[1;31m|[m[1;31m/[m[33m|[m [1;35m|[m [35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m   
+[1;31m|[m * [1;35m|[m [35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m [33m9c41581[m fix: #8 애러코드 적용 안 된 부분 수정 완료
+[1;31m|[m[1;31m/[m [1;35m/[m [35m/[m [31m/[m [31m/[m [1;33m/[m [1;33m/[m  
+[1;31m|[m [1;35m|[m * [31m/[m [31m/[m [1;33m/[m [1;33m/[m [33m0dd442e[m feat(#16):구독 알림 로직 구현 완료
+[1;31m|[m [1;35m|[m[1;31m/[m [31m/[m [31m/[m [1;33m/[m [1;33m/[m  
+[1;31m|[m[1;31m/[m[1;35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m   
+* [1;35m|[m [31m|[m [31m|[m [1;33m|[m [1;33m|[m   [33m954275e[m Merge pull request #17 from sparta-final-organization/feat/store_subscribe
+[1;33m|[m[35m\[m [1;35m\[m [31m\[m [31m\[m [1;33m\[m [1;33m\[m  
+[1;33m|[m [35m|[m[1;33m_[m[1;35m|[m[1;33m_[m[31m|[m[1;33m_[m[31m|[m[1;33m/[m [1;33m/[m  
+[1;33m|[m[1;33m/[m[35m|[m [1;35m|[m [31m|[m [31m|[m [1;33m|[m   
+[1;33m|[m * [1;35m|[m [31m|[m [31m|[m [1;33m|[m   [33mb0b46c4[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[1;33m|[m [36m|[m[1;33m\[m [1;35m\[m [31m\[m [31m\[m [1;33m\[m  
+[1;33m|[m [36m|[m[1;33m/[m [1;35m/[m [31m/[m [31m/[m [1;33m/[m  
+[1;33m|[m[1;33m/[m[36m|[m [1;35m|[m [31m|[m [31m|[m [1;33m|[m   
+* [36m|[m [1;35m|[m [31m|[m [31m|[m [1;33m|[m   [33mff504ca[m Merge pull request #18 from sparta-final-organization/feat/user
+[1;32m|[m[1;33m\[m [36m\[m [1;35m\[m [31m\[m [31m\[m [1;33m\[m  
+[1;32m|[m [1;33m|[m [36m|[m[1;33m_[m[1;35m|[m[1;33m_[m[31m|[m[1;33m_[m[31m|[m[1;33m/[m  
+[1;32m|[m [1;33m|[m[1;33m/[m[36m|[m [1;35m|[m [31m|[m [31m|[m   
+[1;32m|[m * [36m|[m [1;35m|[m [31m|[m [31m|[m [33ma773e82[m test(#4): user 관련 서비스로직 테스트 코드 작성
+[1;32m|[m * [36m|[m [1;35m|[m [31m|[m [31m|[m [33ma1b13d8[m chore(#4): 탈퇴 로직에 Transactional 어노테이션 추가 및 requestDto에 생성자어노테이션 추가
+[1;32m|[m * [36m|[m [1;35m|[m [31m|[m [31m|[m [33md66fa33[m chore(#4): 불필요 import 삭제 및 줄맞춤
+[1;32m|[m * [36m|[m [1;35m|[m [31m|[m [31m|[m [33mc34c71c[m feat(#4): refreshToken 기능 구현 및 Redis 설정
+[1;32m|[m * [36m|[m [1;35m|[m [31m|[m [31m|[m   [33m71598e9[m Merge branch 'dev' into feat/user
+[1;32m|[m [1;34m|[m[1;35m\[m [36m\[m [1;35m\[m [31m\[m [31m\[m  
+[1;32m|[m [1;34m|[m [1;35m|[m [36m|[m[1;35m/[m [31m/[m [31m/[m  
+[1;32m|[m [1;34m|[m [1;35m|[m[1;35m/[m[36m|[m [31m|[m [31m|[m   
+[1;32m|[m * [1;35m|[m [36m|[m [31m|[m [31m|[m [33m62ba34b[m feat(#4): 회원 관리 API 구현
+[1;32m|[m [1;35m|[m [1;35m|[m * [31m|[m [31m|[m   [33m29d1aca[m pull : 1차 pull 완료
+[1;32m|[m [1;35m|[m [1;35m|[m [1;36m|[m[1;32m\[m [31m\[m [31m\[m  
+[1;32m|[m [1;35m|[m[1;32m_[m[1;35m|[m[1;32m_[m[1;36m|[m[1;32m/[m [31m/[m [31m/[m  
+[1;32m|[m[1;32m/[m[1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m   
+* [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m   [33m84071d1[m Merge pull request #23 from sparta-final-organization/feature/store
+[32m|[m[33m\[m [1;35m\[m [1;35m\[m [1;36m\[m [31m\[m [31m\[m  
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33mca21d3b[m feat: #8 팀원 파일 추가
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m82094e7[m fix: #8 카테고리 필드 제거에 따른 로직 수정
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33me740974[m fix: #8 카테고리 필드 제거
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m05c9d48[m fix: #8 카테고리 필드 제거
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m   [33ma82d418[m fix: #8 카테고리 필드 제거
+[32m|[m [34m|[m[1;35m\[m [1;35m\[m [1;35m\[m [1;36m\[m [31m\[m [31m\[m  
+[32m|[m [34m|[m [1;35m|[m [1;35m|[m[1;35m/[m [1;36m/[m [31m/[m [31m/[m  
+[32m|[m [34m|[m [1;35m|[m[1;35m/[m[1;35m|[m [1;36m|[m [31m|[m [31m|[m   
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m666a45d[m feat: #8  더미파일 추가
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m48cb0cb[m feat: #8  StoreController 로직 추가
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m03f2854[m feat: #8  StoreRepository 로직 추가
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m0e528ac[m feat: #8 StoreService 로직 추가
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m2beb540[m feat: #8 UserStoreSubscribe
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m7765e11[m feat: #8 UserCouponSubscribe
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m0006a25[m feat: #8 유저쿠폰 레퍼지토리
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m [33m1289abd[m feat: #8 리드미
+[32m|[m * [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [31m|[m   [33m957169a[m feat: #8 Jwt기반 유저 Crud(팀원)
+[32m|[m [36m|[m[31m\[m [1;35m\[m [1;35m\[m [1;36m\[m [31m\[m [31m\[m  
+[32m|[m [36m|[m [31m|[m [1;35m|[m[31m_[m[1;35m|[m[31m_[m[1;36m|[m[31m_[m[31m|[m[31m/[m  
+[32m|[m [36m|[m [31m|[m[31m/[m[1;35m|[m [1;35m|[m [1;36m|[m [31m|[m   
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33mdce873a[m feat: #8 임시 저장
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33ma9ec290[m feat: #8 임시 저장
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33ma3fedf2[m feat: #8 update 메서드
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33me79c264[m feat: #8 StoreService
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33me45ff95[m feat: #8 StoreResponse
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33m865ee6c[m feat: #8 StoreRequest
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33m4da1e99[m feat: #8 StoreRepository
+[32m|[m * [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33mcbb7cf2[m feat: #8 유저 연관관계
+* [1;31m|[m [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m   [33ma6e31ad[m Merge pull request #22 from sparta-final-organization/BerensLeap-patch-2
+[1;32m|[m[1;33m\[m [1;31m\[m [31m\[m [1;35m\[m [1;35m\[m [1;36m\[m [31m\[m  
+[1;32m|[m * [1;31m|[m [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33m52f21af[m Update README.md
+[1;32m|[m[1;32m/[m [1;31m/[m [31m/[m [1;35m/[m [1;35m/[m [1;36m/[m [31m/[m  
+* [1;31m|[m [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m   [33mbd43640[m Merge pull request #21 from sparta-final-organization/BerensLeap-patch-1
+[1;34m|[m[1;35m\[m [1;31m\[m [31m\[m [1;35m\[m [1;35m\[m [1;36m\[m [31m\[m  
+[1;34m|[m * [1;31m|[m [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m [33m137ba57[m Update README.md
+[1;34m|[m[1;34m/[m [1;31m/[m [31m/[m [1;35m/[m [1;35m/[m [1;36m/[m [31m/[m  
+* [1;31m|[m [31m|[m [1;35m|[m [1;35m|[m [1;36m|[m [31m|[m   [33m9375a27[m Merge pull request #20 from sparta-final-organization/kny5579-patch-1
+[1;35m|[m[31m\[m [1;31m\[m [31m\[m [1;35m\[m [1;35m\[m [1;36m\[m [31m\[m  
+[1;35m|[m [31m|[m[1;35m_[m[1;31m|[m[1;35m_[m[31m|[m[1;35m/[m [1;35m/[m [1;36m/[m [31m/[m  
+[1;35m|[m[1;35m/[m[31m|[m [1;31m|[m [31m|[m [1;35m|[m [1;36m|[m [31m|[m   
+[1;35m|[m * [1;31m|[m [31m|[m [1;35m|[m [1;36m|[m [31m|[m [33m031c52d[m Update README.md
+[1;35m|[m[1;35m/[m [1;31m/[m [31m/[m [1;35m/[m [1;36m/[m [31m/[m  
+[1;35m|[m [1;31m|[m [31m|[m [1;35m|[m * [31m|[m [33m066a06c[m pull 전 커밋
+[1;35m|[m [1;31m|[m [31m|[m [1;35m|[m * [31m|[m [33mda24494[m feat(#16):가게구독 Api 구현
+[1;35m|[m [1;31m|[m [31m|[m [1;35m|[m * [31m|[m   [33m854b8bf[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into feat/store_subscribe
+[1;35m|[m [1;31m|[m [31m|[m [1;35m|[m [32m|[m[1;35m\[m [31m\[m  
+[1;35m|[m [1;31m|[m[1;35m_[m[31m|[m[1;35m_[m[1;35m|[m[1;35m_[m[32m|[m[1;35m/[m [31m/[m  
+[1;35m|[m[1;35m/[m[1;31m|[m [31m|[m [1;35m|[m [32m|[m [31m|[m   
+* [1;31m|[m [31m|[m [1;35m|[m [32m|[m [31m|[m   [33mca1d8e4[m Merge pull request #15 from sparta-final-organization/feat/swagger-config
+[31m|[m[35m\[m [1;31m\[m [31m\[m [1;35m\[m [32m\[m [31m\[m  
+[31m|[m [35m|[m[31m_[m[1;31m|[m[31m/[m [1;35m/[m [32m/[m [31m/[m  
+[31m|[m[31m/[m[35m|[m [1;31m|[m [1;35m|[m [32m|[m [31m|[m   
+[31m|[m * [1;31m|[m [1;35m|[m [32m|[m [31m|[m [33m37e016d[m feat(#14): Swagger JWT 기반 Authorization 설정 추가
+[31m|[m[31m/[m [1;31m/[m [1;35m/[m [32m/[m [31m/[m  
+* [1;31m|[m [1;35m|[m [32m|[m [31m|[m   [33ma6e6e92[m Merge pull request #13 from sparta-final-organization/plusmate-patch-1
+[36m|[m[1;31m\[m [1;31m\[m [1;35m\[m [32m\[m [31m\[m  
+[36m|[m * [1;31m|[m [1;35m|[m [32m|[m [31m|[m [33m3dae8c8[m Update README.md
+[36m|[m[36m/[m [1;31m/[m [1;35m/[m [32m/[m [31m/[m  
+[36m|[m [1;31m|[m [1;35m|[m * [31m|[m [33mb6312d5[m fix(#1):ErrorCode 수정
+[36m|[m [1;31m|[m [1;35m|[m * [31m|[m [33m9204b96[m fix(#1):쿠폰 구독 로직 중복 예외처리
+[36m|[m [1;31m|[m [1;35m|[m * [31m|[m [33m313e1be[m feat(#1):쿠폰 구독 리스트 Api 구현
+[36m|[m [1;31m|[m [1;35m|[m * [31m|[m [33mb6cfe48[m feat(#1):쿠폰 구독 취소 Api 구현
+[36m|[m [1;31m|[m [1;35m|[m * [31m|[m   [33m2b69387[m pull(#12):jwt, security 설정 및 회원가입, 로그인 기능 구현
+[36m|[m [1;31m|[m [1;35m|[m [1;32m|[m[36m\[m [31m\[m  
+[36m|[m [1;31m|[m[36m_[m[1;35m|[m[36m_[m[1;32m|[m[36m/[m [31m/[m  
+[36m|[m[36m/[m[1;31m|[m [1;35m|[m [1;32m|[m [31m|[m   
+* [1;31m|[m [1;35m|[m [1;32m|[m [31m|[m   [33m55c6578[m Merge pull request #12 from sparta-final-organization/feat/user
+[31m|[m[1;35m\[m [1;31m\[m [1;35m\[m [1;32m\[m [31m\[m  
+[31m|[m [1;35m|[m [1;31m|[m[1;35m/[m [1;32m/[m [31m/[m  
+[31m|[m [1;35m|[m[1;35m/[m[1;31m|[m [1;32m|[m [31m/[m   
+[31m|[m [1;35m|[m[31m_[m[1;31m|[m[31m_[m[1;32m|[m[31m/[m    
+[31m|[m[31m/[m[1;35m|[m [1;31m|[m [1;32m|[m     
+[31m|[m * [1;31m|[m [1;32m|[m [33m94745e3[m feat(#4): securityFilter에 swagger 추가
+[31m|[m * [1;31m|[m [1;32m|[m   [33mf46b4a8[m Merge branch 'dev' into feat/user
+[31m|[m [1;36m|[m[31m\[m [1;31m\[m [1;32m\[m  
+[31m|[m [1;36m|[m[31m/[m [1;31m/[m [1;32m/[m  
+[31m|[m[31m/[m[1;36m|[m [1;31m|[m [1;32m|[m   
+* [1;36m|[m [1;31m|[m [1;32m|[m   [33m146fddf[m pull:엔티티 개발 pull 반영
+[1;31m|[m[33m\[m [1;36m\[m [1;31m\[m [1;32m\[m  
+[1;31m|[m [33m|[m[1;31m_[m[1;36m|[m[1;31m/[m [1;32m/[m  
+[1;31m|[m[1;31m/[m[33m|[m [1;36m|[m [1;32m|[m   
+[1;31m|[m [33m|[m * [1;32m|[m [33m5265382[m feat(#4): jwt, security 설정 및 회원가입, 로그인 기능 구현
+[1;31m|[m [33m|[m [33m|[m * [33m5d26dbb[m pull전 commit
+[1;31m|[m [33m|[m [33m|[m * [33m904db8d[m feat(#1):유저-쿠폰 구독 api 구현
+[1;31m|[m [33m|[m [33m|[m[33m/[m  
+[1;31m|[m [33m|[m[33m/[m[33m|[m   
+[1;31m|[m * [33m|[m   [33m8ef76de[m pull:엔티티 개발 pull 반영
+[1;31m|[m [34m|[m[1;31m\[m [33m\[m  
+[1;31m|[m [34m|[m[1;31m/[m [33m/[m  
+[1;31m|[m[1;31m/[m[34m|[m [33m|[m   
+* [34m|[m [33m|[m   [33m113399b[m Merge pull request #5 from sparta-final-organization/feat/user-coupon-entity
+[36m|[m[1;31m\[m [34m\[m [33m\[m  
+[36m|[m * [34m|[m [33m|[m [33m141ba35[m feat: UserCoupon 엔티티 추가
+* [1;31m|[m [34m|[m [33m|[m   [33m12a96bf[m Merge pull request #7 from sparta-final-organization/feat/user
+[1;32m|[m[33m\[m [1;31m\[m [34m\[m [33m\[m  
+[1;32m|[m [33m|[m [1;31m|[m[33m_[m[34m|[m[33m/[m  
+[1;32m|[m [33m|[m[33m/[m[1;31m|[m [34m|[m   
+[1;32m|[m * [1;31m|[m [34m|[m [33m823f475[m feat(#4): user 엔티티 작성
+* [1;33m|[m [1;31m|[m [34m|[m   [33m75c795c[m Merge pull request #9 from sparta-final-organization/feat/coupon
+[1;34m|[m[1;35m\[m [1;33m\[m [1;31m\[m [34m\[m  
+[1;34m|[m * [1;33m|[m [1;31m|[m [34m|[m [33m37e1eaf[m feat#3: Coupon Entity 추가
+[1;34m|[m * [1;33m|[m [1;31m|[m [34m|[m [33m54d0e57[m init
+[1;34m|[m [1;31m|[m [1;33m|[m[1;31m/[m [34m/[m  
+[1;34m|[m [1;31m|[m[1;31m/[m[1;33m|[m [34m|[m   
+* [1;31m|[m [1;33m|[m [34m|[m   [33m4aa6bbf[m Merge pull request #10 from sparta-final-organization/feature/store
+[1;31m|[m[31m\[m [1;31m\[m [1;33m\[m [34m\[m  
+[1;31m|[m [31m|[m[1;31m/[m [1;33m/[m [34m/[m  
+[1;31m|[m[1;31m/[m[31m|[m [1;33m|[m [34m|[m   
+[1;31m|[m * [1;33m|[m [34m|[m [33m76ad6f0[m feat: StoreCategory 추가
+[1;31m|[m * [1;33m|[m [34m|[m [33m1e1b989[m feat: store 엔티티 추가#8
+[1;31m|[m [31m|[m [1;33m|[m * [33m04797c2[m feat(#1):스토어구독 및 쿠폰 구독 엔티티 개발(연관관계 미구현)
+[1;31m|[m [31m|[m[1;31m_[m[1;33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[31m|[m [1;33m|[m   
+* [31m|[m [1;33m|[m [33md99f188[m feat: Swagger 설정 추가
+* [31m|[m [1;33m|[m [33m55126ee[m Update README.md
+* [31m|[m [1;33m|[m [33m5fff933[m Update README.md
+[31m|[m[31m/[m [1;33m/[m  
+* [1;33m/[m [33m34db892[m Update README.md
+[1;33m|[m[1;33m/[m  
+* [33m5a11af4[m Update README.md
+* [33m073193e[m Update README.md
+* [33m30f9e61[m Update README.md
+* [33m4583c20[m Update README.md
+* [33m97f1b13[m Update README.md
+* [33m52010cb[m Update README.md
+* [33m8621cf7[m Create README.md
+*   [33m0a1061c[m Merge branch 'dev' of https://github.com/sparta-final-organization/couponmoa into dev
+[32m|[m[33m\[m  
+[32m|[m * [33m40ab3f8[m Delete src/main/resources/application-local.properties
+* [33m|[m [33m9b66cf2[m fix:application-local 커밋 삭제
+[33m|[m[33m/[m  
+* [33m9425443[m feat:domain에 dummy클래스 추가(구현시 삭제 요망)
+* [33m7732cce[m fix:gitignore 오타 수정
+* [33m7a4edbc[m first commit
