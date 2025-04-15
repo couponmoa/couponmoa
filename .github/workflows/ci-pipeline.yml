@@ -26,4 +26,4 @@ jobs:
       - name: Build Spring Boot App (not build test)
         run: |
           chmod +x ./gradlew
-          ./gradlew test
+          ./gradlew test -Dspring.profiles.active=test
