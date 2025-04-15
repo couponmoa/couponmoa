@@ -42,8 +42,7 @@ jobs:
       - name: Check if test yml exists
         run: |
           echo "==== application-test.yml 내용 ===="
-          cat src/test/resources/application-test.yml || echo "❌ 파일 없음"
-          echo "==== application-test.yml 파일이 존재하지 않습니다! ===="
+          cat src/test/resources/application-test.yml || echo "application-test.yml 을 읽을 수 없습니다"
 
       - name: Run tests
         run: |
