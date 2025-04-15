@@ -29,8 +29,8 @@ jobs:
 
       - name: Prepare deploy directory
         run: |
-          mkdir -p deploy/script
-          cp $(find build/libs -name "*.jar" | head -n 1) deploy/app.jar
+          mkdir -p deploy/build/libs/
+          cp $(find build/libs -name "*.jar" | head -n 1) deploy/build/libs/app.jar
           cp Dockerfile deploy/
           cp appspec.yml deploy/
           cp script/deploy.sh deploy/script/deploy.sh
