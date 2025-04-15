@@ -1,3 +1,7 @@
+jwt:
+  secret:
+    key: "HULfUlHgYuvQ0YIl9qHyQ0Fq4gZb5ZofLD0isNs7Xb+2FBsrs8HMUQpGyJTEcMNb2vott/0TtiuMkvIcmc/fYg=="
+    
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -39,9 +43,6 @@ spring:
         queue:
           email-alert: https://sqs.ap-northeast-2.amazonaws.com/253490759940/couponmoa-queue
 
-jwt:
-  secret:
-    key: "HULfUlHgYuvQ0YIl9qHyQ0Fq4gZb5ZofLD0isNs7Xb+2FBsrs8HMUQpGyJTEcMNb2vott/0TtiuMkvIcmc/fYg=="
 
 org:
   jobrunr:
