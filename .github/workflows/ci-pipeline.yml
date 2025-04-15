@@ -39,6 +39,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Check if test yml exists
+        run: |
+          echo "==== application-test.yml 내용 ===="
+          cat src/test/resources/application-test.yml || echo "❌ 파일 없음"
+          echo "==== application-test.yml 파일이 존재하지 않습니다! ===="
+
       - name: Run tests
         run: |
           chmod +x ./gradlew
@@ -64,8 +70,3 @@ jobs:
           docker ps
           docker logs spring-app || true
 
-      - name: Check if test yml exists
-        run: |
-          echo "==== application-test.yml 내용 ===="
-          cat src/test/resources/application-test.yml || echo "❌ 파일 없음"
-          echo "==== 끝 ===="
