@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.service;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
@@ -16,9 +15,10 @@ import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CouponServiceTest {
 
     @Mock private CouponRepository couponRepository;
@@ -41,7 +42,6 @@ class CouponServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         AuthUser authUser = new AuthUser(1L, "admin@example.com", UserRole.ROLE_USER);
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(authUser, "", authUser.getAuthorities()));
@@ -59,10 +59,7 @@ class CouponServiceTest {
                 1L
         );
 
-        // User mock 객체 생성
         User mockUser = new User("admin@example.com", "테스트_비밀번호", "테스트_닉네임", UserRole.ROLE_USER);
-
-        // Store mock 객체 생성 및 설정
         Store mockStore = mock(Store.class);
         when(mockStore.getUser()).thenReturn(mockUser);
 
@@ -70,23 +67,17 @@ class CouponServiceTest {
 
         when(couponRepository.save(any(Coupon.class))).thenAnswer(invocation -> {
             Coupon savedCoupon = invocation.getArgument(0);
-
-            try {
-                Field idField = Coupon.class.getDeclaredField("id");
-                idField.setAccessible(true);
-                idField.set(savedCoupon, 1L);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
+            Field idField = Coupon.class.getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(savedCoupon, 1L);
             return savedCoupon;
         });
 
         // when
-        ApiResponse<CouponResponseDto> result = couponService.createCoupon(request);
+        CouponResponseDto result = couponService.createCoupon(request);
 
         // then
-        assertThat(result.getData().getId()).isNotNull();
+        assertThat(result.getId()).isNotNull();
     }
 
     @Test
@@ -117,7 +108,7 @@ class CouponServiceTest {
     @Test
     void 쿠폰_삭제_성공() {
         // given
-        User user = new User("admin@example.com", "테스트_비밀번호", "테스트_닉네임",UserRole.ROLE_USER);
+        User user = new User("admin@example.com", "테스트_비밀번호", "테스트_닉네임", UserRole.ROLE_USER);
         Store store = new Store(user, "테스트_가게", "테스트_가게_설명", "서울시_어쩌구");
 
         Coupon coupon = Coupon.builder()

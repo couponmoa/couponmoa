@@ -1,17 +1,16 @@
 package com.couponmoa.backend.domain.coupon.service;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CouponReadServiceTest {
 
     @Mock
@@ -31,11 +31,6 @@ class CouponReadServiceTest {
 
     @InjectMocks
     private CouponReadService couponReadService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void 쿠폰_목록_조회_0건_정상작동() {
@@ -47,10 +42,10 @@ class CouponReadServiceTest {
                 .thenReturn(page);
 
         // when
-        ApiResponse<Page<CouponSimpleResponseDto>> result = couponReadService.findAllCoupons(1, 10);
+        Page<CouponSimpleResponseDto> result = couponReadService.findAllCoupons(1, 10);
 
         // then
-        assertThat(result.getData().getTotalElements()).isEqualTo(1);
+        assertThat(result.getTotalElements()).isEqualTo(1);
         verify(couponRepository).findAllSortedByIQ(any(Pageable.class));
     }
 
@@ -61,11 +56,11 @@ class CouponReadServiceTest {
         when(couponRepository.findAllSortedByIQ(any(Pageable.class))).thenReturn(page);
 
         // when
-        ApiResponse<Page<CouponSimpleResponseDto>> result = couponReadService.findAllCoupons(1, 10);
+        Page<CouponSimpleResponseDto> result = couponReadService.findAllCoupons(1, 10);
 
         // then
-        assertThat(result.getData().getContent()).isEmpty();
-        assertThat(result.getData().getTotalElements()).isEqualTo(0);
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.getTotalElements()).isEqualTo(0);
     }
 
     @Test
@@ -78,11 +73,11 @@ class CouponReadServiceTest {
         when(couponRepository.findById(1L)).thenReturn(Optional.of(coupon));
 
         // when
-        ApiResponse<CouponDetailResponseDto> result = couponReadService.findCoupon(1L, mock(AuthUser.class));
+        CouponDetailResponseDto result = couponReadService.findCoupon(1L, mock(AuthUser.class));
 
         // then
-        assertThat(result.getData().getId()).isEqualTo(1L);
-        assertThat(result.getData().getName()).isEqualTo("테스트용_쿠폰");
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getName()).isEqualTo("테스트용_쿠폰");
 
         verify(couponRepository).findById(1L);
     }
@@ -91,8 +86,7 @@ class CouponReadServiceTest {
     void 쿠폰_상세_조회_실패_존재하지않음() {
         // given
         Long couponId = 1L;
-        when(couponRepository.findById(couponId))
-                .thenReturn(Optional.empty());
+        when(couponRepository.findById(couponId)).thenReturn(Optional.empty());
 
         // when & then
         assertThrows(ApplicationException.class, () ->
