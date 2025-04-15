@@ -1,22 +1,30 @@
 spring:
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        instance-profile: true
+      sqs:
+        queue:
+          emailAlert: couponmoa-queue
   datasource:
     url: ${MYSQL_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-#  mail:
-#    host: ${SMTP_HOST}
-#    port: ${SMTP_PORT}
-#    username: ${SMTP_USERNAME}
-#    password: ${SMTP_PASSWORD}
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
-
+  #  mail:
+  #    host: ${SMTP_HOST}
+  #    port: ${SMTP_PORT}
+  #    username: ${SMTP_USERNAME}
+  #    password: ${SMTP_PASSWORD}
+  #    properties:
+  #      mail:
+  #        smtp:
+  #          auth: true
+  #          starttls:
+  #            enable: true
   data:
     redis:
       host: ${REDIS_HOST}
@@ -26,12 +34,6 @@ jwt:
   secret:
     key: ${JWT_SECRET_KEY}
 
-cloud:
-  aws:
-    region:
-      static: ap-northeast-2
-    credentials:
-      instance-profile: true
-    sqs:
-      queue:
-        emailAlert: couponmoa-queue
+server:
+  port: 8080
+  address: 0.0.0.0
