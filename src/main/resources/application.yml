@@ -1,0 +1,5 @@
+spring:
+  profiles:
+      group:
+        local: local
+        prod: prod
