@@ -97,6 +97,6 @@ compileJava {
     options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
-tasks.named('test') {
+tasks.named('local') {
     useJUnitPlatform()
 }
