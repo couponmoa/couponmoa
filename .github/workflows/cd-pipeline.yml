@@ -6,7 +6,9 @@ on:
       - completed
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,9 +31,8 @@ jobs:
 
       - name: Prepare deploy directory
         run: |
-          mkdir -p deploy/build/libs/
           mkdir -p deploy/script
-          cp $(find build/libs -name "*.jar" | head -n 1) deploy/build/libs/app.jar
+          cp $(find build/libs -name "*.jar" | head -n 1) deploy/app.jar
           cp Dockerfile deploy/
           cp appspec.yml deploy/
           cp script/deploy.sh deploy/script/deploy.sh
