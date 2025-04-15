@@ -34,3 +34,9 @@ org:
   jobrunr:
     dashboard:
       enabled: false
+
+cloud:
+  aws:
+    sqs:
+      queue:
+        email-alert: dummy-url
