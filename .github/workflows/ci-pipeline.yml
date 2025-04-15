@@ -39,9 +39,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run Tests
-        run: ./gradlew test
-
       - name: Build Spring Boot App (not build test)
         run: |
           chmod +x ./gradlew
@@ -67,3 +64,6 @@ jobs:
           echo "==== application-test.yml 내용 ===="
           cat src/test/resources/application-test.yml || echo "❌ 파일 없음"
           echo "==== 끝 ===="
+
+      - name: Run Tests
+        run: ./gradlew test
