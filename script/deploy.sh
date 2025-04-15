@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# ✅ 환경 변수 수동 로드
+source /home/ubuntu/.profile
+
 echo ">>> 기존 컨테이너 중지 및 삭제" >> /home/ubuntu/deploy.log
 docker stop couponmoa || true
 docker rm couponmoa || true
@@ -15,6 +18,7 @@ docker run -d \
   -e DB_PASSWORD=$DB_PASSWORD \
   -e REDIS_HOST=$REDIS_HOST \
   -e REDIS_PORT=$REDIS_PORT \
+  -e JWT_SECRET_KEY=$JWT_SECRET_KEY \
   -p 8080:8080 \
   couponmoa-prod >> /home/ubuntu/deploy.log 2>> /home/ubuntu/deploy_err.log
 
