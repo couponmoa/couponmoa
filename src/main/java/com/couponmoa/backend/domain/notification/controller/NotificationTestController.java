@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test/notification")
 public class NotificationTestController {
 
-//    private final JobScheduler jobScheduler;
-//    private final ExpiredNotificationService expiredNotificationService;
-//
+    private final JobScheduler jobScheduler;
+    private final ExpiredNotificationService expiredNotificationService;
+
 //    @GetMapping("/expire")
 //    public String testExpireNotification() {
 //        jobScheduler.enqueue(expiredNotificationService::sendExpireCouponNotifications);
