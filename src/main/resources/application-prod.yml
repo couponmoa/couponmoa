@@ -1,3 +1,4 @@
+#AWS SQS
 spring:
   cloud:
     aws:
@@ -8,32 +9,36 @@ spring:
       sqs:
         queue:
           emailAlert: couponmoa-queue
+
+  #RDB setting
   datasource:
     url: ${MYSQL_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  #  mail:
-  #    host: ${SMTP_HOST}
-  #    port: ${SMTP_PORT}
-  #    username: ${SMTP_USERNAME}
-  #    password: ${SMTP_PASSWORD}
-  #    properties:
-  #      mail:
-  #        smtp:
-  #          auth: true
-  #          starttls:
-  #            enable: true
+  #Redis setting
   data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
 
+#JWT
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
 
+#server setting
 server:
   port: 8080
   address: 0.0.0.0
+
+#server health check
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
