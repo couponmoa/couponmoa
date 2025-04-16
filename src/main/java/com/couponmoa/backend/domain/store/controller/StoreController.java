@@ -44,26 +44,26 @@ public class StoreController {
     @GetMapping("/my")
     @Operation(summary = "내 가게 목록 조회",
                description = "로그인한 사용자가 자신이 생성한 가게 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse<List<StoreResponse>>> getMyStore(
+    public ResponseEntity<ApiResponse<List<StoreResponse>>> findMyStore(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<StoreResponse> response = storeService.getMyStore(authUser.getId()); // category 제거
+        List<StoreResponse> response = storeService.findMyStore(authUser.getId()); // category 제거
         return ResponseEntity.ok(ApiResponse.success(response, "가게 목록 조회 성공"));
     }
 
     @GetMapping("/my/simple")
     @Operation(summary = "내 가게 간단 목록 조회",
                description = "로그인 한 사용자가 자신의 가게 ID와 이름만 포함한 간단 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse<List<SimpleStoreResponse>>> getMySimpleStores(
+    public ResponseEntity<ApiResponse<List<SimpleStoreResponse>>> findMySimpleStores(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<SimpleStoreResponse> response = storeService.getMySimpleStores(authUser.getId());
+        List<SimpleStoreResponse> response = storeService.findMySimpleStores(authUser.getId());
         return ResponseEntity.ok(ApiResponse.success(response, "내 가게 간단 목록 조회 성공"));
     }
 
     @GetMapping("/{storeId}")
     @Operation(summary = "특정 가게 조회",
                description = "가게 ID를 통해 특정 가게의 상세 정보를 조회합니다")
-    public ResponseEntity<ApiResponse<StoreResponse>> getStore(@PathVariable Long storeId) {
-        StoreResponse response = storeService.getStore(storeId);
+    public ResponseEntity<ApiResponse<StoreResponse>> findStore(@PathVariable Long storeId) {
+        StoreResponse response = storeService.findStore(storeId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

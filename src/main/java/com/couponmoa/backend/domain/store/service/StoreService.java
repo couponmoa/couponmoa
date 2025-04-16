@@ -60,7 +60,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreResponse> getMyStore(Long userId) {
+    public List<StoreResponse> findMyStore(Long userId) {
         if (userId == null) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
         }
@@ -78,7 +78,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<SimpleStoreResponse> getMySimpleStores(Long userId) {
+    public List<SimpleStoreResponse> findMySimpleStores(Long userId) {
         if (userId == null) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
         }
@@ -91,7 +91,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public StoreResponse getStore(Long storeId) {
+    public StoreResponse findStore(Long storeId) {
         Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         return new StoreResponse(
                 store.getId(),
