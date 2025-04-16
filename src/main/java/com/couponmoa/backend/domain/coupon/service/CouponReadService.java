@@ -1,10 +1,9 @@
 package com.couponmoa.backend.domain.coupon.service;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
@@ -24,15 +23,15 @@ public class CouponReadService {
 
     private final CouponRepository couponRepository;
 
-    public Page<CouponSimpleResponseDto> findAllCoupons(int page, int size) {
+    public Page<CouponSimpleResponse> findAllCoupons(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Coupon> coupons = couponRepository.findAllSortedByIQ(pageable);
-        return coupons.map(CouponSimpleResponseDto::toDto);
+        return coupons.map(CouponSimpleResponse::toDto);
     }
 
-    public CouponDetailResponseDto findCoupon(Long couponId, AuthUser authUser) {
+    public CouponDetailResponse findCoupon(Long couponId, AuthUser authUser) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
-        return CouponDetailResponseDto.toDto(coupon);
+        return CouponDetailResponse.toDto(coupon);
     }
 }

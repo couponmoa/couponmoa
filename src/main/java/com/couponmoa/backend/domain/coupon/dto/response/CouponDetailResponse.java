@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class CouponDetailResponseDto {
+public class CouponDetailResponse {
 
     private Long id;
     private String name;
@@ -35,8 +35,8 @@ public class CouponDetailResponseDto {
     private LocalDateTime modifiedAt;
     private CouponStatus status;
 
-    public static CouponDetailResponseDto toDto(Coupon coupon) {
-        return CouponDetailResponseDto.builder()
+    public static CouponDetailResponse toDto(Coupon coupon) {
+        return CouponDetailResponse.builder()
                 .id(coupon.getId())
                 .name(coupon.getName())
                 .totalQuantity(coupon.getTotalQuantity())

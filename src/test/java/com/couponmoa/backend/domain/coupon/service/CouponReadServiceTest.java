@@ -1,8 +1,8 @@
 package com.couponmoa.backend.domain.coupon.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
@@ -42,7 +42,7 @@ class CouponReadServiceTest {
                 .thenReturn(page);
 
         // when
-        Page<CouponSimpleResponseDto> result = couponReadService.findAllCoupons(1, 10);
+        Page<CouponSimpleResponse> result = couponReadService.findAllCoupons(1, 10);
 
         // then
         assertThat(result.getTotalElements()).isEqualTo(1);
@@ -56,7 +56,7 @@ class CouponReadServiceTest {
         when(couponRepository.findAllSortedByIQ(any(Pageable.class))).thenReturn(page);
 
         // when
-        Page<CouponSimpleResponseDto> result = couponReadService.findAllCoupons(1, 10);
+        Page<CouponSimpleResponse> result = couponReadService.findAllCoupons(1, 10);
 
         // then
         assertThat(result.getContent()).isEmpty();
@@ -73,7 +73,7 @@ class CouponReadServiceTest {
         when(couponRepository.findById(1L)).thenReturn(Optional.of(coupon));
 
         // when
-        CouponDetailResponseDto result = couponReadService.findCoupon(1L, mock(AuthUser.class));
+        CouponDetailResponse result = couponReadService.findCoupon(1L, mock(AuthUser.class));
 
         // then
         assertThat(result.getId()).isEqualTo(1L);

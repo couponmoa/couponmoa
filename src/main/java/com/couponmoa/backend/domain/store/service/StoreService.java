@@ -1,20 +1,17 @@
 package com.couponmoa.backend.domain.store.service;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.SimpleStoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreQueryDslRepository;
-import com.couponmoa.backend.domain.store.repository.StoreQueryDslRepositoryImpl;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
-import com.couponmoa.backend.domain.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -83,14 +80,16 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<SimpleStoreResponse> getMySimpleStores(Long userId) {
+    public List<StoreSimpleResponse> getMySimpleStores(Long userId) {
         if (userId == null) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
         }
         List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(userId);
-        List<SimpleStoreResponse> responses = new ArrayList<>();
+        List<StoreSimpleResponse> responses = new ArrayList<>();
         for (Store store : stores) {
-            responses.add(new SimpleStoreResponse(store.getId(), store.getName()));
+            responses.add(new StoreSimpleResponse(
+                    store.getId(),
+                    store.getName()));
         }
         return responses;
     }
@@ -138,6 +137,10 @@ public class StoreService {
         if (!store.getUser().getId().equals(authUser.getId())) {
             throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY);
         }
-        storeRepository.delete(store);
+        // 이미 삭제된 경우 예외 처리
+        if (store.getDeletedAt() != null) {
+            throw new ApplicationException(ErrorCode.ALREADY_DELETED);
+        }
+        store.delete();
     }
 }

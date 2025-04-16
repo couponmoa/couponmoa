@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter //테스트 용도
@@ -40,5 +42,9 @@ public class Store extends BaseEntity {
         this.name = name;
         this.description = description;
         this.address = address;
+    }
+
+    public void delete() {
+        this.setDeletedAt(LocalDateTime.now());
     }
 }

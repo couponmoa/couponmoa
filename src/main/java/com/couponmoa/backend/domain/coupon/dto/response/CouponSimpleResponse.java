@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class CouponSimpleResponseDto implements Serializable {// implements Serializable 캐싱을 위해 Redis에 객체를 저장할 때, 직렬화 필요
+public class CouponSimpleResponse implements Serializable {// implements Serializable 캐싱을 위해 Redis에 객체를 저장할 때, 직렬화 필요
     private Long id;
     private String name;
     private BigDecimal discountAmount;
@@ -26,7 +26,7 @@ public class CouponSimpleResponseDto implements Serializable {// implements Seri
     private CouponStatus status;
 
     @Builder
-    public CouponSimpleResponseDto(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate) {
+    public CouponSimpleResponse(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
@@ -34,7 +34,7 @@ public class CouponSimpleResponseDto implements Serializable {// implements Seri
     }
 
     @Builder
-    public CouponSimpleResponseDto(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate, LocalDateTime startDate, LocalDateTime endDate, CouponStatus status) {
+    public CouponSimpleResponse(Long id, String name, BigDecimal discountAmount, BigDecimal discountRate, LocalDateTime startDate, LocalDateTime endDate, CouponStatus status) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
@@ -44,8 +44,8 @@ public class CouponSimpleResponseDto implements Serializable {// implements Seri
         this.status = status;
     }
 
-    public static CouponSimpleResponseDto toDto(Coupon coupon) {
-        return CouponSimpleResponseDto.builder()
+    public static CouponSimpleResponse toDto(Coupon coupon) {
+        return CouponSimpleResponse.builder()
                 .id(coupon.getId())
                 .name(coupon.getName())
                 .discountAmount(coupon.getDiscountAmount())
