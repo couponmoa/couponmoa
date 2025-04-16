@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test/notification")
 public class NotificationTestController {
 
-    private final JobScheduler jobScheduler;
-    private final ExpiredNotificationService expiredNotificationService;
-
-    @GetMapping("/expire")
-    public String testExpireNotification() {
-        jobScheduler.enqueue(expiredNotificationService::sendExpireCouponNotifications);
-        return "JobRunr 백그라운드 잡 등록 완료";
-    }
+//    private final JobScheduler jobScheduler;
+//    private final ExpiredNotificationService expiredNotificationService;
+//
+//    @GetMapping("/expire")
+//    public String testExpireNotification() {
+//        jobScheduler.enqueue(expiredNotificationService::sendExpireCouponNotifications);
+//        return "JobRunr 백그라운드 잡 등록 완료";
+//    }
 }
