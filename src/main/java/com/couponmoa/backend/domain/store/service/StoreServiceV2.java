@@ -126,11 +126,13 @@ public class StoreServiceV2 {
     }
 
     private void validateStoreNameUniqueness(String oldStoreName,String newStoreName,boolean isUpdate) {
-        // 이름이 다르면 중복 체크 수행
-        boolean isSameName = oldStoreName.equals(newStoreName);
+        // oldStoreName이 있을 때만, 요청의 새 이름과 비교.
+        if (oldStoreName != null && oldStoreName.equals(newStoreName)) {
+            return;
+        }
 
         // 생성 또는 이름이 변경된 경우에만 중복 체크
-        if ((!isUpdate || !isSameName) && storeRepository.existsByNameAndDeletedAtIsNull(oldStoreName)) {
+        if (!isUpdate && storeRepository.existsByNameAndDeletedAtIsNull(newStoreName)) {
             throw new ApplicationException(ErrorCode.DUPLICATE_RESOURCE);
         }
     }
@@ -144,7 +146,7 @@ public class StoreServiceV2 {
         return stores.stream().map(StoreResponse::toDto).collect(Collectors.toList());
     }
 
-    // Fallback 메서드: Redis 장애 발생 시 호출되어 DB에서 data를 찾아줌
+    // findStore 실패 시 fallback 메서드
     public StoreResponse fallbackFindStore(Long storeId, Exception e) {
 
         log.info("Redis 장애 발생, DB에서 조회: " + e.getMessage());

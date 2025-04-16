@@ -3,8 +3,10 @@ package com.couponmoa.backend.domain.store.dto.response;
 import com.couponmoa.backend.domain.store.entity.Store;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public class StoreResponse {
+public class StoreResponse implements Serializable {
 
     private final Long id;
     private final String name;
