@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class CouponUpdateRequestDto {
+public class CouponUpdateRequest {
 
     private String name;
     private int newTotalQuantity;

@@ -2,9 +2,9 @@ package com.couponmoa.backend.domain.coupon.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequest;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequest;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
@@ -39,7 +39,7 @@ public class CouponServiceV2 {
 
     // 새 쿠폰 생성 후 기존 캐시 제거
     @CacheEvict(value = "coupons", allEntries = true)
-    public CouponResponseDto createCoupon(CouponCreateRequestDto requestDto) {
+    public CouponResponse createCoupon(CouponCreateRequest requestDto) {
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
@@ -88,12 +88,12 @@ public class CouponServiceV2 {
 
         sendEmail(savedCoupon);
 
-        return new CouponResponseDto(savedCoupon.getId());
+        return new CouponResponse(savedCoupon.getId());
     }
 
     // 쿠폰 수정 시 캐시 무효화
     @CacheEvict(value = "coupons", allEntries = true)
-    public CouponResponseDto updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
+    public CouponResponse updateCoupon(Long couponId, CouponUpdateRequest requestDto) {
 
         // 아직 존재하는 쿠폰인지 검증
         Coupon coupon = couponRepository.findById(couponId)
@@ -137,7 +137,7 @@ public class CouponServiceV2 {
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
 
-        return new CouponResponseDto(coupon.getId());
+        return new CouponResponse(coupon.getId());
     }
 
     // 쿠폰 삭제 시 캐시 무효화
@@ -168,7 +168,7 @@ public class CouponServiceV2 {
         return store;
     }
 
-    private void updateIfPresent(Coupon coupon, CouponUpdateRequestDto requestDto) {
+    private void updateIfPresent(Coupon coupon, CouponUpdateRequest requestDto) {
         String name = requestDto.getName() != null ? requestDto.getName() : coupon.getName();
         BigDecimal discountAmount = requestDto.getDiscountAmount() != null ? requestDto.getDiscountAmount() : coupon.getDiscountAmount();
         BigDecimal discountRate = requestDto.getDiscountRate() != null ? requestDto.getDiscountRate() : coupon.getDiscountRate();
@@ -219,7 +219,7 @@ public class CouponServiceV2 {
             LocalDateTime expiryDate
     ) {}
 
-    private static ResolvedDates resolveDates(CouponUpdateRequestDto requestDto, Coupon coupon) {
+    private static ResolvedDates resolveDates(CouponUpdateRequest requestDto, Coupon coupon) {
         LocalDateTime startDate = requestDto.getStartDate() != null ? requestDto.getStartDate() : coupon.getStartDate();
         LocalDateTime endDate = requestDto.getEndDate() != null ? requestDto.getEndDate() : coupon.getEndDate();
         LocalDateTime expiryDate = requestDto.getExpiryDate() != null ? requestDto.getExpiryDate() : coupon.getExpiryDate();

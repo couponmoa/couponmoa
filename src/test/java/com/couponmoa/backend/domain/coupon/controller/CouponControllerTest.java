@@ -3,10 +3,10 @@ package com.couponmoa.backend.domain.coupon.controller;
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequest;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.service.CouponReadService;
@@ -61,7 +61,7 @@ class CouponControllerTest {
     @WithMockUser(roles = "ADMIN")
     void 쿠폰_생성_성공() throws Exception {
         // Given
-        CouponCreateRequestDto requestDto = new CouponCreateRequestDto(
+        CouponCreateRequest requestDto = new CouponCreateRequest(
                 "테스트용_할인_쿠폰", 100, BigDecimal.valueOf(1000), BigDecimal.ZERO,
                 BigDecimal.ZERO, BigDecimal.valueOf(10000), "테스트 쿠폰입니다.",
                 LocalDateTime.now().plusDays(1),
@@ -70,9 +70,9 @@ class CouponControllerTest {
                 1L
         );
 
-        CouponResponseDto responseDto = new CouponResponseDto(1L);
+        CouponResponse responseDto = new CouponResponse(1L);
 
-        given(couponService.createCoupon(any(CouponCreateRequestDto.class)))
+        given(couponService.createCoupon(any(CouponCreateRequest.class)))
                 .willReturn(responseDto);
 
         // When
@@ -90,7 +90,7 @@ class CouponControllerTest {
     @WithMockUser
     void 쿠폰_목록_조회_성공() throws Exception {
         // Given
-        CouponSimpleResponseDto dto1 = CouponSimpleResponseDto.builder()
+        CouponSimpleResponse dto1 = CouponSimpleResponse.builder()
                 .id(1L)
                 .name("쿠폰A")
                 .discountAmount(BigDecimal.valueOf(1000))
@@ -99,7 +99,7 @@ class CouponControllerTest {
                 .endDate(LocalDateTime.now().plusDays(5))
                 .build();
 
-        CouponSimpleResponseDto dto2 = CouponSimpleResponseDto.builder()
+        CouponSimpleResponse dto2 = CouponSimpleResponse.builder()
                 .id(2L)
                 .name("쿠폰B")
                 .discountAmount(BigDecimal.valueOf(2000))
@@ -108,7 +108,7 @@ class CouponControllerTest {
                 .endDate(LocalDateTime.now().plusDays(10))
                 .build();
 
-        Page<CouponSimpleResponseDto> page = new PageImpl<>(List.of(dto1, dto2));
+        Page<CouponSimpleResponse> page = new PageImpl<>(List.of(dto1, dto2));
 
         given(couponReadService.findAllCoupons(anyInt(), anyInt()))
                 .willReturn(page);
@@ -145,7 +145,7 @@ class CouponControllerTest {
 
         ReflectionTestUtils.setField(coupon, "id", 1L);
 
-        CouponDetailResponseDto responseDto = CouponDetailResponseDto.toDto(coupon);
+        CouponDetailResponse responseDto = CouponDetailResponse.toDto(coupon);
 
         given(couponReadService.findCoupon(eq(1L), any()))
                 .willReturn(responseDto);

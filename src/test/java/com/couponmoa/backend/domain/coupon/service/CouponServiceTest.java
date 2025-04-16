@@ -2,8 +2,8 @@ package com.couponmoa.backend.domain.coupon.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequest;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
@@ -50,7 +50,7 @@ class CouponServiceTest {
     @Test
     void 쿠폰_생성_성공() {
         // given
-        CouponCreateRequestDto request = new CouponCreateRequestDto(
+        CouponCreateRequest request = new CouponCreateRequest(
                 "테스트용_할인_쿠폰", 100, BigDecimal.valueOf(1000), BigDecimal.ZERO,
                 BigDecimal.valueOf(0), BigDecimal.valueOf(10000), "테스트를_위해_생성된_쿠폰입니다.",
                 LocalDateTime.now().plusDays(1),
@@ -74,7 +74,7 @@ class CouponServiceTest {
         });
 
         // when
-        CouponResponseDto result = couponService.createCoupon(request);
+        CouponResponse result = couponService.createCoupon(request);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -83,7 +83,7 @@ class CouponServiceTest {
     @Test
     void 쿠폰_생성_실패_할인로직_검증_오류() {
         // given
-        CouponCreateRequestDto request = new CouponCreateRequestDto(
+        CouponCreateRequest request = new CouponCreateRequest(
                 "테스트용_할인_쿠폰", 100,
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(10),
                 BigDecimal.valueOf(0), BigDecimal.valueOf(2000),
