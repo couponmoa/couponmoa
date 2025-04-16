@@ -78,11 +78,16 @@ public class UserCouponService {
 
     private void validateIssueResultCode(Integer resultCode) {
         switch (resultCode) {
-            case 0: return;
-            case 1: throw new IllegalStateException("쿠폰 재고가 redis에 등록되지 않았습니다.");
-            case 2: throw new ApplicationException(ErrorCode.DUPLICATED_USER_COUPON);
-            case 3: throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
-            default: throw new IllegalStateException("예상하지 못한 값이 반환되었습니다.");
+            case 0:
+                return;
+            case 1:
+                throw new IllegalStateException("쿠폰 재고가 redis에 등록되지 않았습니다.");
+            case 2:
+                throw new ApplicationException(ErrorCode.DUPLICATED_USER_COUPON);
+            case 3:
+                throw new ApplicationException(ErrorCode.COUPON_SOLD_OUT);
+            default:
+                throw new IllegalStateException("예상하지 못한 값이 반환되었습니다.");
         }
     }
 

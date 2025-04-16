@@ -2,6 +2,8 @@ package com.couponmoa.backend.domain.usercoupon.service;
 
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.notification.service.ExpiredNotificationService;
+import com.couponmoa.backend.domain.notification.service.IssuedNotificationService;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
@@ -17,6 +19,8 @@ public class UserCouponAsyncService {
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
+    private final IssuedNotificationService issuedNotificationService;
+    private final ExpiredNotificationService expiredNotificationService;
 
     @Async
     public void saveUserCoupon(Long userId, Long couponId) {
@@ -24,5 +28,11 @@ public class UserCouponAsyncService {
         Coupon coupon = couponRepository.getReferenceById(couponId);
         UserCoupon userCoupon = new UserCoupon(user, coupon);
         userCouponRepository.save(userCoupon);
+        saveNotification(userId, userCoupon);
+    }
+
+    private void saveNotification(Long userId, UserCoupon userCoupon) {
+        issuedNotificationService.createIssuedNotification(userId, userCoupon);
+        expiredNotificationService.createCouponExpireNotification(userCoupon);
     }
 }
