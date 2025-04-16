@@ -16,9 +16,9 @@ public class SendToMQDto {
     private String name;
 
     public SendToMQDto(List<String> emailList, String subject, String name, String text) {
-        this.text = text;
-        this.subject = subject;
         this.emailList = emailList;
+        this.subject = subject;
         this.name = name;
+        this.text = text;
     }
 }

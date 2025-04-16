@@ -90,6 +90,6 @@ public class ExpiredNotificationService {
     private SendToMQDto createMessageQueueDto(List<Notification> notiList, String couponName) {
         List<String> emails = notiList.stream().map(n -> n.getUserCoupon().getUser().getEmail()).toList();
 
-        return new SendToMQDto(emails, "쿠폰 만료일 하루 전 알림", "쿠폰이 하루 뒤 만료됩니다!", couponName);
+        return new SendToMQDto(emails, "쿠폰 만료일 하루 전 알림", couponName, "쿠폰이 하루 뒤 만료됩니다!");
     }
 }
