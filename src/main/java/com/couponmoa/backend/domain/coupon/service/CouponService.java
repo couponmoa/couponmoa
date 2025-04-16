@@ -1,6 +1,5 @@
 package com.couponmoa.backend.domain.coupon.service;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
@@ -37,7 +36,7 @@ public class CouponService {
     private final UserCouponSubscribeService userCouponSubServ;
     private final UserStoreSubscribeService userStoreSubServ;
 
-    public ApiResponse<CouponResponseDto> createCoupon(CouponCreateRequestDto requestDto) {
+    public CouponResponseDto createCoupon(CouponCreateRequestDto requestDto) {
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
@@ -86,13 +85,10 @@ public class CouponService {
 
         sendEmail(savedCoupon);
 
-        return ApiResponse.success(new CouponResponseDto(
-                savedCoupon.getId()));
+        return new CouponResponseDto(savedCoupon.getId());
     }
 
-    // 일단 update시에 store는 변경할 수 없다고 가정.
-
-    public ApiResponse<CouponResponseDto> updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
+    public CouponResponseDto updateCoupon(Long couponId, CouponUpdateRequestDto requestDto) {
 
         // 아직 존재하는 쿠폰인지 검증
         Coupon coupon = couponRepository.findById(couponId)
@@ -105,7 +101,7 @@ public class CouponService {
         ResolvedDates resolvedDates = resolveDates(requestDto, coupon);
 
         // 날짜 검증
-        validateDates(resolvedDates.startDate(), resolvedDates.endDate(),resolvedDates.expiryDate(),false);
+        validateDates(resolvedDates.startDate(), resolvedDates.endDate(), resolvedDates.expiryDate(), false);
 
         // newTotalQuantity 검증 및 반영, availableQuantity가 0이 되면 status도 ENDED로 업데이트됨
         if (requestDto.getNewTotalQuantity() > 0) {
@@ -137,7 +133,7 @@ public class CouponService {
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
 
-        return ApiResponse.success(new CouponResponseDto(coupon.getId()));
+        return new CouponResponseDto(coupon.getId());
     }
 
     public void deleteCoupon(Long couponId) {

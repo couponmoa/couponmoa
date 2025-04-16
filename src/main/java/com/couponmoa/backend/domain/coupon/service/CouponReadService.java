@@ -24,18 +24,15 @@ public class CouponReadService {
 
     private final CouponRepository couponRepository;
 
-    public ApiResponse<Page<CouponSimpleResponseDto>> findAllCoupons(int page, int size) {
-        Pageable pageable = PageRequest.of(page-1, size);
-
+    public Page<CouponSimpleResponseDto> findAllCoupons(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
         Page<Coupon> coupons = couponRepository.findAllSortedByIQ(pageable);
-
-        return ApiResponse.success(coupons.map(CouponSimpleResponseDto::toDto));
+        return coupons.map(CouponSimpleResponseDto::toDto);
     }
 
-    public ApiResponse<CouponDetailResponseDto> findCoupon(Long couponId, AuthUser authUser) {
+    public CouponDetailResponseDto findCoupon(Long couponId, AuthUser authUser) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
-
-        return ApiResponse.success(CouponDetailResponseDto.toDto(coupon));
+        return CouponDetailResponseDto.toDto(coupon);
     }
 }

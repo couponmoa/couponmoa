@@ -2,8 +2,9 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY build/libs/couponmoa-*-SNAPSHOT.jar app.jar
+#build/libs/couponmoa-*-SNAPSHOT.jar app.jar
+COPY app.jar app.jar
 
-ENV SPRING_PROFILES_ACTIVE=prop
+ENV SPRING_PROFILES_ACTIVE=prod
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
