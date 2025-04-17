@@ -34,8 +34,7 @@ public class UserProfileService {
 
     @Transactional
     public void updateUserImage(Long userId, MultipartFile multipartFile) throws IOException {
-        System.out.println("메서드 실행");
-        User user = userRepository.findByIdOrElseThrow(userId, ErrorCode.USER_NOT_FOUND);
+        User user = getUserById(userId);
         String userImageKey = uploadImageToS3(multipartFile);
 
         user.updateImageKey(userImageKey);
@@ -45,7 +44,7 @@ public class UserProfileService {
 
     @Transactional
     public void deleteUserImage(Long userId) {
-        User user = userRepository.findByIdOrElseThrow(userId, ErrorCode.USER_NOT_FOUND);
+        User user = getUserById(userId);
 
         String key = user.getImageKey();
 
@@ -54,6 +53,10 @@ public class UserProfileService {
         user.deleteImageKey();
 
         userRepository.save(user);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findByIdOrElseThrow(userId, ErrorCode.USER_NOT_FOUND);
     }
 
     private String uploadImageToS3(MultipartFile multipartFile) throws IOException {

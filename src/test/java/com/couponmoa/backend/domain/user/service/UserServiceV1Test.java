@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class UserServiceV1Test {
 
     @Mock
     private UserRepository userRepository;
@@ -41,7 +41,7 @@ public class UserServiceTest {
     private UserStoreSubscribeRepository userStoreSubRepo;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceV1 userServiceV1;
 
     private User user;
 
@@ -59,7 +59,7 @@ public class UserServiceTest {
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class)))
                     .willThrow(new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-            ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.findUser(userId));
+            ApplicationException exception = assertThrows(ApplicationException.class, () -> userServiceV1.findUser(userId));
             assertEquals(ErrorCode.USER_NOT_FOUND.getHttpStatus(), exception.getStatus());
         }
 
@@ -69,7 +69,7 @@ public class UserServiceTest {
 
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
 
-            UserResponse userResponse = userService.findUser(userId);
+            UserResponse userResponse = userServiceV1.findUser(userId);
 
             assertEquals(user.getEmail(), userResponse.getEmail());
             assertEquals(user.getNickname(), userResponse.getNickname());
@@ -85,7 +85,7 @@ public class UserServiceTest {
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
             given(userRepository.existsByEmail(anyString())).willReturn(true);
 
-            ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.updateUser(userId, request));
+            ApplicationException exception = assertThrows(ApplicationException.class, () -> userServiceV1.updateUser(userId, request));
             assertEquals(ErrorCode.EMAIL_ALREADY_EXIST.getHttpStatus(), exception.getStatus());
         }
 
@@ -97,7 +97,7 @@ public class UserServiceTest {
             given(userRepository.findByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(user);
             given(userRepository.existsByEmail(anyString())).willReturn(false);
 
-            userService.updateUser(userId, request);
+            userServiceV1.updateUser(userId, request);
 
             assertEquals(user.getEmail(), request.getEmail());
             assertEquals(user.getNickname(), request.getNickname());
@@ -115,7 +115,7 @@ public class UserServiceTest {
             given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
             ApplicationException exception = assertThrows(ApplicationException.class,
-                    () -> userService.updateUserPassword(userId, request));
+                    () -> userServiceV1.updateUserPassword(userId, request));
             assertEquals(ErrorCode.SAME_PASSWORD.getHttpStatus(), exception.getStatus());
         }
 
@@ -128,7 +128,7 @@ public class UserServiceTest {
             given(passwordEncoder.matches(anyString(), anyString())).willReturn(false, false);
 
             ApplicationException exception = assertThrows(ApplicationException.class,
-                    () -> userService.updateUserPassword(userId, request));
+                    () -> userServiceV1.updateUserPassword(userId, request));
             assertEquals(ErrorCode.INVALID_PASSWORD.getHttpStatus(), exception.getStatus());
         }
 
@@ -141,7 +141,7 @@ public class UserServiceTest {
             given(passwordEncoder.matches(anyString(), anyString())).willReturn(false, true);
             given(passwordEncoder.encode(anyString())).willReturn("encodedPassword");
 
-            userService.updateUserPassword(userId, request);
+            userServiceV1.updateUserPassword(userId, request);
 
             assertEquals("encodedPassword", user.getPassword());
         }
@@ -156,7 +156,7 @@ public class UserServiceTest {
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
 
-        userService.deleteUser(userId, request);
+        userServiceV1.deleteUser(userId, request);
 
         assertNotNull(user.getDeletedAt());
     }
