@@ -9,6 +9,7 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.elasticsearch.service.CouponElasticsearchService;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubscribeService;
@@ -36,6 +37,7 @@ public class CouponService {
     private final StoreRepository storeRepository;
     private final UserCouponSubscribeService userCouponSubServ;
     private final UserStoreSubscribeService userStoreSubServ;
+    private final CouponElasticsearchService couponElasticsearchService;
 
     public ApiResponse<CouponResponseDto> createCoupon(CouponCreateRequestDto requestDto) {
 
@@ -85,6 +87,7 @@ public class CouponService {
         Coupon savedCoupon = couponRepository.save(newCoupon);
 
         sendEmail(savedCoupon);
+        couponElasticsearchService.save(savedCoupon);  // Elastic 저장
 
         return ApiResponse.success(new CouponResponseDto(
                 savedCoupon.getId()));
@@ -136,6 +139,7 @@ public class CouponService {
 
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
+        couponElasticsearchService.save(coupon);  // Elastic 저장
 
         return ApiResponse.success(new CouponResponseDto(coupon.getId()));
     }
@@ -147,8 +151,13 @@ public class CouponService {
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         validateStoreOwnerAndGetStore(coupon.getStore().getId());
 
-        coupon.delete();
+        // 쿠폰 삭제
+        couponRepository.delete(coupon);
+
+        // Elasticsearch에서 쿠폰 삭제
+        couponElasticsearchService.deleteCouponFromElasticsearch(couponId);
     }
+
 
     private Store validateStoreOwnerAndGetStore(Long storeId) {
         Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
