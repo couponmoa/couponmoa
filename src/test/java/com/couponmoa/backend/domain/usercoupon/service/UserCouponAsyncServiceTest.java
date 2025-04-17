@@ -17,9 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +29,8 @@ class UserCouponAsyncServiceTest {
     private CouponRepository couponRepository;
     @Mock
     private UserCouponRepository userCouponRepository;
+    @Mock
+    private UserCouponRedisService userCouponRedisService;
     @Mock
     private IssuedNotificationService issuedNotificationService;
     @Mock
@@ -51,14 +51,44 @@ class UserCouponAsyncServiceTest {
         void 사용자_쿠폰_저장_성공() {
             given(userRepository.getReferenceById(anyLong())).willReturn(mock(User.class));
             given(couponRepository.getReferenceById(anyLong())).willReturn(mock(Coupon.class));
-            willDoNothing().given(issuedNotificationService)
-                    .createIssuedNotification(anyLong(), any(UserCoupon.class));
-            willDoNothing().given(expiredNotificationService)
-                    .createCouponExpireNotification(any(UserCoupon.class));
 
             userCouponAsyncService.saveUserCoupon(userId, couponId);
 
-            verify(userCouponRepository).save(any(UserCoupon.class));
+            verify(userCouponRepository, times(1)).save(any(UserCoupon.class));
+        }
+    }
+
+    @Nested
+    @Order(2)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class CouponIssueTests {
+
+        private static final long userId = 1L;
+        private static final Coupon coupon = mock();
+
+        @Test
+        @Order(1)
+        void 쿠폰_발급_실패() {
+            given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(1);
+
+            userCouponAsyncService.couponIssue(userId, coupon);
+
+            verify(userCouponRepository, times(0)).save(any(UserCoupon.class));
+            verify(issuedNotificationService, times(0)).createIssuedNotification(anyLong(), any(UserCoupon.class));
+            verify(expiredNotificationService, times(0)).createCouponExpireNotification(any(UserCoupon.class));
+        }
+
+        @Test
+        @Order(2)
+        void 쿠폰_발급_성공() {
+            given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(0);
+            given(userRepository.getReferenceById(anyLong())).willReturn(mock(User.class));
+            given(userCouponRepository.save(any(UserCoupon.class))).willReturn(mock(UserCoupon.class));
+
+            userCouponAsyncService.couponIssue(userId, coupon);
+
+            verify(issuedNotificationService, times(1)).createIssuedNotification(anyLong(), any(UserCoupon.class));
+            verify(expiredNotificationService, times(1)).createCouponExpireNotification(any(UserCoupon.class));
         }
     }
 }
