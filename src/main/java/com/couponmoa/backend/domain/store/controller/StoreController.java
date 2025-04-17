@@ -1,20 +1,16 @@
 package com.couponmoa.backend.domain.store.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
-import com.couponmoa.backend.common.exception.ApplicationException;
-import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.SimpleStoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
 import com.couponmoa.backend.domain.store.service.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
-import com.couponmoa.backend.domain.user.enums.UserRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,9 +49,9 @@ public class StoreController {
     @GetMapping("/my/simple")
     @Operation(summary = "내 가게 간단 목록 조회",
                description = "로그인 한 사용자가 자신의 가게 ID와 이름만 포함한 간단 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse<List<SimpleStoreResponse>>> getMySimpleStores(
+    public ResponseEntity<ApiResponse<List<StoreSimpleResponse>>> getMySimpleStores(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<SimpleStoreResponse> response = storeService.getMySimpleStores(authUser.getId());
+        List<StoreSimpleResponse> response = storeService.getMySimpleStores(authUser.getId());
         return ResponseEntity.ok(ApiResponse.success(response, "내 가게 간단 목록 조회 성공"));
     }
 

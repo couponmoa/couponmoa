@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
-public class CouponSearchByStoreRequestDto {
+public class CouponSearchByStoreRequest {
 
     private String keyword;
     private CouponStatus status;

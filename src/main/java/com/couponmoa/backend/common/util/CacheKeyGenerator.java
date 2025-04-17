@@ -1,8 +1,9 @@
-package com.couponmoa.backend.domain.coupon.util;
+package com.couponmoa.backend.common.util;
 
 import com.couponmoa.backend.domain.coupon.dto.request.CouponCursor;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponSearchByStoreRequestDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponSearchByStoreRequest;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
+import com.couponmoa.backend.domain.store.dto.request.StoreCursor;
 import lombok.extern.slf4j.Slf4j;
 
 // 캐시 키를 생성하는 역할, 파라미터를 기반으로 고유한 키 생성
@@ -36,7 +37,7 @@ public class CacheKeyGenerator {
     }
 
     // Store와 관련된 조건을 기준으로 고유한 키 생성 ( ex: storeId-1-keyword-아메리카노-status-IN_PROGRESS-discountAmount-3000-discountRate-null-startDate-2025-04-14-size-10-page-1
-    public static String generateCacheKey(Long storeId, CouponSearchByStoreRequestDto requestDto, int size, int page) {
+    public static String generateCacheKey(Long storeId, CouponSearchByStoreRequest requestDto, int size, int page) {
         StringBuilder keyBuilder = new StringBuilder();
 
         keyBuilder.append("storeId-").append(storeId).append("-");
@@ -55,8 +56,30 @@ public class CacheKeyGenerator {
         return keyBuilder.toString();
     }
 
+    // Store 검색 조건을 기반으로 고유한 캐시 키 생성( ex: keyword-커피-storeId-10-size-20), storeId: 커서 기반 페이징을 위해 사용, 없으면 생략 가능
+    public static String generateCacheKey(StoreCursor cursor, int size) {
+        StringBuilder keyBuilder = new StringBuilder();
+
+        keyBuilder.append("keyword-")
+                .append(cursor != null && cursor.keyword() != null ? cursor.keyword() : "all")
+                .append("-");
+
+        if (cursor != null && cursor.storeId() != null) {
+            keyBuilder.append("storeId-").append(cursor.storeId()).append("-");
+        }
+
+        keyBuilder.append("size-").append(size);
+        return keyBuilder.toString();
+    }
+
     // 쿠폰 ID를 기반으로 고유한 키 생성 ( ex: couponId-123 )
-    public static String generateCacheKey(Long couponId) {
+    public static String generateCouponCacheKey(Long couponId) {
         return "couponId-" + couponId;
     }
+
+    // 단일 스토어 ID 기준 캐시 키 (ex: storeId-123)
+    public static String generateStoreCacheKey(Long storeId) {
+        return "storeId-" + storeId;
+    }
+
 }
