@@ -15,13 +15,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자 쿠폰 API", description = "쿠폰을 발급받고, 발급받은 쿠폰을 관리할 수 있는 API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserCouponController {
 
@@ -30,20 +31,32 @@ public class UserCouponController {
 
     private final UserCouponService userCouponService;
 
-    @Operation(summary = "쿠폰 발급")
+    @Operation(summary = "쿠폰 발급 (동기)")
     @Secured(UserRole.Authority.USER)
-    @PostMapping("/coupons/{couponId}/issue")
-    public ApiResponse<Void> createUserCoupon(
+    @PostMapping("/v1/coupons/{couponId}/issue")
+    public ApiResponse<Void> createUserCouponSync(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long couponId
     ) {
-        userCouponService.createUserCoupon(authUser.getId(), couponId);
+        userCouponService.createUserCouponSync(authUser.getId(), couponId);
         return ApiResponse.success();
+    }
+
+    @Operation(summary = "쿠폰 발급 (비동기)")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @Secured(UserRole.Authority.USER)
+    @PostMapping("/v2/coupons/{couponId}/issue")
+    public ApiResponse<Void> createUserCouponAsync(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long couponId
+    ) {
+        userCouponService.createUserCouponAsync(authUser.getId(), couponId);
+        return ApiResponse.of(HttpStatus.ACCEPTED, "쿠폰 발급 요청이 접수되었습니다.", null);
     }
 
     @Operation(summary = "발급받은 쿠폰 목록 조회")
     @Secured(UserRole.Authority.USER)
-    @GetMapping("/user-coupons")
+    @GetMapping("/v1/user-coupons")
     public ApiResponse<Page<UserCouponResponse>> findUserCoupons(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestParam(required = false) UserCouponStatus status,
@@ -56,7 +69,7 @@ public class UserCouponController {
 
     @Operation(summary = "쿠폰 코드 조회")
     @Secured(UserRole.Authority.USER)
-    @GetMapping("/user-coupons/{userCouponId}/code")
+    @GetMapping("/v1/user-coupons/{userCouponId}/code")
     public ApiResponse<UserCouponCodeResponse> findUserCouponCode(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long userCouponId
@@ -67,7 +80,7 @@ public class UserCouponController {
 
     @Operation(summary = "쿠폰 사용 처리")
     @Secured(UserRole.Authority.ADMIN)
-    @PostMapping("/user-coupons/use")
+    @PostMapping("/v1/user-coupons/use")
     public ApiResponse<UseUserCouponResponse> useUserCoupon(
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserCouponRequest request
