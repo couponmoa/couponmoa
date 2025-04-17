@@ -1,8 +1,6 @@
 package com.couponmoa.backend.domain.store.controller;
 
-import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.common.service.RedisService;
-import com.couponmoa.backend.config.JwtAuthenticationFilter;
 import com.couponmoa.backend.config.JwtAuthenticationToken;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
@@ -13,7 +11,6 @@ import com.couponmoa.backend.domain.store.service.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,18 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(StoreController.class)
@@ -53,9 +44,6 @@ public class StoreControllerTest {
 
     @MockitoBean
     private RedisService redisService;
-
-   /* @MockitoBean
-    private JwtUtil jwtUtil;*/
 
     private JwtAuthenticationToken userAuthToken;
     private JwtAuthenticationToken adminAuthToken;
@@ -98,7 +86,7 @@ public class StoreControllerTest {
     @Test
     void 내_가게_목록_조회() throws Exception {
         StoreResponse response = new StoreResponse(1L, "가게명", "설명", "주소");
-        given(storeService.getMyStore(anyLong())).willReturn(List.of(response));
+        given(storeService.findMyStore(anyLong())).willReturn(List.of(response));
 
         mockMvc.perform(get("/api/v1/stores/my")
                         .with(authentication(userAuthToken)))
@@ -109,7 +97,7 @@ public class StoreControllerTest {
     @Test
     void 내_가게_간단_목록_조회() throws Exception {
         SimpleStoreResponse response = new SimpleStoreResponse(1L, "가게명");
-        given(storeService.getMySimpleStores(anyLong())).willReturn(List.of(response));
+        given(storeService.findMySimpleStores(anyLong())).willReturn(List.of(response));
 
         mockMvc.perform(get("/api/v1/stores/my/simple")
                         .with(authentication(userAuthToken)))
