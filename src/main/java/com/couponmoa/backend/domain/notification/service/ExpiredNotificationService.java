@@ -1,19 +1,18 @@
 package com.couponmoa.backend.domain.notification.service;
 
 import com.couponmoa.backend.common.emailSender.dto.SendToMQDto;
+import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.notification.entity.Notification;
 import com.couponmoa.backend.domain.notification.enums.NotificationType;
-import com.couponmoa.backend.domain.notification.event.CouponIssuedEvent;
 import com.couponmoa.backend.domain.notification.repository.NotificationJdbcRepository;
 import com.couponmoa.backend.domain.notification.repository.NotificationRepository;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +65,7 @@ public class ExpiredNotificationService {
     }
 
     // jobrunr 실행 대상, sqs 요청 메서드
+    @Job(name = "Send grouped notification")
     @Transactional
     public void sendGroupedNotification(List<Long> notificationIds, String couponName) {
         List<Notification> notiList = notificationRepository.findAllById(notificationIds);
