@@ -1,6 +1,7 @@
 package com.couponmoa.backend.domain.coupon.service;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
+import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponSearchByStoreRequest;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
@@ -71,7 +72,7 @@ class CouponReadServiceV2Test {
     void 키워드로_쿠폰_조회_성공() {
         // Given
         List<CouponSimpleResponse> coupons = Collections.singletonList(
-                CouponSimpleResponse.builder().id(1L).name("테스트").discountAmount(BigDecimal.TEN).discountRate(BigDecimal.ONE).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).status(CouponStatus.IN_PROGRESS).build()
+                CouponSimpleResponse.builder().id(1L).name("테스트").discountAmount(BigDecimal.valueOf(3000)).build()
         );
         when(couponQueryDslRepository.searchCouponsByKeyword(any(), any(), anyInt())).thenReturn(coupons);
 
@@ -167,7 +168,8 @@ class CouponReadServiceV2Test {
         when(couponRepository.findAll()).thenReturn(List.of(dummyCoupon));
 
         // When
-        List<CouponSimpleResponse> result = couponReadServiceV2.fallbackFindCouponsByKeyword(null, null, 10, new RuntimeException("Simulated Redis failure"));
+        List<CouponSimpleResponse> result = couponReadServiceV2.fallbackFindCouponsByKeyword(
+                null, null, 10, new ApplicationException(ErrorCode.REDIS_FAILURE));
 
         // Then
         assertFalse(result.isEmpty());
@@ -182,7 +184,8 @@ class CouponReadServiceV2Test {
         when(couponRepository.findByStoreId(anyLong(), any(Pageable.class))).thenReturn(couponPage);
 
         // When
-        Page<CouponSimpleResponse> result = couponReadServiceV2.fallbackFindCouponsByStore(1L, new CouponSearchByStoreRequest(), 10, 1, new RuntimeException("Simulated Redis failure"));
+        Page<CouponSimpleResponse> result = couponReadServiceV2.fallbackFindCouponsByStore(
+                1L, new CouponSearchByStoreRequest(), 10, 1, new ApplicationException(ErrorCode.REDIS_FAILURE));
 
         // Then
         assertFalse(result.isEmpty());
@@ -196,7 +199,8 @@ class CouponReadServiceV2Test {
         when(couponRepository.findById(anyLong())).thenReturn(Optional.of(dummyCoupon));
 
         // When
-        CouponDetailResponse result = couponReadServiceV2.fallbackFindCoupon(1L, null, new RuntimeException("Simulated Redis failure"));
+        CouponDetailResponse result = couponReadServiceV2.fallbackFindCoupon(
+                1L, null, new ApplicationException(ErrorCode.REDIS_FAILURE));
 
         // Then
         assertNotNull(result);

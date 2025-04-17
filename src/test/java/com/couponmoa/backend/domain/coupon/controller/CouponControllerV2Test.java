@@ -98,7 +98,7 @@ class CouponControllerV2Test {
     void 키워드로_쿠폰_조회_성공() throws Exception {
         // Given
         List<CouponSimpleResponse> coupons = Collections.singletonList(
-                CouponSimpleResponse.builder().id(1L).name("테스트").discountAmount(BigDecimal.TEN).discountRate(BigDecimal.ONE).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).status(CouponStatus.IN_PROGRESS).build()
+                CouponSimpleResponse.builder().id(1L).name("테스트").discountAmount(BigDecimal.valueOf(3000)).discountRate(BigDecimal.ZERO).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).status(CouponStatus.IN_PROGRESS).build()
         );
         when(couponReadServiceV2.findCouponsByKeyword(any(), any(), anyInt())).thenReturn(coupons);
 
@@ -114,7 +114,7 @@ class CouponControllerV2Test {
     void 스토어별_쿠폰_조회_성공() throws Exception {
         // Given
         Page<CouponSimpleResponse> coupons = new PageImpl<>(Collections.singletonList(
-                CouponSimpleResponse.builder().id(1L).name("스토어 쿠폰").discountAmount(BigDecimal.TEN).discountRate(BigDecimal.ONE).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).status(CouponStatus.IN_PROGRESS).build()
+                CouponSimpleResponse.builder().id(1L).name("스토어 쿠폰").discountAmount(BigDecimal.valueOf(3000)).discountRate(BigDecimal.ZERO).startDate(LocalDateTime.now()).endDate(LocalDateTime.now()).status(CouponStatus.IN_PROGRESS).build()
         ));
         when(couponReadServiceV2.findCouponsByStore(anyLong(), any(CouponSearchByStoreRequest.class), anyInt(), anyInt())).thenReturn(coupons);
 
