@@ -49,7 +49,7 @@ class UserCouponServiceTest {
     @Nested
     @Order(1)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    class CreateUserCouponTests {
+    class CreateUserCouponSyncTests {
 
         private final long userId = 1L;
         private final long couponId = 1L;
@@ -87,10 +87,28 @@ class UserCouponServiceTest {
 
         @Test
         @Order(3)
-        void 쿠폰_발급_수량_없음_실패() {
+        void 쿠폰_발급_DB_수량_없음_실패() {
             ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(0);
+            given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
+
+            ApplicationException thrown = assertThrows(ApplicationException.class,
+                    () -> userCouponService.createUserCouponSync(userId, couponId));
+
+            assertNotNull(thrown);
+            assertEquals(errorCode.getMessage(), thrown.getMessage());
+            assertEquals(errorCode.getHttpStatus(), thrown.getStatus());
+        }
+
+        @Test
+        @Order(4)
+        void 쿠폰_발급_redis_수량_없음_실패() {
+            ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
+            Coupon coupon = mock();
+            given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(10);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(3);
 
@@ -103,11 +121,12 @@ class UserCouponServiceTest {
         }
 
         @Test
-        @Order(4)
+        @Order(5)
         void 쿠폰_발급_중복_요청_실패() {
             ErrorCode errorCode = ErrorCode.DUPLICATED_USER_COUPON;
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(10);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(2);
 
@@ -120,10 +139,11 @@ class UserCouponServiceTest {
         }
 
         @Test
-        @Order(5)
+        @Order(6)
         void 쿠폰_발급_redis에_쿠폰_재고_등록_안됨_실패() {
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(10);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(1);
 
@@ -134,10 +154,11 @@ class UserCouponServiceTest {
         }
 
         @Test
-        @Order(6)
+        @Order(7)
         void 쿠폰_발급_lua_script_예상_못한_값_반환_실패() {
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(10);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(-1);
 
@@ -148,10 +169,11 @@ class UserCouponServiceTest {
         }
 
         @Test
-        @Order(7)
+        @Order(8)
         void 쿠폰_발급_성공() {
             Coupon coupon = mock();
             given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(10);
             given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
             given(userCouponRedisService.couponIssue(anyLong(), anyLong())).willReturn(0);
 
@@ -163,6 +185,76 @@ class UserCouponServiceTest {
 
     @Nested
     @Order(2)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class CreateUserCouponAsyncTests {
+
+        private final long userId = 1L;
+        private final long couponId = 1L;
+
+        @Test
+        @Order(1)
+        void 쿠폰_발급_쿠폰_없음_실패() {
+            ErrorCode errorCode = ErrorCode.COUPON_NOT_FOUND;
+            given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class)))
+                    .willThrow(new ApplicationException(errorCode));
+
+            ApplicationException thrown = assertThrows(ApplicationException.class,
+                    () -> userCouponService.createUserCouponAsync(userId, couponId));
+
+            assertNotNull(thrown);
+            assertEquals(errorCode.getMessage(), thrown.getMessage());
+            assertEquals(errorCode.getHttpStatus(), thrown.getStatus());
+        }
+
+        @Test
+        @Order(2)
+        void 쿠폰_발급_IN_PROGRESS_상태_아님_실패() {
+            ErrorCode errorCode = ErrorCode.COUPON_NOT_ACTIVE;
+            Coupon coupon = mock();
+            given(coupon.getStatus()).willReturn(CouponStatus.UPCOMING);
+            given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
+
+            ApplicationException thrown = assertThrows(ApplicationException.class,
+                    () -> userCouponService.createUserCouponAsync(userId, couponId));
+
+            assertNotNull(thrown);
+            assertEquals(errorCode.getMessage(), thrown.getMessage());
+            assertEquals(errorCode.getHttpStatus(), thrown.getStatus());
+        }
+
+        @Test
+        @Order(3)
+        void 쿠폰_발급_DB_수량_없음_실패() {
+            ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
+            Coupon coupon = mock();
+            given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(0);
+            given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
+
+            ApplicationException thrown = assertThrows(ApplicationException.class,
+                    () -> userCouponService.createUserCouponAsync(userId, couponId));
+
+            assertNotNull(thrown);
+            assertEquals(errorCode.getMessage(), thrown.getMessage());
+            assertEquals(errorCode.getHttpStatus(), thrown.getStatus());
+        }
+
+        @Test
+        @Order(4)
+        void 쿠폰_발급_요청_성공() {
+            Coupon coupon = mock();
+            given(coupon.getStatus()).willReturn(CouponStatus.IN_PROGRESS);
+            given(coupon.getAvailableQuantity()).willReturn(10);
+            given(couponRepository.findActiveByIdOrElseThrow(anyLong(), any(ErrorCode.class))).willReturn(coupon);
+
+            userCouponService.createUserCouponAsync(userId, couponId);
+
+            verify(userCouponAsyncService, times(1)).couponIssue(anyLong(), any(Coupon.class));
+        }
+    }
+
+    @Nested
+    @Order(3)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class FindUserCouponsTests {
 
@@ -191,7 +283,7 @@ class UserCouponServiceTest {
     }
 
     @Nested
-    @Order(3)
+    @Order(4)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class FindUserCouponCodeTests {
 
@@ -290,7 +382,7 @@ class UserCouponServiceTest {
 
 
     @Nested
-    @Order(4)
+    @Order(5)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class UseUserCouponTests {
 

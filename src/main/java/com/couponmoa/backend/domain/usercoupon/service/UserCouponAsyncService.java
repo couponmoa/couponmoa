@@ -32,13 +32,18 @@ public class UserCouponAsyncService {
     }
 
     @Async
-    public void couponIssue(Long userId, Long couponId) {
-        Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
+    public void couponIssue(Long userId, Coupon coupon) {
+        Integer resultCode = userCouponRedisService.couponIssue(userId, coupon.getId());
+        if (resultCode != 0) return; // 쿠폰 발급 실패
 
-        if (resultCode == 0) { // 쿠폰 발급 성공
-            saveUserCoupon(userId, couponId);
-            saveNotification(userId, userCoupon);
-        }
+        UserCoupon userCoupon = saveUserCoupon(userId, coupon);
+        saveNotification(userId, userCoupon);
+    }
+
+    private UserCoupon saveUserCoupon(Long userId, Coupon coupon) {
+        User user = userRepository.getReferenceById(userId);
+        UserCoupon userCoupon = new UserCoupon(user, coupon);
+        return userCouponRepository.save(userCoupon);
     }
 
     private void saveNotification(Long userId, UserCoupon userCoupon) {

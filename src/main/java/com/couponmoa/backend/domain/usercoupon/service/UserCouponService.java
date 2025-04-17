@@ -33,7 +33,9 @@ public class UserCouponService {
 
     public void createUserCouponSync(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findActiveByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
+
         validateCouponIssuablePeriod(coupon.getStatus());
+        validateCouponNotSoldOut(coupon.getAvailableQuantity());
 
         Integer resultCode = userCouponRedisService.couponIssue(userId, couponId);
         validateIssueResultCode(resultCode);
@@ -47,7 +49,7 @@ public class UserCouponService {
         validateCouponIssuablePeriod(coupon.getStatus());
         validateCouponNotSoldOut(coupon.getAvailableQuantity());
 
-        userCouponAsyncService.couponIssue(userId, couponId);
+        userCouponAsyncService.couponIssue(userId, coupon);
     }
 
     @Transactional(readOnly = true)
