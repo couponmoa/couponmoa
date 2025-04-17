@@ -60,7 +60,11 @@ public enum ErrorCode {
 
     // notification
     NOTIFICATION_NOT_FOUND(BAD_REQUEST,"존재하지 않는 알림입니다."),
-    SQS_SEND_FAILED(INTERNAL_SERVER_ERROR,"알림 전송에 실패했습니다.");
+    SQS_SEND_FAILED(INTERNAL_SERVER_ERROR,"알림 전송에 실패했습니다."),
+
+    // S3
+    S3_SERVICE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AWS S3 서비스 오류"),
+    S3_CLIENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AWS S3 클라이언트 오류");
 
     private final HttpStatus httpStatus;
     private final String message;
