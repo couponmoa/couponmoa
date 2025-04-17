@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter //테스트 용도
 @Table(name = "stores")
 @NoArgsConstructor
 public class Store extends BaseEntity {
