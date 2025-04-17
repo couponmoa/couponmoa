@@ -1,11 +1,11 @@
 package com.couponmoa.backend.domain.coupon.controller;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequestDto;
-import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequestDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponseDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponResponseDto;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequest;
+import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequest;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.service.CouponReadService;
 import com.couponmoa.backend.domain.coupon.service.CouponService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
@@ -34,45 +34,45 @@ public class CouponController {
 	@Operation(summary = "쿠폰 생성", description = "관리자가 새로운 쿠폰을 생성함.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<ApiResponse<CouponResponseDto>> createCoupon(
-			@Valid @RequestBody CouponCreateRequestDto requestDto) {
+	public ResponseEntity<ApiResponse<CouponResponse>> createCoupon(
+			@Valid @RequestBody CouponCreateRequest requestDto) {
 
-		CouponResponseDto couponResponseDto = couponService.createCoupon(requestDto);
+		CouponResponse couponResponseDto = couponService.createCoupon(requestDto);
 		return ResponseEntity.ok(ApiResponse.success(couponResponseDto));
 	}
 
 	@Operation(summary = "쿠폰 목록 조회", description = "쿠폰 목록을 페이징하여 조회함.")
 	@GetMapping
-	public ResponseEntity<ApiResponse<Page<CouponSimpleResponseDto>>> findAllCoupons(
+	public ResponseEntity<ApiResponse<Page<CouponSimpleResponse>>> findAllCoupons(
 			@Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1")
 			@RequestParam(defaultValue = "1") int page,
 			@Parameter(description = "페이지당 쿠폰 수", example = "10")
 			@RequestParam(defaultValue = "10") int size) {
 
-		Page<CouponSimpleResponseDto> couponList = couponReadService.findAllCoupons(page, size);
+		Page<CouponSimpleResponse> couponList = couponReadService.findAllCoupons(page, size);
 		return ResponseEntity.ok(ApiResponse.success(couponList));
 	}
 
 	@Operation(summary = "쿠폰 상세 조회", description = "특정 쿠폰의 상세 정보를 조회함.")
 	@GetMapping("/{couponId}")
-	public ResponseEntity<ApiResponse<CouponDetailResponseDto>> findCoupon(
+	public ResponseEntity<ApiResponse<CouponDetailResponse>> findCoupon(
 			@Parameter(description = "조회할 쿠폰의 ID", example = "5")
 			@PathVariable Long couponId,
 			@AuthenticationPrincipal AuthUser authUser) {
 
-		CouponDetailResponseDto responseDto = couponReadService.findCoupon(couponId, authUser);
+		CouponDetailResponse responseDto = couponReadService.findCoupon(couponId, authUser);
 		return ResponseEntity.ok(ApiResponse.success(responseDto));
 	}
 
 	@Operation(summary = "쿠폰 수정", description = "관리자가 특정 쿠폰 정보를 수정함.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{couponId}")
-	public ResponseEntity<ApiResponse<CouponResponseDto>> updateCoupon(
+	public ResponseEntity<ApiResponse<CouponResponse>> updateCoupon(
 			@Parameter(description = "수정할 쿠폰의 ID", example = "5")
 			@PathVariable Long couponId,
-			@Valid @RequestBody CouponUpdateRequestDto requestDto) {
+			@Valid @RequestBody CouponUpdateRequest requestDto) {
 
-		CouponResponseDto couponResponseDto = couponService.updateCoupon(couponId, requestDto);
+		CouponResponse couponResponseDto = couponService.updateCoupon(couponId, requestDto);
 		return ResponseEntity.ok(ApiResponse.success(couponResponseDto));
 	}
 

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class CouponCreateRequestDto {
+public class CouponCreateRequest {
 
     @NotBlank
     private String name;
@@ -45,7 +45,7 @@ public class CouponCreateRequestDto {
     private Long storeId;
 
     @Builder
-    public CouponCreateRequestDto(
+    public CouponCreateRequest(
             String name,
             int totalQuantity,
             BigDecimal discountAmount,

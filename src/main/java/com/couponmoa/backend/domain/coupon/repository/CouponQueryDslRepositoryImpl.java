@@ -1,7 +1,7 @@
 package com.couponmoa.backend.domain.coupon.repository;
 
 import com.couponmoa.backend.domain.coupon.dto.request.CouponCursor;
-import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponseDto;
+import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.entity.QCoupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.store.entity.QStore;
@@ -29,15 +29,15 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
 
     // 조회 요청에 storeId값이 있을 때 쿠폰 목록 조회, store별로 쿠폰은 많지 않을 것이기 때문에, offset 방식
     @Override
-    public Page<CouponSimpleResponseDto> searchCouponsByStore(Long storeId, String keyword, CouponStatus status,
-                                                       BigDecimal discountAmount, BigDecimal discountRate,
-                                                       LocalDateTime startDate, Pageable pageable) {
+    public Page<CouponSimpleResponse> searchCouponsByStore(Long storeId, String keyword, CouponStatus status,
+                                                           BigDecimal discountAmount, BigDecimal discountRate,
+                                                           LocalDateTime startDate, Pageable pageable) {
         QCoupon coupon = QCoupon.coupon;
         QStore store = QStore.store;
 
-        List<CouponSimpleResponseDto> content = queryFactory
+        List<CouponSimpleResponse> content = queryFactory
                 .select(Projections.constructor(
-                        CouponSimpleResponseDto.class,
+                        CouponSimpleResponse.class,
                         coupon.id,
                         coupon.name,
                         coupon.discountAmount,
@@ -47,7 +47,7 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                 .join(coupon.store, store)
                 .where(
                         storeIdEquals(storeId),
-                        couponNameContains(keyword),
+                        keywordContains(keyword),
                         couponStatusEq(status),
                         couponDiscountAmountEq(discountAmount),
                         couponDiscountRateEq(discountRate),
@@ -66,7 +66,7 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                 .join(coupon.store, store)
                 .where(
                         storeIdEquals(storeId),
-                        couponNameContains(keyword),
+                        keywordContains(keyword),
                         couponStatusEq(status),
                         couponDiscountAmountEq(discountAmount),
                         couponDiscountRateEq(discountRate),
@@ -80,13 +80,13 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
 
     // storeId가 없을때 keyword로 조회 (keyword는 없을수도, 그럼 issuedQuantity와 name 기준 정렬, 전체 쿠폰 조회), cursor방식)
     @Override
-    public List<CouponSimpleResponseDto> searchCouponsByKeyword(CouponStatus status, CouponCursor cursor, int size) {
+    public List<CouponSimpleResponse> searchCouponsByKeyword(CouponStatus status, CouponCursor cursor, int size) {
 
         QCoupon coupon = QCoupon.coupon;
 
         return queryFactory
                 .select(Projections.constructor(
-                        CouponSimpleResponseDto.class,
+                        CouponSimpleResponse.class,
                         coupon.id,
                         coupon.name,
                         coupon.discountAmount,
@@ -111,8 +111,8 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
         return storeId == null ? null : QStore.store.id.eq(storeId);
     }
 
-    private BooleanExpression couponNameContains(String keyword) {
-        return keyword == null || keyword.isBlank() ? null : QCoupon.coupon.name.containsIgnoreCase(keyword);
+    private BooleanExpression keywordContains(String keyword) {
+        return (keyword == null || keyword.isBlank()) ? null : QCoupon.coupon.name.containsIgnoreCase(keyword);
     }
 
     private BooleanExpression couponStatusEq(CouponStatus status) {

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository extends BaseRepository<Coupon, Long> {
@@ -35,4 +36,7 @@ public interface CouponRepository extends BaseRepository<Coupon, Long> {
         return findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ApplicationException(errorCode, errorCode.getMessage() + " id = " + id));
     }
+
+    // fallback 용 기본적인 메서드
+    Page<Coupon> findByStoreId(Long storeId,Pageable pageable);
 }

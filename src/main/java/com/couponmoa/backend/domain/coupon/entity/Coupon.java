@@ -34,7 +34,6 @@ public class Coupon extends BaseEntity {
     private LocalDateTime startDate;  // 쿠폰 발급 시작일
     private LocalDateTime endDate;    // 쿠폰 발급 종료일
     private LocalDateTime expiryDate; // 쿠폰 만료일
-    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="store_id", nullable = false)
@@ -92,7 +91,7 @@ public class Coupon extends BaseEntity {
     }
 
     public void delete() {
-        this.deletedAt = LocalDateTime.now();
+        this.setDeletedAt(LocalDateTime.now());
     }
 
     public int getAvailableQuantity() {
