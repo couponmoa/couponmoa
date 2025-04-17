@@ -96,8 +96,7 @@ public class CouponServiceV2 {
     public CouponResponse updateCoupon(Long couponId, CouponUpdateRequest requestDto) {
 
         // 아직 존재하는 쿠폰인지 검증
-        Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.COUPON_NOT_FOUND));
+        Coupon coupon = couponRepository.findByIdOrElseThrow(couponId, ErrorCode.COUPON_NOT_FOUND);
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
@@ -136,6 +135,8 @@ public class CouponServiceV2 {
 
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
+
+        couponRepository.save(coupon);
 
         return new CouponResponse(coupon.getId());
     }

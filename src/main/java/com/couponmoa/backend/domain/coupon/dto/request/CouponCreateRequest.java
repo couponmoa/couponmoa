@@ -28,7 +28,7 @@ public class CouponCreateRequest {
     private BigDecimal discountRate = BigDecimal.ZERO;
     private BigDecimal minOrderAmount;
 
-    @JsonSetter(nulls = Nulls.SKIP)   // @NotNull 방어코드 작성 튜터님께 여쭤볼 것.
+    @JsonSetter(nulls = Nulls.SKIP)
     private BigDecimal maxDiscountAmount = BigDecimal.valueOf(9_999_999);
     private String description;
 
