@@ -237,7 +237,7 @@ class StoreServiceV2Test {
         int size = 10;
 
         // When
-        List<StoreResponse> result = storeServiceV2.fallbackFindStoresByKeyword(cursor, size, new RuntimeException("Simulated Redis failure"));
+        List<StoreResponse> result = storeServiceV2.fallbackFindStoresByKeyword(cursor, size, new ApplicationException(ErrorCode.REDIS_FAILURE));
 
         // Then
         assertFalse(result.isEmpty());
@@ -251,7 +251,7 @@ class StoreServiceV2Test {
         when(storeRepository.findByIdOrElseThrow(anyLong(), any())).thenReturn(store);
 
         // When
-        StoreResponse result = storeServiceV2.fallbackFindStore(1L, new RuntimeException("Simulated Redis failure"));
+        StoreResponse result = storeServiceV2.fallbackFindStore(1L, new ApplicationException(ErrorCode.REDIS_FAILURE));
 
         // Then
         assertNotNull(result);
