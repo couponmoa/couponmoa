@@ -9,6 +9,10 @@ spring:
       sqs:
         queue:
           emailAlert: couponmoa-queue
+          couponAlert: coupon-alert-queue
+      s3:
+        bucket: couponmoa-user-profile
+
 
   #RDB setting
   datasource:

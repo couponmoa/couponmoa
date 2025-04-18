@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.user.controller;
+package com.couponmoa.backend.domain.user.controller.v1;
 
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtAuthenticationToken;
@@ -11,7 +11,7 @@ import com.couponmoa.backend.domain.user.dto.request.UserUpdateRequest;
 import com.couponmoa.backend.domain.user.dto.response.UserResponse;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
-import com.couponmoa.backend.domain.user.service.UserService;
+import com.couponmoa.backend.domain.user.service.v1.UserServiceV1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -32,9 +33,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(UserControllerV1.class)
 @Import({SecurityConfig.class, JwtUtil.class})
-public class UserControllerTest {
+public class UserControllerV1Test {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,7 +47,7 @@ public class UserControllerTest {
     private RedisService redisService;
 
     @MockitoBean
-    private UserService userService;
+    private UserServiceV1 userServiceV1;
 
     private JwtAuthenticationToken userAuthenticationToken;
 
@@ -63,15 +64,16 @@ public class UserControllerTest {
         String email = "email@email.com";
         User user = new User(email, "password", "name", UserRole.ROLE_USER);
         ReflectionTestUtils.setField(user, "id", userId);
-        UserResponse mockResponse = UserResponse.fromEntity(user);
-        given(userService.findUser(anyLong())).willReturn(mockResponse);
+        UserResponse mockResponse = UserResponse.fromEntityV1(user);
+        given(userServiceV1.findUser(anyLong())).willReturn(mockResponse);
 
         //when&then
         mockMvc.perform(get("/api/v1/users")
                         .with(authentication(userAuthenticationToken)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(userId))
-                .andExpect(jsonPath("$.data.email").value(email));
+                .andExpect(jsonPath("$.data.email").value(email))
+                .andExpect(jsonPath("$.data.imageUrl").value(startsWith("https://couponmoa-user-profile.s3")));
     }
 
     @Test
@@ -79,7 +81,7 @@ public class UserControllerTest {
         //given
         long userId = 1L;
         UserUpdateRequest userUpdateRequest = new UserUpdateRequest("change@email.com", "changename");
-        willDoNothing().given(userService).updateUser(anyLong(), any(UserUpdateRequest.class));
+        willDoNothing().given(userServiceV1).updateUser(anyLong(), any(UserUpdateRequest.class));
 
         //when&then
         mockMvc.perform(patch("/api/v1/users")
@@ -95,7 +97,7 @@ public class UserControllerTest {
         long userId = 1L;
         UserUpdatePasswordRequest request = new UserUpdatePasswordRequest(
                 "Password1234!", "Password12345!");
-        willDoNothing().given(userService).updateUserPassword(anyLong(), any(UserUpdatePasswordRequest.class));
+        willDoNothing().given(userServiceV1).updateUserPassword(anyLong(), any(UserUpdatePasswordRequest.class));
 
         //when&then
         mockMvc.perform(put("/api/v1/users/password")
@@ -110,7 +112,7 @@ public class UserControllerTest {
         //given
         long userId = 1L;
         UserDeleteRequest request = new UserDeleteRequest("Password1234!");
-        willDoNothing().given(userService).deleteUser(anyLong(), any(UserDeleteRequest.class));
+        willDoNothing().given(userServiceV1).deleteUser(anyLong(), any(UserDeleteRequest.class));
 
         //when&then
         mockMvc.perform(delete("/api/v1/users")
