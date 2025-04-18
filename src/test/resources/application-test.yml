@@ -31,6 +31,7 @@ cloud:
     credentials:
       access-key: dummy
       secret-key: dummy
+      instance-profile: false
     region:
       static: ap-northeast-2
     stack:
