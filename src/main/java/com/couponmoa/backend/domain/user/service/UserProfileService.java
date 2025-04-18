@@ -29,7 +29,7 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucketName}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
     @Transactional
@@ -60,7 +60,6 @@ public class UserProfileService {
     }
 
     private String uploadImageToS3(MultipartFile multipartFile) throws IOException {
-        System.out.println("메서드 실행2");
         String originalFilename = multipartFile.getOriginalFilename();
         String s3FileName = "image/" + UUID.randomUUID() + "_" + originalFilename;
 

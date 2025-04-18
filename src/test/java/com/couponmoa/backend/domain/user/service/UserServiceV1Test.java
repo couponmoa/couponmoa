@@ -73,6 +73,7 @@ public class UserServiceV1Test {
 
             assertEquals(user.getEmail(), userResponse.getEmail());
             assertEquals(user.getNickname(), userResponse.getNickname());
+            assertEquals(user.getImageKey(),"image/default.jpg");
         }
     }
 

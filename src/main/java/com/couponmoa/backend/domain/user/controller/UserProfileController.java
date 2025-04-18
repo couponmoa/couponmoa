@@ -22,10 +22,9 @@ public class UserProfileController {
     private final UserProfileService userProfileService;
 
     @Operation(summary = "프로필 사진 등록", description = "사용자의 프로필 사진을 등록함")
-    @PutMapping
+    @PostMapping
     public ResponseEntity<ApiResponse<Void>> updateUserImage(
             @AuthenticationPrincipal AuthUser authUser, @RequestPart(value = "image") MultipartFile image) throws IOException {
-        System.out.println("컨트롤러 실행");
         userProfileService.updateUserImage(authUser.getId(), image);
         return ResponseEntity.ok(ApiResponse.success("회원 프로필 사진 등록 완료"));
     }

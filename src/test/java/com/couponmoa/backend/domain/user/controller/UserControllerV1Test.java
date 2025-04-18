@@ -23,6 +23,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -71,7 +72,8 @@ public class UserControllerV1Test {
                         .with(authentication(userAuthenticationToken)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(userId))
-                .andExpect(jsonPath("$.data.email").value(email));
+                .andExpect(jsonPath("$.data.email").value(email))
+                .andExpect(jsonPath("$.data.imageUrl").value(startsWith("https://couponmoa-user-profile.s3")));
     }
 
     @Test
