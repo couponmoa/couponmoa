@@ -1,34 +1,33 @@
-package com.couponmoa.backend.domain.user.controller;
+package com.couponmoa.backend.domain.user.controller.v1;
 
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtAuthenticationToken;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
-import com.couponmoa.backend.domain.user.dto.response.UserResponse;
-import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
-import com.couponmoa.backend.domain.user.service.UserServiceV2;
+import com.couponmoa.backend.domain.user.service.v1.UserProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
-import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserControllerV2.class)
+@WebMvcTest(UserProfileController.class)
 @Import({SecurityConfig.class, JwtUtil.class})
-public class UserControllerV2Test {
+public class UserProfileControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +36,7 @@ public class UserControllerV2Test {
     private RedisService redisService;
 
     @MockitoBean
-    private UserServiceV2 userServiceV2;
+    private UserProfileService userProfileService;
 
     private JwtAuthenticationToken userAuthenticationToken;
 
@@ -48,21 +47,28 @@ public class UserControllerV2Test {
     }
 
     @Test
-    void 사용자_조회() throws Exception {
-        //given
-        long userId = 1L;
-        String email = "email@email.com";
-        User user = new User(email, "password", "name", UserRole.ROLE_USER);
-        ReflectionTestUtils.setField(user, "id", userId);
-        UserResponse mockResponse = UserResponse.fromEntityV2(user);
-        given(userServiceV2.findUser(anyLong())).willReturn(mockResponse);
+    void 프로필_사진_등록() throws Exception {
+        MockMultipartFile file = new MockMultipartFile(
+                "image",
+                "profile.jpg",
+                "image/jpeg",
+                "fake image content".getBytes()
+        );
 
-        //when&then
-        mockMvc.perform(get("/api/v2/users")
+        willDoNothing().given(userProfileService).updateUserImage(anyLong(), any(MultipartFile.class));
+
+        mockMvc.perform(multipart("/api/v1/users/image")
+                        .file(file)
                         .with(authentication(userAuthenticationToken)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(userId))
-                .andExpect(jsonPath("$.data.email").value(email))
-                .andExpect(jsonPath("$.data.imageUrl").value(startsWith("https://d2mm3xa8sjonwp.cloudfront.net")));
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void 프로필_사진_삭제() throws Exception {
+        willDoNothing().given(userProfileService).deleteUserImage(anyLong());
+
+        mockMvc.perform(delete("/api/v1/users/image")
+                        .with(authentication(userAuthenticationToken)))
+                .andExpect(status().isOk());
     }
 }

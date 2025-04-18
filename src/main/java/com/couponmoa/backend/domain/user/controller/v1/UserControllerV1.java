@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.user.controller;
+package com.couponmoa.backend.domain.user.controller.v1;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
@@ -6,7 +6,7 @@ import com.couponmoa.backend.domain.user.dto.request.UserDeleteRequest;
 import com.couponmoa.backend.domain.user.dto.request.UserUpdatePasswordRequest;
 import com.couponmoa.backend.domain.user.dto.request.UserUpdateRequest;
 import com.couponmoa.backend.domain.user.dto.response.UserResponse;
-import com.couponmoa.backend.domain.user.service.UserServiceV1;
+import com.couponmoa.backend.domain.user.service.v1.UserServiceV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

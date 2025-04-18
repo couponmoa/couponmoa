@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.user.controller;
+package com.couponmoa.backend.domain.user.controller.v1;
 
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtAuthenticationToken;
@@ -11,7 +11,7 @@ import com.couponmoa.backend.domain.user.dto.request.UserUpdateRequest;
 import com.couponmoa.backend.domain.user.dto.response.UserResponse;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
-import com.couponmoa.backend.domain.user.service.UserServiceV1;
+import com.couponmoa.backend.domain.user.service.v1.UserServiceV1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

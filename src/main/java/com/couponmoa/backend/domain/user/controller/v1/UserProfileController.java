@@ -1,8 +1,8 @@
-package com.couponmoa.backend.domain.user.controller;
+package com.couponmoa.backend.domain.user.controller.v1;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
-import com.couponmoa.backend.domain.user.service.UserProfileService;
+import com.couponmoa.backend.domain.user.service.v1.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

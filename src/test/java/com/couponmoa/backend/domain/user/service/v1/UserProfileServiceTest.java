@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.user.service;
+package com.couponmoa.backend.domain.user.service.v1;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.config.S3Config;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
