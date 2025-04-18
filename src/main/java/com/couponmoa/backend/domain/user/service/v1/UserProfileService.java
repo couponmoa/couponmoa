@@ -29,7 +29,7 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
     @Transactional

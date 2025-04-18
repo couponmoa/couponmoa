@@ -14,16 +14,16 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class S3Config {
 
-    @Value("${cloud.aws.credentials.access-key:}")
+    @Value("${spring.cloud.aws.credentials.access-key:}")
     private String accessKey;
 
-    @Value("${cloud.aws.credentials.secret-key:}")
+    @Value("${spring.cloud.aws.credentials.secret-key:}")
     private String secretKey;
 
-    @Value("${cloud.aws.region.static}")
+    @Value("${spring.cloud.aws.region.static}")
     private String region;
 
-    @Value("${cloud.aws.credentials.instance-profile:false}")
+    @Value("${spring.cloud.aws.credentials.instance-profile:false}")
     private boolean useInstanceProfile;
 
     @Bean
