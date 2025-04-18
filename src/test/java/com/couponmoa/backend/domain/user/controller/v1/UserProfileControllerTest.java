@@ -1,5 +1,6 @@
 package com.couponmoa.backend.domain.user.controller.v1;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtAuthenticationToken;
 import com.couponmoa.backend.config.JwtUtil;
@@ -34,6 +35,9 @@ public class UserProfileControllerTest {
 
     @MockitoBean
     private RedisService redisService;
+
+    @MockitoBean
+    private AmazonS3 amazonS3;
 
     @MockitoBean
     private UserProfileService userProfileService;
