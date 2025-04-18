@@ -26,18 +26,20 @@ spring:
     username: dummy
     password: dummy
 
-  cloud:
-    aws:
-      credentials:
-        access-key: dummy
-        secret-key: dummy
-      region:
-        static: ap-northeast-2
-      stack:
-        auto: false
-      sqs:
-        queue:
-          email-alert: https://sqs.ap-northeast-2.amazonaws.com/253490759940/couponmoa-queue
+cloud:
+  aws:
+    credentials:
+      access-key: dummy
+      secret-key: dummy
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    sqs:
+      queue:
+        email-alert: https://sqs.ap-northeast-2.amazonaws.com/253490759940/couponmoa-queue
+    s3:
+      bucket: couponmoa-user-profile
 
 jwt:
   secret:
