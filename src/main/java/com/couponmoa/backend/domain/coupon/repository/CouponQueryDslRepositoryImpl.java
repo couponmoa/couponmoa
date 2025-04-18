@@ -5,6 +5,7 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.entity.QCoupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.store.entity.QStore;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -96,13 +97,9 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                 .where(
                         coupon.deletedAt.isNull(),
                         couponStatusEq(status),
-                        cursorFilter(cursor)
+                        cursorFilter(cursor) // 커서 조건 분리
                 )
-                .orderBy(
-                        coupon.issuedQuantity.desc(),
-                        coupon.name.asc(),
-                        coupon.id.desc()
-                )
+                .orderBy(orderSpecifiers()) // 정렬 조건 분리
                 .limit(size)
                 .fetch();
     }
@@ -131,23 +128,34 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
         return startDate == null ? null : QCoupon.coupon.startDate.after(startDate);
     }
 
-    // 현재 요청값으로 전달된 커서 이후의 데이터만 핕터링
     private BooleanExpression cursorFilter(CouponCursor cursor) {
         if (cursor == null) return null;
 
         QCoupon coupon = QCoupon.coupon;
 
-        NumberExpression<BigDecimal> issuedQuantityExpression = Expressions.numberTemplate(BigDecimal.class, "{0}", coupon.issuedQuantity);
+        BooleanExpression issuedQuantityLt = coupon.issuedQuantity.lt(cursor.issuedQuantity());
 
-        return issuedQuantityExpression.lt(cursor.issuedQuantity())
-                .or(
-                        issuedQuantityExpression.eq(cursor.issuedQuantity())
-                                .and(coupon.name.gt(cursor.keyword()))
-                )
-                .or(
-                        issuedQuantityExpression.eq(cursor.issuedQuantity())
-                                .and(coupon.name.eq(cursor.keyword()))
-                                .and(coupon.id.lt(cursor.couponId()))
-                );
+        BooleanExpression issuedQuantityEqAndNameGt =
+                coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
+                        .and(coupon.name.gt(cursor.keyword()));
+
+        BooleanExpression issuedQuantityEqAndNameEqAndIdLt =
+                coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
+                        .and(coupon.name.eq(cursor.keyword()))
+                        .and(coupon.id.lt(cursor.couponId()));
+
+        return issuedQuantityLt
+                .or(issuedQuantityEqAndNameGt)
+                .or(issuedQuantityEqAndNameEqAndIdLt);
+    }
+
+    private OrderSpecifier<?>[] orderSpecifiers() {
+        QCoupon coupon = QCoupon.coupon;
+
+        return new OrderSpecifier[]{
+                coupon.issuedQuantity.desc(),
+                coupon.name.asc(),
+                coupon.id.desc()
+        };
     }
 }

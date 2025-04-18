@@ -55,7 +55,7 @@ class CouponReadServiceV2Test {
                 .name("테스트 스토어")
                 .description("테스트 설명")
                 .address("서울시 강남구")
-                .user(mock(User.class))  // User는 mock으로 생성
+                .user(mock(User.class))
                 .build();
 
         // Coupon 객체 초기화
