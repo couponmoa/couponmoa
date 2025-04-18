@@ -10,6 +10,7 @@ import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreQueryDslRepository;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.store.service.v2.StoreServiceV2;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.user.repository.UserRepository;

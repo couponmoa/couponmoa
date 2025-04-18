@@ -8,6 +8,7 @@ import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequest;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.coupon.service.v2.CouponServiceV2;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubscribeService;

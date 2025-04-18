@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.coupon.controller;
+package com.couponmoa.backend.domain.coupon.controller.v1;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.coupon.dto.request.CouponCreateRequest;
@@ -6,8 +6,8 @@ import com.couponmoa.backend.domain.coupon.dto.request.CouponUpdateRequest;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
-import com.couponmoa.backend.domain.coupon.service.CouponReadService;
-import com.couponmoa.backend.domain.coupon.service.CouponService;
+import com.couponmoa.backend.domain.coupon.service.v1.CouponReadService;
+import com.couponmoa.backend.domain.coupon.service.v1.CouponService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 
 import io.swagger.v3.oas.annotations.Operation;

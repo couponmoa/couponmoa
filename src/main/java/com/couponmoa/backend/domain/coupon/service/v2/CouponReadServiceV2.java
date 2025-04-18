@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.coupon.service;
+package com.couponmoa.backend.domain.coupon.service.v2;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;

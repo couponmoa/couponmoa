@@ -7,6 +7,7 @@ import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.store.service.v1.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
@@ -20,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

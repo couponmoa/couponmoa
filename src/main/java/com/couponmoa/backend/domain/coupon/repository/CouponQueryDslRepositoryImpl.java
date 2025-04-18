@@ -97,9 +97,9 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                 .where(
                         coupon.deletedAt.isNull(),
                         couponStatusEq(status),
-                        cursorFilter(cursor) // 커서 조건 분리
+                        cursorFilter(cursor)
                 )
-                .orderBy(orderSpecifiers()) // 정렬 조건 분리
+                .orderBy(orderSpecifiers())
                 .limit(size)
                 .fetch();
     }

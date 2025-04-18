@@ -9,6 +9,7 @@ import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import com.couponmoa.backend.domain.coupon.repository.CouponQueryDslRepository;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.coupon.service.v2.CouponReadServiceV2;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
