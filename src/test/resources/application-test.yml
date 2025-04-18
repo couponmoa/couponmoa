@@ -38,8 +38,8 @@ spring:
         auto: false
       sqs:
         queue:
-          email-alert: https://sqs.ap-northeast-2.amazonaws.com/588738590244/couponmoa-queue
-          coupon-alert: https://sqs.ap-northeast-2.amazonaws.com/588738590244/coupon-alert-queue
+          email-alert: dummy
+          coupon-alert: dummy
       s3:
         bucket: couponmoa-user-profile
 
