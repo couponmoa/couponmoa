@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.coupon.service;
+package com.couponmoa.backend.domain.coupon.service.v1;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
@@ -14,7 +14,6 @@ import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubsc
 import com.couponmoa.backend.domain.subscribe.userstore.service.UserStoreSubscribeService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +23,6 @@ import java.time.LocalDateTime;
 
 import static com.couponmoa.backend.domain.coupon.enums.CouponStatus.editStatus;
 
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional

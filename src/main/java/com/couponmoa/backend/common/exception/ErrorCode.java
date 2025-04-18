@@ -60,7 +60,10 @@ public enum ErrorCode {
 
     // notification
     NOTIFICATION_NOT_FOUND(BAD_REQUEST,"존재하지 않는 알림입니다."),
-    SQS_SEND_FAILED(INTERNAL_SERVER_ERROR,"알림 전송에 실패했습니다.");
+    SQS_SEND_FAILED(INTERNAL_SERVER_ERROR,"알림 전송에 실패했습니다."),
+
+    // redis
+    REDIS_FAILURE(INTERNAL_SERVER_ERROR, "Redis 서버에 문제가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

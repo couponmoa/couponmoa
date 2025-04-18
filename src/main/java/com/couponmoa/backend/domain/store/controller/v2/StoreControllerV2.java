@@ -1,11 +1,11 @@
-package com.couponmoa.backend.domain.store.controller;
+package com.couponmoa.backend.domain.store.controller.v2;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.store.dto.request.StoreCursor;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
-import com.couponmoa.backend.domain.store.service.StoreServiceV2;
+import com.couponmoa.backend.domain.store.service.v2.StoreServiceV2;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

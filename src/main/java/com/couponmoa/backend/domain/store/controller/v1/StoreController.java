@@ -1,10 +1,10 @@
-package com.couponmoa.backend.domain.store.controller;
+package com.couponmoa.backend.domain.store.controller.v1;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
 import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
-import com.couponmoa.backend.domain.store.service.StoreService;
+import com.couponmoa.backend.domain.store.service.v1.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stores")
-@Tag(name = "Store API", description = "가게 관리 API")
+@Tag(name = "스토어 API", description = "가게 관리 API")
 public class StoreController {
 
     private final StoreService storeService;
