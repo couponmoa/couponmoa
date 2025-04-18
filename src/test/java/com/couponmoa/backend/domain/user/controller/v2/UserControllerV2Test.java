@@ -63,6 +63,6 @@ public class UserControllerV2Test {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(userId))
                 .andExpect(jsonPath("$.data.email").value(email))
-                .andExpect(jsonPath("$.data.imageUrl").value(startsWith("https://d2mm3xa8sjonwp.cloudfront.net")));
+                .andExpect(jsonPath("$.data.imageUrl").value(startsWith("https://d21i1tq0rni1rm.cloudfront.net/")));
     }
 }
