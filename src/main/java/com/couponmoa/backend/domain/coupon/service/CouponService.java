@@ -24,8 +24,6 @@ import java.time.LocalDateTime;
 
 import static com.couponmoa.backend.domain.coupon.enums.CouponStatus.editStatus;
 
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional

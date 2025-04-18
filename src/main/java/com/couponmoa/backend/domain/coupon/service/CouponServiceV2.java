@@ -14,7 +14,6 @@ import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubsc
 import com.couponmoa.backend.domain.subscribe.userstore.service.UserStoreSubscribeService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,6 @@ import java.time.LocalDateTime;
 
 import static com.couponmoa.backend.domain.coupon.enums.CouponStatus.editStatus;
 
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
