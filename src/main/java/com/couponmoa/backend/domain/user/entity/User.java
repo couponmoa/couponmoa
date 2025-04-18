@@ -27,6 +27,8 @@ public class User extends BaseEntity {
 
     private String nickname;
 
+    private String imageKey;
+
     private LocalDateTime deletedAt;
 
     @Enumerated(EnumType.STRING)
@@ -37,10 +39,20 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.userRole = userRole;
+        this.imageKey = "image/default.jpg"; // 기본 이미지
     }
 
     public void update(String email, String nickname) {
         if (email != null) this.email = email;
         if (nickname != null) this.nickname = nickname;
     }
+
+    public void updateImageKey(String imageKey) {
+        this.imageKey = imageKey;
+    }
+
+    public void deleteImageKey() {
+        this.imageKey = "image/default.jpg";
+    }
+
 }

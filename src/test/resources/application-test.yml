@@ -31,13 +31,17 @@ spring:
       credentials:
         access-key: dummy
         secret-key: dummy
+        instance-profile: false
       region:
         static: ap-northeast-2
       stack:
         auto: false
       sqs:
         queue:
-          email-alert: https://sqs.ap-northeast-2.amazonaws.com/253490759940/couponmoa-queue
+          email-alert: dummy
+          coupon-alert: dummy
+      s3:
+        bucket: couponmoa-user-profile
 
 jwt:
   secret:

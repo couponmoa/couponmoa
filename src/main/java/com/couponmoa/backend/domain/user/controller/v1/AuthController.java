@@ -1,10 +1,10 @@
-package com.couponmoa.backend.domain.user.controller;
+package com.couponmoa.backend.domain.user.controller.v1;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.user.dto.request.SigninRequest;
 import com.couponmoa.backend.domain.user.dto.request.SignupRequest;
 import com.couponmoa.backend.domain.user.dto.response.TokenResponse;
-import com.couponmoa.backend.domain.user.service.AuthService;
+import com.couponmoa.backend.domain.user.service.v1.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
