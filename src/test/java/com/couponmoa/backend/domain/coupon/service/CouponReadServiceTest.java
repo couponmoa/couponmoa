@@ -5,6 +5,7 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
+import com.couponmoa.backend.domain.coupon.service.v1.CouponReadService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

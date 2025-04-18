@@ -1,4 +1,4 @@
-package com.couponmoa.backend.domain.store.service;
+package com.couponmoa.backend.domain.store.service.v2;
 
 
 import com.couponmoa.backend.common.exception.ApplicationException;
@@ -97,11 +97,9 @@ public class StoreServiceV2 {
         // 기존 이름과 새 이름을 비교하여 동일한 이름이 아닌 경우에만 중복 체크
         validateStoreNameUniqueness(store.getName(),request.getName(),true);
 
-        store.update(
-                request.getName(),
-                request.getDescription(),
-                request.getAddress()
-        );
+        store.update(request.getName(), request.getDescription(), request.getAddress());
+
+        storeRepository.save(store);
 
         return StoreResponse.toDto(store);
     }

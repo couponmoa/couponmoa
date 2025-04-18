@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.store.entity;
 import com.couponmoa.backend.common.entity.BaseEntity;
 import com.couponmoa.backend.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +31,8 @@ public class Store extends BaseEntity {
 
     private String address;
 
+
+    @Builder
     public Store(User user, String name, String description, String address) {
         this.user = user;
         this.name = name;
