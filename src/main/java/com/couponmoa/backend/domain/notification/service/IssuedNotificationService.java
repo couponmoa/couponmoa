@@ -1,27 +1,16 @@
 package com.couponmoa.backend.domain.notification.service;
 
-import com.couponmoa.backend.common.emailSender.dto.SendToMQDto;
-import com.couponmoa.backend.common.emailSender.service.SqsService;
-import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.notification.entity.Notification;
 import com.couponmoa.backend.domain.notification.enums.NotificationType;
 import com.couponmoa.backend.domain.notification.event.CouponIssuedEvent;
-import com.couponmoa.backend.domain.notification.repository.NotificationJdbcRepository;
 import com.couponmoa.backend.domain.notification.repository.NotificationRepository;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Service
