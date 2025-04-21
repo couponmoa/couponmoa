@@ -57,6 +57,7 @@ public enum ErrorCode {
     INVALID_END_DATE(BAD_REQUEST,"쿠폰 발급 시작일은 종료일보다 이전이어야 합니다." ),
     ALREADY_DELETED(BAD_REQUEST,"이미 삭제된 가게입니다." ),
     DUPLICATE_RESOURCE(BAD_REQUEST,"이미 존재하는 가게 이름입니다" ),
+    COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰에 대한 권한이 없습니다."),
 
     // notification
     NOTIFICATION_NOT_FOUND(BAD_REQUEST,"존재하지 않는 알림입니다."),

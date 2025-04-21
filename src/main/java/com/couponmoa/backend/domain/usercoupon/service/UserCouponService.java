@@ -8,7 +8,7 @@ import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponUseResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
@@ -70,7 +70,7 @@ public class UserCouponService {
     }
 
     @Transactional
-    public UseUserCouponResponse useUserCoupon(Long userId, UserCouponRequest request) {
+    public UserCouponUseResponse useUserCoupon(Long userId, UserCouponRequest request) {
         UserCoupon userCoupon = userCouponRepository.findByCodeWithCouponAndStore(request.getCode())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_COUPON_NOT_FOUND));
 
@@ -78,7 +78,7 @@ public class UserCouponService {
         validateCouponStatus(userCoupon.getStatus());
 
         userCoupon.setUsed();
-        return UseUserCouponResponse.from(userCoupon);
+        return UserCouponUseResponse.from(userCoupon);
     }
 
     private void validateCouponIssuablePeriod(CouponStatus status) {

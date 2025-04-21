@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-public class UseUserCouponResponse {
+public class UserCouponUseResponse {
     private Long id;
     private BigDecimal discountAmount;
     private BigDecimal discountRate;
@@ -17,8 +17,8 @@ public class UseUserCouponResponse {
     private BigDecimal minOrderAmount;
     private BigDecimal maxDiscountAmount;
 
-    public static UseUserCouponResponse from(UserCoupon userCoupon) {
-        return new UseUserCouponResponse(
+    public static UserCouponUseResponse from(UserCoupon userCoupon) {
+        return new UserCouponUseResponse(
                 userCoupon.getId(),
                 userCoupon.getCoupon().getDiscountAmount(),
                 userCoupon.getCoupon().getDiscountRate(),
