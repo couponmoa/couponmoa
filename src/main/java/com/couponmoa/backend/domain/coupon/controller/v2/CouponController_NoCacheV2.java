@@ -9,7 +9,7 @@ import com.couponmoa.backend.domain.coupon.dto.response.CouponDetailResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponResponse;
 import com.couponmoa.backend.domain.coupon.dto.response.CouponSimpleResponse;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
-import com.couponmoa.backend.domain.coupon.service.v2.CouponReadServiceV2;
+import com.couponmoa.backend.domain.coupon.service.v2.CouponReadServiceV2_NoCache;
 import com.couponmoa.backend.domain.coupon.service.v2.CouponServiceV2;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,12 +29,12 @@ import java.util.List;
 
 @Tag(name = "쿠폰 API V2", description = "쿠폰 관련 기능을 제공하는 API + 캐싱")
 @RestController
-@RequestMapping("/api/v2/coupons")
+@RequestMapping("/api/v2_nocache/coupons")
 @RequiredArgsConstructor
 @Slf4j
-public class CouponControllerV2 {
+public class CouponController_NoCacheV2 {
 
-    private final CouponReadServiceV2 couponReadServiceV2;
+    private final CouponReadServiceV2_NoCache couponReadServiceV2_NoCache;
     private final CouponServiceV2 couponServiceV2;
 
     @Operation(summary = "쿠폰 생성", description = "관리자가 새로운 쿠폰을 생성함 (캐시 무효화 포함).")
@@ -60,7 +60,7 @@ public class CouponControllerV2 {
                 ? new CouponCursor(issuedQuantity, keyword, id)
                 : null;
 
-        List<CouponSimpleResponse> coupons = couponReadServiceV2.findCouponsByKeyword(status, cursor, size);
+        List<CouponSimpleResponse> coupons = couponReadServiceV2_NoCache.findCouponsByKeyword(status, cursor, size);
         return ApiResponse.success(coupons);
     }
 
@@ -74,7 +74,7 @@ public class CouponControllerV2 {
             @Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1")
             @RequestParam(defaultValue = "1") int page) {
 
-        Page<CouponSimpleResponse> coupons = couponReadServiceV2.findCouponsByStore(storeId, requestDto, size, page);
+        Page<CouponSimpleResponse> coupons = couponReadServiceV2_NoCache.findCouponsByStore(storeId, requestDto, size, page);
         return ApiResponse.success(coupons);
     }
 
@@ -84,7 +84,7 @@ public class CouponControllerV2 {
             @PathVariable Long couponId,
             @AuthenticationPrincipal AuthUser authUser) {
 
-        CouponDetailResponse couponDetail = couponReadServiceV2.findCoupon(couponId, authUser);
+        CouponDetailResponse couponDetail = couponReadServiceV2_NoCache.findCoupon(couponId, authUser);
         return ApiResponse.success(couponDetail);
     }
 

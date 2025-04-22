@@ -4,6 +4,8 @@ import com.couponmoa.backend.common.emailSender.dto.CouponAlertDto;
 import com.couponmoa.backend.common.emailSender.service.SqsService;
 import com.couponmoa.backend.domain.notification.event.CouponIssuedEvent;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,8 @@ public class NotificationEventHandler {
 
     private final SqsService sqsService;
 
+    @Timed(value = "notification.handle.time", description = "이벤트 처리 시간", histogram = true)
+    @Counted(value = "notification.handle.count", description = "이벤트 처리 횟수")
     @Async // 트랜잭션 커밋 후 별도 쓰레드에서 비동기 처리
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(CouponIssuedEvent event) {
