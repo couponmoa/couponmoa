@@ -8,7 +8,7 @@ import com.couponmoa.backend.config.TestSecurityConfig;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponUseResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.service.UserCouponService;
@@ -331,7 +331,7 @@ class UserCouponControllerTest {
             AuthUser authUser = new AuthUser(1L, "temp@gmail.com", UserRole.ROLE_ADMIN);
             JwtAuthenticationToken authentication = new JwtAuthenticationToken(authUser);
 
-            UseUserCouponResponse response = mock();
+            UserCouponUseResponse response = mock();
             given(response.getId()).willReturn(1L);
             given(userCouponService.useUserCoupon(any(), any())).willReturn(response);
 

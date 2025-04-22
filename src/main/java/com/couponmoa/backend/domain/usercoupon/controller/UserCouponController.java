@@ -4,7 +4,7 @@ import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponUseResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.enums.UserCouponStatus;
@@ -81,11 +81,11 @@ public class UserCouponController {
     @Operation(summary = "쿠폰 사용 처리")
     @Secured(UserRole.Authority.ADMIN)
     @PostMapping("/v1/user-coupons/use")
-    public ApiResponse<UseUserCouponResponse> useUserCoupon(
+    public ApiResponse<UserCouponUseResponse> useUserCoupon(
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserCouponRequest request
     ) {
-        UseUserCouponResponse response = userCouponService.useUserCoupon(authUser.getId(), request);
+        UserCouponUseResponse response = userCouponService.useUserCoupon(authUser.getId(), request);
         return ApiResponse.success(response);
     }
 }
