@@ -29,14 +29,26 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    //actuator
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+    // Resilience4j : redis 장애시 fallback
+    implementation 'io.github.resilience4j:resilience4j-spring-boot2:1.7.0'
+
+    // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    //lombok
+    // prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -62,8 +74,13 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
-    //SMTP(send mail)
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //AWS SQS
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+
+    //test lombok
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     // jobrunr
     implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:7.4.1'
@@ -71,15 +88,28 @@ dependencies {
     //h2 test db
     testImplementation 'com.h2database:h2'
 
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
     //elastic search
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     implementation 'org.elasticsearch.client:elasticsearch-rest-client:8.12.0' // 서버 버전과 맞춤
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+/*sourceSets {
+    main.java.srcDirs += querydslDir
+}*/
+
+compileJava {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += "-parameters"
 }

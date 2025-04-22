@@ -8,11 +8,16 @@ import static org.springframework.http.HttpStatus.*;
 @Getter
 public enum ErrorCode {
 
+    //send message
+    UNABLE_SEND_MESSAGE(INTERNAL_SERVER_ERROR, "메시지 큐에 데이터를 전송할 수 없습니다."),
+
     // subscribe
     DUPLICATED_USER_COUPON(CONFLICT, "이미 구독한 쿠폰입니다."),
+    NO_SUBSCRIBER(NOT_FOUND, "구독한 유저가 없습니다."),
 
     // common
     FORBIDDEN_ADMIN_ONLY(FORBIDDEN, "ADMIN 권한을 가진 유저만 접근할 수 있습니다."),
+    EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다."),
 
     // auth
     TOKEN_NOT_FOUND(NOT_FOUND, "존재하지 않는 토큰입니다."),
@@ -32,12 +37,8 @@ public enum ErrorCode {
 
     // user coupon
     USER_COUPON_NOT_FOUND(NOT_FOUND, "사용자 쿠폰을 찾을 수 없습니다."),
-    USER_COUPON_ALREADY_ISSUED(CONFLICT, "이미 발급받은 쿠폰입니다."),
     USER_COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰에 대한 권한이 없습니다."),
     USER_COUPON_CODE_UNAVAILABLE(BAD_REQUEST, "쿠폰이 이미 사용되었거나 만료되었습니다."),
-
-    // server
-    EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 에러입니다."),
 
     // store
     STORE_NOT_FOUND(NOT_FOUND, "존재하지 않는 스토어 입니다."),
@@ -51,10 +52,18 @@ public enum ErrorCode {
     INVALID_EXPIRY_DATE(BAD_REQUEST,"쿠폰 만료일은 발급 종료일 이후여야 합니다." ),
     COUPON_NOT_FOUND(NOT_FOUND,"존재하지 않는 쿠폰입니다." ),
     INVALID_TOTAL_QUANTITY(BAD_REQUEST,"새로운 총 수량은 이미 발급된 쿠폰 수보다 커야합니다." ),
-    COUPON_OUT_OF_STOCK(BAD_REQUEST,"쿠폰이 모두 소진되었습니다." ),
     COUPON_NOT_ACTIVE(BAD_REQUEST, "쿠폰 발급 기간이 아닙니다."),
-    COUPON_SOLE_OUT(BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
-    INVALID_END_DATE(BAD_REQUEST,"쿠폰 발급 시작일은 종료일보다 이전이어야 합니다." );
+    COUPON_SOLD_OUT(BAD_REQUEST, "쿠폰이 모두 소진되었습니다."),
+    INVALID_END_DATE(BAD_REQUEST,"쿠폰 발급 시작일은 종료일보다 이전이어야 합니다." ),
+    ALREADY_DELETED(BAD_REQUEST,"이미 삭제된 가게입니다." ),
+    DUPLICATE_RESOURCE(BAD_REQUEST,"이미 존재하는 가게 이름입니다" ),
+
+    // notification
+    NOTIFICATION_NOT_FOUND(BAD_REQUEST,"존재하지 않는 알림입니다."),
+    SQS_SEND_FAILED(INTERNAL_SERVER_ERROR,"알림 전송에 실패했습니다."),
+
+    // redis
+    REDIS_FAILURE(INTERNAL_SERVER_ERROR, "Redis 서버에 문제가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -4,10 +4,11 @@ import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtAuthenticationToken;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
+import com.couponmoa.backend.domain.store.controller.v1.StoreController;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.SimpleStoreResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
-import com.couponmoa.backend.domain.store.service.StoreService;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
+import com.couponmoa.backend.domain.store.service.v1.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.enums.UserRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -87,7 +89,6 @@ public class StoreControllerTest {
     void 내_가게_목록_조회() throws Exception {
         StoreResponse response = new StoreResponse(1L, "가게명", "설명", "주소");
         given(storeService.findMyStore(anyLong())).willReturn(List.of(response));
-
         mockMvc.perform(get("/api/v1/stores/my")
                         .with(authentication(userAuthToken)))
                 .andExpect(status().isOk())
@@ -96,9 +97,8 @@ public class StoreControllerTest {
 
     @Test
     void 내_가게_간단_목록_조회() throws Exception {
-        SimpleStoreResponse response = new SimpleStoreResponse(1L, "가게명");
+        StoreSimpleResponse response = new StoreSimpleResponse(1L, "가게명");
         given(storeService.findMySimpleStores(anyLong())).willReturn(List.of(response));
-
         mockMvc.perform(get("/api/v1/stores/my/simple")
                         .with(authentication(userAuthToken)))
                 .andExpect(status().isOk())

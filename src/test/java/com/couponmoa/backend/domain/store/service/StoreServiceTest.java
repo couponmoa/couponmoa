@@ -3,10 +3,11 @@ package com.couponmoa.backend.domain.store.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.SimpleStoreResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
+import com.couponmoa.backend.domain.store.service.v1.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.user.enums.UserRole;
@@ -54,7 +55,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 관리자일_경우_가게_생성_성공() {
+    void createStore_success_admin() {
         AuthUser adminUser = new AuthUser(1L, "admin@example.com", UserRole.ROLE_ADMIN);
         StoreRequest request = new StoreRequest("Test Store", "Description", "Address");
         when(userRepository.findByIdOrElseThrow(1L, ErrorCode.USER_NOT_FOUND)).thenReturn(user);
@@ -69,7 +70,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 관리자가_아니면_가게_생성_실패() {
+    void createStore_fail_notAdmin() {
         StoreRequest request = new StoreRequest("New Store", "New Desc", "New Address");
 
         ApplicationException exception = assertThrows(ApplicationException.class,
@@ -80,7 +81,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 인증되지_않은_사용자는_가게_생성_실패() {
+    void createStore_fail_nullAuthUser() {
         StoreRequest request = new StoreRequest("New Store", "New Desc", "New Address");
 
         ApplicationException exception = assertThrows(ApplicationException.class,
@@ -91,7 +92,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 내_가게_조회_성공() {
+    void getMyStore_success() {
         when(storeRepository.findByUserIdAndDeletedAtIsNull(1L)).thenReturn(List.of(store));
 
         List<StoreResponse> responses = storeService.findMyStore(1L);
@@ -103,7 +104,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 내_가게_조회_실패_유저정보_없음() {
+    void getMyStore_fail_nullUserId() {
         ApplicationException exception = assertThrows(ApplicationException.class,
                 () -> storeService.findMyStore(null));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
@@ -111,10 +112,10 @@ class StoreServiceTest {
     }
 
     @Test
-    void 내_간단한_가게_리스트_조회_성공() {
+    void getMySimpleStores_success() {
         when(storeRepository.findByUserIdAndDeletedAtIsNull(1L)).thenReturn(List.of(store));
 
-        List<SimpleStoreResponse> responses = storeService.findMySimpleStores(1L);
+        List<StoreSimpleResponse> responses = storeService.findMySimpleStores(1L);
 
         assertFalse(responses.isEmpty());
         assertEquals(1, responses.size());
@@ -123,7 +124,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 내_간단한_가게_리스트_조회_실패_유저정보_없음() {
+    void getMySimpleStores_fail_nullUserId() {
         ApplicationException exception = assertThrows(ApplicationException.class,
                 () -> storeService.findMySimpleStores(null));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
@@ -131,7 +132,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 특정_가게_조회_성공() {
+    void getStore_success() {
         when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
 
         StoreResponse response = storeService.findStore(1L);
@@ -142,7 +143,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 특정_가게_조회_실패_가게없음() {
+    void getStore_fail_notFound() {
         when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND))
                 .thenThrow(new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
@@ -153,7 +154,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 가게_수정_성공() {
+    void updateStore_success() {
         StoreRequest request = new StoreRequest("Updated Store", "Updated Desc", "Updated Address");
         when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
         when(storeRepository.save(any(Store.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -166,9 +167,20 @@ class StoreServiceTest {
         verify(storeRepository, times(1)).save(any(Store.class));
     }
 
+    @Test
+    void updateStore_fail_forbidden() {
+        AuthUser otherUser = new AuthUser(2L, "other@example.com", UserRole.ROLE_USER);
+        StoreRequest request = new StoreRequest("Test", "Desc", "Addr");
+        when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
+
+        ApplicationException exception = assertThrows(ApplicationException.class,
+                () -> storeService.updateStore(1L, request, otherUser));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatus());
+        assertEquals("ADMIN 권한을 가진 유저만 접근할 수 있습니다.", exception.getMessage());
+    }
 
     @Test
-    void 가게_삭제_성공() {
+    void deleteStore_success() {
         System.out.println("JDK Version: " + System.getProperty("java.version"));
         System.out.println("Test running in: " + System.getProperty("java.class.path"));
         when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
@@ -179,7 +191,7 @@ class StoreServiceTest {
     }
 
     @Test
-    void 가게_삭제_실패_권한없음() {
+    void deleteStore_fail_forbidden() {
         AuthUser otherUser = new AuthUser(2L, "other@example.com", UserRole.ROLE_USER);
         when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
 

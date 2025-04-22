@@ -37,6 +37,7 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
+        log.info(">>> Loaded secret key: {}", secretKey);
         key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 

@@ -2,12 +2,11 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
-    password:
+    password: ""
     driver-class-name: org.h2.Driver
-
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -27,6 +26,26 @@ spring:
     username: dummy
     password: dummy
 
+  cloud:
+    aws:
+      credentials:
+        access-key: dummy
+        secret-key: dummy
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+      sqs:
+        queue:
+          email-alert: https://sqs.ap-northeast-2.amazonaws.com/253490759940/couponmoa-queue
+
 jwt:
   secret:
-    key: "gHf3kLz7uW4eMpT0a9R2vXxCvPqLuSxKbNzRtUyIoQpLmNs9"
+    key: HULfUlHgYuvQ0YIl9qHyQ0Fq4gZb5ZofLD0isNs7Xb+2FBsrs8HMUQpGyJTEcMNb2vott/0TtiuMkvIcmc/fYg==
+
+org:
+  jobrunr:
+    dashboard:
+      enabled: false
+
+

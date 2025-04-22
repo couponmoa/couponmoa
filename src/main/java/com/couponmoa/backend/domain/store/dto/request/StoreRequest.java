@@ -12,7 +12,6 @@ public class StoreRequest {
     private String description;
     private String address;
 
-
     public StoreRequest(String name, String description, String address) {
         this.name = name;
         this.description = description;

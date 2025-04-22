@@ -55,15 +55,15 @@ class UserCouponControllerTest {
     @MockitoBean
     private UserCouponService userCouponService;
 
-    private final static String URL_PREFIX = "/api/v1";
+    private final static String URL_PREFIX = "/api";
 
     @Nested
     @Order(1)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    class CreateUserCouponTests {
+    class CreateUserCouponSyncTests {
 
         private final static long couponId = 1L;
-        private final static String REQUEST_URL = URL_PREFIX + "/coupons/{couponId}/issue";
+        private final static String REQUEST_URL = URL_PREFIX + "/v1/coupons/{couponId}/issue";
 
         @Test
         @Order(1)
@@ -83,9 +83,9 @@ class UserCouponControllerTest {
             AuthUser authUser = new AuthUser(1L, "temp@gmail.com", UserRole.ROLE_USER);
             JwtAuthenticationToken authentication = new JwtAuthenticationToken(authUser);
 
-            ErrorCode errorCode = ErrorCode.COUPON_SOLE_OUT;
+            ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
             doThrow(new ApplicationException(errorCode))
-                    .when(userCouponService).createUserCoupon(anyLong(), anyLong());
+                    .when(userCouponService).createUserCouponSync(anyLong(), anyLong());
 
             mockMvc.perform(post(REQUEST_URL, couponId)
                             .with(authentication(authentication)))
@@ -110,9 +110,59 @@ class UserCouponControllerTest {
     @Nested
     @Order(2)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class CreateUserCouponAsyncTests {
+
+        private final static long couponId = 1L;
+        private final static String REQUEST_URL = URL_PREFIX + "/v2/coupons/{couponId}/issue";
+
+        @Test
+        @Order(1)
+        void 쿠폰_발급_사용자_권한_아님_실패() throws Exception {
+            AuthUser authUser = new AuthUser(1L, "temp@gmail.com", UserRole.ROLE_ADMIN);
+            JwtAuthenticationToken authentication = new JwtAuthenticationToken(authUser);
+
+            mockMvc.perform(post(REQUEST_URL, couponId)
+                            .with(authentication(authentication)))
+                    .andExpect(status().isForbidden())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.FORBIDDEN.value()));
+        }
+
+        @Test
+        @Order(2)
+        void 쿠폰_발급_쿠폰_소진_실패() throws Exception {
+            AuthUser authUser = new AuthUser(1L, "temp@gmail.com", UserRole.ROLE_USER);
+            JwtAuthenticationToken authentication = new JwtAuthenticationToken(authUser);
+
+            ErrorCode errorCode = ErrorCode.COUPON_SOLD_OUT;
+            doThrow(new ApplicationException(errorCode))
+                    .when(userCouponService).createUserCouponAsync(anyLong(), anyLong());
+
+            mockMvc.perform(post(REQUEST_URL, couponId)
+                            .with(authentication(authentication)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
+                    .andExpect(jsonPath("$.message").value(errorCode.getMessage()));
+        }
+
+        @Test
+        @Order(3)
+        void 쿠폰_발급_요청_성공() throws Exception {
+            AuthUser authUser = new AuthUser(1L, "temp@gmail.com", UserRole.ROLE_USER);
+            JwtAuthenticationToken authentication = new JwtAuthenticationToken(authUser);
+
+            mockMvc.perform(post(REQUEST_URL, couponId)
+                            .with(authentication(authentication)))
+                    .andExpect(status().isAccepted())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.ACCEPTED.value()));
+        }
+    }
+
+    @Nested
+    @Order(3)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class FindUserCouponsTests {
 
-        private final static String REQUEST_URL = URL_PREFIX + "/user-coupons";
+        private final static String REQUEST_URL = URL_PREFIX + "/v1/user-coupons";
 
         @Test
         @Order(1)
@@ -165,12 +215,12 @@ class UserCouponControllerTest {
     }
 
     @Nested
-    @Order(3)
+    @Order(4)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class FindUserCouponCodeTests {
 
         private final static long userCouponId = 1L;
-        private final static String REQUEST_URL = URL_PREFIX + "/user-coupons/{userCouponId}/code";
+        private final static String REQUEST_URL = URL_PREFIX + "/v1/user-coupons/{userCouponId}/code";
 
         @Test
         @Order(1)
@@ -219,11 +269,11 @@ class UserCouponControllerTest {
     }
 
     @Nested
-    @Order(4)
+    @Order(5)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class UseUserCouponTests {
 
-        private final static String REQUEST_URL = URL_PREFIX + "/user-coupons/use";
+        private final static String REQUEST_URL = URL_PREFIX + "/v1/user-coupons/use";
         private final static UserCouponRequest request = new UserCouponRequest("code");
 
         @Test
