@@ -1,7 +1,7 @@
-package com.couponmoa.backend.domain.elasticsearch.converter;
+package com.couponmoa.backend.domain.coupon.converter;
 
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
-import com.couponmoa.backend.domain.elasticsearch.entity.Search;
+import com.couponmoa.backend.domain.coupon.entity.Search;
 
 public class CouponConverter {
 

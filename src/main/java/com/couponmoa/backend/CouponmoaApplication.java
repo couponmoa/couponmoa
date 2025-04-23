@@ -1,7 +1,6 @@
 package com.couponmoa.backend;
 
 import com.couponmoa.backend.common.emailSender.SqsProperties;
-import com.couponmoa.backend.domain.coupon.service.v1.AiServerProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -13,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 @EnableCaching
-@EnableConfigurationProperties({SqsProperties.class, AiServerProperties.class})
+@EnableConfigurationProperties(SqsProperties.class)
 public class CouponmoaApplication {
 
     public static void main(String[] args) {

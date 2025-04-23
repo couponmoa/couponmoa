@@ -1,9 +1,6 @@
-package com.couponmoa.backend.domain.elasticsearch.entity;
+package com.couponmoa.backend.domain.coupon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -12,6 +9,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.math.BigDecimal;
 
 @Getter
+@Setter //테스트용
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

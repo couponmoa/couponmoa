@@ -1,6 +1,6 @@
-package com.couponmoa.backend.domain.elasticsearch.repository;
+package com.couponmoa.backend.domain.coupon.repository;
 
-import com.couponmoa.backend.domain.elasticsearch.entity.Search;
+import com.couponmoa.backend.domain.coupon.entity.Search;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import java.util.List;
