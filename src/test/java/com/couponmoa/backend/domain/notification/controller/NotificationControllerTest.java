@@ -3,6 +3,7 @@ package com.couponmoa.backend.domain.notification.controller;
 import com.couponmoa.backend.common.service.RedisService;
 import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
+import com.couponmoa.backend.domain.notification.service.ExpiredNotificationService;
 import com.couponmoa.backend.domain.notification.service.IssuedNotificationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,17 @@ public class NotificationControllerTest {
 
     @MockitoBean
     private IssuedNotificationService issuedNotificationService;
+
+    @MockitoBean
+    private ExpiredNotificationService expiredNotificationService;
+
+    @Test
+    void 쿠폰_만료_알림_실행() throws Exception {
+        willDoNothing().given(expiredNotificationService).sendExpireCouponNotifications();
+
+        mockMvc.perform(post("/api/v1/notifications"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     void 알림_상태_변경() throws Exception {

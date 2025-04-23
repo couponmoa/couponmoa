@@ -8,7 +8,7 @@ import com.couponmoa.backend.domain.coupon.repository.CouponRepository;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.user.entity.User;
 import com.couponmoa.backend.domain.usercoupon.dto.request.UserCouponRequest;
-import com.couponmoa.backend.domain.usercoupon.dto.response.UseUserCouponResponse;
+import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponUseResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponCodeResponse;
 import com.couponmoa.backend.domain.usercoupon.dto.response.UserCouponResponse;
 import com.couponmoa.backend.domain.usercoupon.entity.UserCoupon;
@@ -489,7 +489,7 @@ class UserCouponServiceTest {
             given(userCoupon.getCoupon()).willReturn(coupon);
             given(userCouponRepository.findByCodeWithCouponAndStore(anyString())).willReturn(Optional.of(userCoupon));
 
-            UseUserCouponResponse result = userCouponService.useUserCoupon(userId, userCouponRequest);
+            UserCouponUseResponse result = userCouponService.useUserCoupon(userId, userCouponRequest);
 
             assertNotNull(result);
             assertEquals(couponName, result.getName());

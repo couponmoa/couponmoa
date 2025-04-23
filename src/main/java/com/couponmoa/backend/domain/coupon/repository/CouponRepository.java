@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository extends BaseRepository<Coupon, Long> {
@@ -42,5 +41,8 @@ public interface CouponRepository extends BaseRepository<Coupon, Long> {
     boolean existsByNameAndDeletedAtIsNull(String name);
 
     // fallback 용 기본적인 메서드
-    Page<Coupon> findByStoreId(Long storeId, Pageable pageable);
+    Page<Coupon> findByStoreId(Long storeId,Pageable pageable);
+
+    @Query("SELECT c FROM Coupon c JOIN FETCH c.store s WHERE c.deletedAt IS NULL and c.id = :id")
+    Optional<Coupon> findActiveByIdWithStore(Long id);
 }

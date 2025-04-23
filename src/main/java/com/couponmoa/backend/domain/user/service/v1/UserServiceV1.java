@@ -1,10 +1,8 @@
-package com.couponmoa.backend.domain.user.service;
+package com.couponmoa.backend.domain.user.service.v1;
 
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
-import com.couponmoa.backend.domain.subscribe.usercoupon.entity.UserCouponSubscribe;
 import com.couponmoa.backend.domain.subscribe.usercoupon.repository.UserCouponSubscribeRepository;
-import com.couponmoa.backend.domain.subscribe.userstore.entity.UserStoreSubscribe;
 import com.couponmoa.backend.domain.subscribe.userstore.repository.UserStoreSubscribeRepository;
 import com.couponmoa.backend.domain.user.dto.request.UserDeleteRequest;
 import com.couponmoa.backend.domain.user.dto.request.UserUpdatePasswordRequest;
@@ -18,11 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceV1 {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -32,7 +29,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse findUser(Long userId) {
         User user = getUserById(userId);
-        return UserResponse.fromEntity(user);
+        return UserResponse.fromEntityV1(user);
     }
 
     @Transactional

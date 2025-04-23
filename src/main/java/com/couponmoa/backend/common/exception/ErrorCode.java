@@ -57,10 +57,15 @@ public enum ErrorCode {
     INVALID_END_DATE(BAD_REQUEST,"쿠폰 발급 시작일은 종료일보다 이전이어야 합니다." ),
     ALREADY_DELETED(BAD_REQUEST,"이미 삭제된 가게입니다." ),
     DUPLICATE_RESOURCE(BAD_REQUEST,"이미 존재하는 가게 이름입니다" ),
+    COUPON_ACCESS_DENIED(FORBIDDEN, "해당 쿠폰에 대한 권한이 없습니다."),
 
     // notification
     NOTIFICATION_NOT_FOUND(BAD_REQUEST,"존재하지 않는 알림입니다."),
     SQS_SEND_FAILED(INTERNAL_SERVER_ERROR,"알림 전송에 실패했습니다."),
+
+    // S3
+    S3_SERVICE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AWS S3 서비스 오류"),
+    S3_CLIENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AWS S3 클라이언트 오류"),
 
     // redis
     REDIS_FAILURE(INTERNAL_SERVER_ERROR, "Redis 서버에 문제가 발생했습니다.");
