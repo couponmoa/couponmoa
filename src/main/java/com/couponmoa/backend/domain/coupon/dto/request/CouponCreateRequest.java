@@ -62,7 +62,7 @@ public class CouponCreateRequest {
         this.totalQuantity = totalQuantity;
         this.discountAmount = discountAmount != null ? discountAmount : BigDecimal.ZERO;
         this.discountRate = discountRate != null ? discountRate : BigDecimal.ZERO;
-        this.minOrderAmount = minOrderAmount;
+        this.minOrderAmount = minOrderAmount != null ? minOrderAmount : BigDecimal.ZERO;
         this.maxDiscountAmount = maxDiscountAmount != null ? maxDiscountAmount : BigDecimal.valueOf(9_999_999);
         this.description = description;
         this.startDate = startDate != null ? startDate : LocalDateTime.now().plusHours(1);

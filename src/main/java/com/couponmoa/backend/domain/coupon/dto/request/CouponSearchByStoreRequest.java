@@ -4,11 +4,14 @@ import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class CouponSearchByStoreRequest {
 
@@ -16,6 +19,8 @@ public class CouponSearchByStoreRequest {
     private CouponStatus status;
     private BigDecimal discountAmount;
     private BigDecimal discountRate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startDate;
 
     @Builder
