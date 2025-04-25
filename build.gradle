@@ -89,12 +89,23 @@ dependencies {
     testImplementation 'com.h2database:h2'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    //elastic search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-client:8.12.0' // 서버 버전과 맞춤
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 
 sourceSets {
     main.java.srcDirs += querydslDir
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
 }
 
 compileJava {
@@ -104,3 +115,8 @@ compileJava {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += "-parameters"
+}
+

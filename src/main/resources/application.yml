@@ -5,4 +5,4 @@ spring:
 server:
   tomcat:
     mbeanregistry:
-     enabled: true
+      enabled: true
