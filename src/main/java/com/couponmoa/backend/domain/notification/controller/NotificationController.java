@@ -15,7 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
+    private final ExpiredNotificationService expiredNotificationService;
     private final IssuedNotificationService issuedNotificationService;
+
+    // 쿠폰 만료 전 알림 실행(스케줄러 서버에서 호출하는 api)
+    @PostMapping
+    public ResponseEntity<ApiResponse<Void>> NotifyCouponExpire() {
+        expiredNotificationService.sendExpireCouponNotifications();
+        return ResponseEntity.ok(ApiResponse.success());
+    }
 
     // 알림 전송 완료시 상태 변경(알림서버에서 호출하는 api)
     @PostMapping("/{id}/notified")

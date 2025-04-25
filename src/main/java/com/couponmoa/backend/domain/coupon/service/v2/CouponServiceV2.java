@@ -13,6 +13,8 @@ import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.subscribe.usercoupon.service.UserCouponSubscribeService;
 import com.couponmoa.backend.domain.subscribe.userstore.service.UserStoreSubscribeService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,12 +36,18 @@ public class CouponServiceV2 {
     private final UserCouponSubscribeService userCouponSubServ;
     private final UserStoreSubscribeService userStoreSubServ;
 
-    // 새 쿠폰 생성 후 기존 캐시 제거
+    @Timed(value = "coupon.create.time", description = "쿠폰 생성에 걸린 시간", histogram = true)
+    @Counted(value = "coupon.create.count", description = "생성된 쿠폰 수")
     @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponse createCoupon(CouponCreateRequest requestDto) {
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
+
+        // 이름 중복 검증 추가
+        if (couponRepository.existsByNameAndDeletedAtIsNull(requestDto.getName())) {
+            throw new ApplicationException(ErrorCode.DUPLICATE_RESOURCE, "이미 존재하는 쿠폰 이름입니다.");
+        }
 
         // 할인 로직 검증
         // discountAmount와 discountRate 중 하나는 반드시 0이어야 함 (변액 할인과 정액 할인을 동시에 제공하는 쿠폰은 없다.)
@@ -89,6 +97,7 @@ public class CouponServiceV2 {
     }
 
     // 쿠폰 수정 시 캐시 무효화
+    @Timed(value = "coupon.update.time", description = "쿠폰 수정에 걸린 시간", histogram = true)
     @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponse updateCoupon(Long couponId, CouponUpdateRequest requestDto) {
 
@@ -97,6 +106,12 @@ public class CouponServiceV2 {
 
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         Store store = validateStoreOwnerAndGetStore(requestDto.getStoreId());
+
+        // 새 이름이 기존 이름과 다를 경우에만 중복 검사
+        if (!coupon.getName().equals(requestDto.getName()) &&
+                couponRepository.existsByNameAndDeletedAtIsNull(requestDto.getName())) {
+            throw new ApplicationException(ErrorCode.DUPLICATE_RESOURCE, "이미 존재하는 쿠폰 이름입니다.");
+        }
 
         // update 요청데이터의 dates null 검증, null 일 경우 이전 데이터로.
         ResolvedDates resolvedDates = resolveDates(requestDto, coupon);
@@ -139,6 +154,7 @@ public class CouponServiceV2 {
     }
 
     // 쿠폰 삭제 시 캐시 무효화
+    @Timed(value = "coupon.delete.time", description = "쿠폰 삭제에 걸린 시간", histogram = true)
     @CacheEvict(value = "coupons", allEntries = true)
     public void deleteCoupon(Long couponId) {
         // 존재하는 쿠폰인지 검증

@@ -1,3 +1,8 @@
 spring:
   profiles:
     active: local
+
+server:
+  tomcat:
+    mbeanregistry:
+     enabled: true

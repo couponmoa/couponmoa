@@ -13,9 +13,11 @@ import com.couponmoa.backend.domain.coupon.service.v2.CouponReadServiceV2;
 import com.couponmoa.backend.domain.coupon.service.v2.CouponServiceV2;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,10 +27,11 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Tag(name = "쿠폰 API V2", description = "쿠폰 관련 기능을 제공하는 API (커서 기반 조회) + 캐싱")
+@Tag(name = "쿠폰 API V2", description = "쿠폰 관련 기능을 제공하는 API + 캐싱")
 @RestController
 @RequestMapping("/api/v2/coupons")
 @RequiredArgsConstructor
+@Slf4j
 public class CouponControllerV2 {
 
     private final CouponReadServiceV2 couponReadServiceV2;
@@ -66,8 +69,10 @@ public class CouponControllerV2 {
     public ApiResponse<Page<CouponSimpleResponse>> findCouponsByStore(
             @PathVariable Long storeId,
             @ModelAttribute CouponSearchByStoreRequest requestDto,
+            @Parameter(description = "페이지당 쿠폰 수", example = "10")
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0") int page) {
+            @Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1")
+            @RequestParam(defaultValue = "1") int page) {
 
         Page<CouponSimpleResponse> coupons = couponReadServiceV2.findCouponsByStore(storeId, requestDto, size, page);
         return ApiResponse.success(coupons);

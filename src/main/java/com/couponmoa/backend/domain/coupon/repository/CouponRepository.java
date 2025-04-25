@@ -5,12 +5,12 @@ import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.common.repository.BaseRepository;
 import com.couponmoa.backend.domain.coupon.entity.Coupon;
 import com.couponmoa.backend.domain.coupon.enums.CouponStatus;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository extends BaseRepository<Coupon, Long> {
@@ -32,11 +32,17 @@ public interface CouponRepository extends BaseRepository<Coupon, Long> {
 
     Optional<Coupon> findByIdAndDeletedAtIsNull(Long id);
 
+    @Timed(value = "coupon.find_active_by_id.time", description = "발급 시 활성 쿠폰 조회에 걸린 시간", histogram = true)
     default Coupon findActiveByIdOrElseThrow(Long id, ErrorCode errorCode) {
         return findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ApplicationException(errorCode, errorCode.getMessage() + " id = " + id));
     }
 
+    boolean existsByNameAndDeletedAtIsNull(String name);
+
     // fallback 용 기본적인 메서드
     Page<Coupon> findByStoreId(Long storeId,Pageable pageable);
+
+    @Query("SELECT c FROM Coupon c JOIN FETCH c.store s WHERE c.deletedAt IS NULL and c.id = :id")
+    Optional<Coupon> findActiveByIdWithStore(Long id);
 }

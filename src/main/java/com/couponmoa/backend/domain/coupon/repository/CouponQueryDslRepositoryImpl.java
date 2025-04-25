@@ -85,6 +85,9 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
 
         QCoupon coupon = QCoupon.coupon;
 
+        // keyword가 있는 경우에만 필터링을 적용
+        BooleanExpression keywordFilter = keywordContains(cursor.keyword());
+
         return queryFactory
                 .select(Projections.constructor(
                         CouponSimpleResponse.class,
@@ -97,7 +100,8 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
                 .where(
                         coupon.deletedAt.isNull(),
                         couponStatusEq(status),
-                        cursorFilter(cursor)
+                        cursorFilter(cursor),
+                        keywordFilter
                 )
                 .orderBy(orderSpecifiers())
                 .limit(size)
@@ -133,20 +137,41 @@ public class CouponQueryDslRepositoryImpl implements CouponQueryDslRepository {
 
         QCoupon coupon = QCoupon.coupon;
 
-        BooleanExpression issuedQuantityLt = coupon.issuedQuantity.lt(cursor.issuedQuantity());
+        BooleanExpression filter = null;
 
-        BooleanExpression issuedQuantityEqAndNameGt =
-                coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
-                        .and(coupon.name.gt(cursor.keyword()));
+        // 조건 1: issuedQuantity 기준 (issuedQuantity가 있을 때만 적용)
+        if (cursor.issuedQuantity() != null) {
+            filter = coupon.issuedQuantity.lt(cursor.issuedQuantity());
+        }
 
-        BooleanExpression issuedQuantityEqAndNameEqAndIdLt =
-                coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
-                        .and(coupon.name.eq(cursor.keyword()))
-                        .and(coupon.id.lt(cursor.couponId()));
+        // 조건 2: issuedQuantity 있고 keyword도 있을 때
+        if (cursor.issuedQuantity() != null && cursor.keyword() != null) {
+            BooleanExpression nameGt = coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
+                    .and(coupon.name.gt(cursor.keyword()));
+            filter = (filter == null) ? nameGt : filter.or(nameGt);
+        }
 
-        return issuedQuantityLt
-                .or(issuedQuantityEqAndNameGt)
-                .or(issuedQuantityEqAndNameEqAndIdLt);
+        // 조건 3: issuedQuantity, keyword, couponId 모두 있을 때
+        if (cursor.issuedQuantity() != null && cursor.keyword() != null && cursor.couponId() != null) {
+            BooleanExpression idLt = coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
+                    .and(coupon.name.eq(cursor.keyword()))
+                    .and(coupon.id.lt(cursor.couponId()));
+            filter = (filter == null) ? idLt : filter.or(idLt);
+        }
+
+        // 조건 4: issuedQuantity 또는 keyword만 있을 때, couponId를 고려하지 않도록 수정
+        if (cursor.issuedQuantity() != null && cursor.keyword() != null && cursor.couponId() == null) {
+            BooleanExpression issuedAndName = coupon.issuedQuantity.eq(cursor.issuedQuantity().intValue())
+                    .and(coupon.name.eq(cursor.keyword()));
+            filter = (filter == null) ? issuedAndName : filter.or(issuedAndName);
+        }
+
+        // 조건 5: keyword가 없으면 필터링을 아예 하지 않도록
+        if (cursor.keyword() == null || cursor.keyword().isBlank()) {
+            return filter;
+        }
+
+        return filter;
     }
 
     private OrderSpecifier<?>[] orderSpecifiers() {

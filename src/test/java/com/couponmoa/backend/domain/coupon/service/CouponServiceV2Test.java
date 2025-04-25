@@ -99,7 +99,7 @@ class CouponServiceV2Test {
     void 쿠폰_수정_성공() {
         // Given
         Coupon coupon = Coupon.builder()
-                .name("수정 전 쿠폰")
+                .name("기존 쿠폰")
                 .totalQuantity(100)
                 .discountAmount(BigDecimal.valueOf(1000))
                 .startDate(LocalDateTime.of(2025, 4, 1, 0, 0))
@@ -115,7 +115,7 @@ class CouponServiceV2Test {
         when(couponRepository.save(any(Coupon.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         CouponUpdateRequest request = CouponUpdateRequest.builder()
-                .name("수정 이후 쿠폰")
+                .name("수정된 쿠폰")
                 .newTotalQuantity(200)
                 .endDate(LocalDateTime.of(2025, 6, 1, 0, 0))
                 .storeId(1L)
@@ -131,7 +131,7 @@ class CouponServiceV2Test {
 
         // Then
         assertNotNull(response);
-        assertEquals("수정 이후 쿠폰", savedCoupon.getName());
+        assertEquals("수정된 쿠폰", savedCoupon.getName());
         assertEquals(200, savedCoupon.getTotalQuantity());
         assertEquals(LocalDateTime.of(2025, 6, 1, 0, 0), savedCoupon.getEndDate());
 

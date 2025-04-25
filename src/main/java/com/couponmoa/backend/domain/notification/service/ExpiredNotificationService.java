@@ -46,7 +46,7 @@ public class ExpiredNotificationService {
     }
 
     // 만료 전 알림 전송
-    @Transactional(readOnly = true)
+    @Transactional
     public void sendExpireCouponNotifications() {
         List<Notification> notifications = findNotificationsExpireTomorrow();
         log.info("조회된 만료 알림 수: {}", notifications.size());
@@ -65,7 +65,7 @@ public class ExpiredNotificationService {
     }
 
     // jobrunr 실행 대상, sqs 요청 메서드
-    @Job(name = "Send grouped notification")
+    @Job(name = "Send grouped notification", retries = 3)
     @Transactional
     public void sendGroupedNotification(List<Long> notificationIds, String couponName) {
         List<Notification> notiList = notificationRepository.findAllById(notificationIds);

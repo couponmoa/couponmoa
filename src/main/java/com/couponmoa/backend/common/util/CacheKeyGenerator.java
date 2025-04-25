@@ -10,15 +10,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CacheKeyGenerator {
 
-    // 검색 조건을 기준으로 고유한 키 생성 ( ex: status-IN_PROGRESS-issuedQuantity-all-keyword-스타벅스-couponId-all-size-10-page-1)
-    public static String generateCacheKey(CouponStatus status, CouponCursor cursor, int size, int page) {
+    // 검색 조건을 기준으로 고유한 키 생성 (예: status-IN_PROGRESS-issuedQuantity-all-keyword-스타벅스-couponId-all-size-10)
+    public static String generateCacheKey(CouponStatus status, CouponCursor cursor, int size) {
         StringBuilder keyBuilder = new StringBuilder();
 
-        keyBuilder.append("status-").append(status.name()).append("-");
+        keyBuilder.append("status-").append(status != null ? status.name() : "all").append("-");
 
-        if (cursor != null) {
+        if (cursor == null) {
+            keyBuilder.append("issuedQuantity-all-")
+                    .append("keyword-all-")
+                    .append("couponId-all-");
+        } else {
             keyBuilder.append("issuedQuantity-")
-                    .append(cursor.issuedQuantity() != null ? cursor.issuedQuantity() : "all")
+                    .append(cursor.issuedQuantity() != null ? cursor.issuedQuantity().toString() : "all")
                     .append("-");
 
             keyBuilder.append("keyword-")
@@ -26,12 +30,11 @@ public class CacheKeyGenerator {
                     .append("-");
 
             keyBuilder.append("couponId-")
-                    .append(cursor.couponId() != null ? cursor.couponId() : "all")
+                    .append(cursor.couponId() != null ? cursor.couponId().toString() : "all")
                     .append("-");
         }
 
-        keyBuilder.append("size-").append(size).append("-");
-        keyBuilder.append("page-").append(page);
+        keyBuilder.append("size-").append(size);
 
         return keyBuilder.toString();
     }
