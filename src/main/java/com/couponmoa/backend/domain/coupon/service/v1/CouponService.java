@@ -82,7 +82,6 @@ public class CouponService {
         Coupon savedCoupon = couponRepository.save(newCoupon);
 
         sendEmail(savedCoupon);
-        couponElasticsearchService.save(savedCoupon);  // Elastic 저장
 
         return new CouponResponse(savedCoupon.getId());
     }
@@ -130,7 +129,7 @@ public class CouponService {
 
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
-        couponElasticsearchService.save(coupon);  // Elastic 저장
+
 
         couponRepository.save(coupon);
 
@@ -146,9 +145,7 @@ public class CouponService {
 
         // 쿠폰 삭제
         couponRepository.delete(coupon);
-
-        // Elasticsearch에서 쿠폰 삭제
-        couponElasticsearchService.deleteCouponFromElasticsearch(couponId);
+        
     }
 
 

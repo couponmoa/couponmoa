@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
-import static co.elastic.clients.elasticsearch._types.query_dsl.Query.Kind.Terms;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -51,7 +49,7 @@ public class CouponElasticsearchService {
         searchRequest.source()
                 .query(QueryBuilders.matchAllQuery())
                 .aggregation(AggregationBuilders.terms("by_keyword")
-                        .field("keyword")
+                        .field("keyword.keyword")
                         .size(limit));
 
         SearchResponse response = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
