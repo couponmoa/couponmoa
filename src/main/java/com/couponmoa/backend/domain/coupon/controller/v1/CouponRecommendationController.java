@@ -1,25 +1,25 @@
 package com.couponmoa.backend.domain.coupon.controller.v1;
 
 import com.couponmoa.backend.domain.coupon.entity.Search;
-import com.couponmoa.backend.domain.coupon.service.v1.CouponElasticsearchService;
+import com.couponmoa.backend.domain.coupon.service.v1.CouponRecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/search")
+@RequestMapping("/api/v1/recommend")
 @RequiredArgsConstructor
-public class CouponSearchController {
+public class CouponRecommendationController {
 
-    private final CouponElasticsearchService couponElasticsearchService;
+    private final CouponRecommendationService recommendationService;
 
     @GetMapping
-    public List<Search> search(@RequestParam(name = "keyword") String keyword,
-                               @RequestParam(name = "userId") String userId) {
-        return couponElasticsearchService.recommendCoupons(keyword, userId);
+    public List<Search> getRecommendations(@RequestParam(name = "userId") String userId) throws IOException {
+        return recommendationService.getAIRecommendations(userId);
     }
 }

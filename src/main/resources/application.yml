@@ -1,4 +1,11 @@
 spring:
+  application:
+    name: couponmoa
+    elasticsearch:
+      uris: http://elasticsearch:9200
+      google:
+        api:
+          key: ${GOOGLE_API_KEY}
   profiles:
     active: local
 
