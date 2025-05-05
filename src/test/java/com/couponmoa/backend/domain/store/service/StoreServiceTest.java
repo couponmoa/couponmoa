@@ -3,8 +3,8 @@ package com.couponmoa.backend.domain.store.service;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.store.service.v1.StoreService;
@@ -95,7 +95,7 @@ class StoreServiceTest {
     void getMyStore_success() {
         when(storeRepository.findByUserIdAndDeletedAtIsNull(1L)).thenReturn(List.of(store));
 
-        List<StoreResponse> responses = storeService.getMyStore(1L);
+        List<StoreResponse> responses = storeService.findMyStore(1L);
 
         assertFalse(responses.isEmpty());
         assertEquals(1, responses.size());
@@ -106,7 +106,7 @@ class StoreServiceTest {
     @Test
     void getMyStore_fail_nullUserId() {
         ApplicationException exception = assertThrows(ApplicationException.class,
-                () -> storeService.getMyStore(null));
+                () -> storeService.findMyStore(null));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
         assertEquals("로그인이 필요합니다", exception.getMessage());
     }
@@ -115,7 +115,7 @@ class StoreServiceTest {
     void getMySimpleStores_success() {
         when(storeRepository.findByUserIdAndDeletedAtIsNull(1L)).thenReturn(List.of(store));
 
-        List<StoreSimpleResponse> responses = storeService.getMySimpleStores(1L);
+        List<StoreSimpleResponse> responses = storeService.findMySimpleStores(1L);
 
         assertFalse(responses.isEmpty());
         assertEquals(1, responses.size());
@@ -126,7 +126,7 @@ class StoreServiceTest {
     @Test
     void getMySimpleStores_fail_nullUserId() {
         ApplicationException exception = assertThrows(ApplicationException.class,
-                () -> storeService.getMySimpleStores(null));
+                () -> storeService.findMySimpleStores(null));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
         assertEquals("로그인이 필요합니다", exception.getMessage());
     }
@@ -135,7 +135,7 @@ class StoreServiceTest {
     void getStore_success() {
         when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
 
-        StoreResponse response = storeService.getStore(1L);
+        StoreResponse response = storeService.findStore(1L);
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
@@ -148,7 +148,7 @@ class StoreServiceTest {
                 .thenThrow(new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
         ApplicationException exception = assertThrows(ApplicationException.class,
-                () -> storeService.getStore(1L));
+                () -> storeService.findStore(1L));
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
         assertEquals("존재하지 않는 스토어 입니다.", exception.getMessage());
     }
@@ -179,17 +179,16 @@ class StoreServiceTest {
         assertEquals("ADMIN 권한을 가진 유저만 접근할 수 있습니다.", exception.getMessage());
     }
 
-//    @Test
-//    void deleteStore_success() {
-//        System.out.println("JDK Version: " + System.getProperty("java.version"));
-//        System.out.println("Test running in: " + System.getProperty("java.class.path"));
-//        when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(spy(store));
-//
-//        storeService.deleteStore(1L, authUser);
-//
-//        verify(spy(store), times(1)).delete();
-//        assertNotNull(spy(store).getDeletedAt());
-//    }
+    @Test
+    void deleteStore_success() {
+        System.out.println("JDK Version: " + System.getProperty("java.version"));
+        System.out.println("Test running in: " + System.getProperty("java.class.path"));
+        when(storeRepository.findByIdOrElseThrow(1L, ErrorCode.STORE_NOT_FOUND)).thenReturn(store);
+
+        storeService.deleteStore(1L, authUser);
+
+        verify(storeRepository, times(1)).delete(store);
+    }
 
     @Test
     void deleteStore_fail_forbidden() {

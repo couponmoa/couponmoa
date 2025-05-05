@@ -3,10 +3,9 @@ package com.couponmoa.backend.domain.store.service.v1;
 import com.couponmoa.backend.common.exception.ApplicationException;
 import com.couponmoa.backend.common.exception.ErrorCode;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.entity.Store;
-import com.couponmoa.backend.domain.store.repository.StoreQueryDslRepository;
 import com.couponmoa.backend.domain.store.repository.StoreRepository;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.entity.User;
@@ -25,8 +24,7 @@ import java.util.List;
 public class StoreService {
 
     private final StoreRepository storeRepository;
-    private final StoreQueryDslRepository storeQueryDslRepository;
-    private final UserRepository userRepository;;
+    private final UserRepository userRepository;
 
     @Transactional
     public StoreResponse createStore(StoreRequest request, AuthUser authUser) {
@@ -62,7 +60,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreResponse> getMyStore(Long userId) {
+    public List<StoreResponse> findMyStore(Long userId) {
         if (userId == null) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
         }
@@ -80,22 +78,20 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreSimpleResponse> getMySimpleStores(Long userId) {
+    public List<StoreSimpleResponse> findMySimpleStores(Long userId) {
         if (userId == null) {
             throw new ApplicationException(ErrorCode.UNAUTHORIZED_ACCESS, "로그인이 필요합니다");
         }
         List<Store> stores = storeRepository.findByUserIdAndDeletedAtIsNull(userId);
         List<StoreSimpleResponse> responses = new ArrayList<>();
         for (Store store : stores) {
-            responses.add(new StoreSimpleResponse(
-                    store.getId(),
-                    store.getName()));
+            responses.add(new StoreSimpleResponse(store.getId(), store.getName()));
         }
         return responses;
     }
 
     @Transactional(readOnly = true)
-    public StoreResponse getStore(Long storeId) {
+    public StoreResponse findStore(Long storeId) {
         Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);
         return new StoreResponse(
                 store.getId(),
@@ -103,11 +99,6 @@ public class StoreService {
                 store.getDescription(),
                 store.getAddress()
         );
-    }
-
-    @Transactional(readOnly = true)
-    public List<Store> findStoresByName(String storeName) {
-        return storeQueryDslRepository.findAllStoreByName(storeName);
     }
 
     @Transactional
@@ -137,10 +128,6 @@ public class StoreService {
         if (!store.getUser().getId().equals(authUser.getId())) {
             throw new ApplicationException(ErrorCode.FORBIDDEN_ADMIN_ONLY);
         }
-        // 이미 삭제된 경우 예외 처리
-        if (store.getDeletedAt() != null) {
-            throw new ApplicationException(ErrorCode.ALREADY_DELETED);
-        }
-        store.delete();
+        storeRepository.delete(store);
     }
 }

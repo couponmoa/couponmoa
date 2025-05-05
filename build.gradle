@@ -35,6 +35,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
     // Resilience4j : redis 장애시 fallback
     implementation 'io.github.resilience4j:resilience4j-spring-boot2:1.7.0'
 
@@ -85,16 +88,28 @@ dependencies {
     //h2 test db
     testImplementation 'com.h2database:h2'
 
-    // s3
-    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.653'
-
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    //elastic search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-client:8.12.0' // 서버 버전과 맞춤
+    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.9'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+
+    // S3용 레거시 AWS SDK
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.700'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 
 sourceSets {
     main.java.srcDirs += querydslDir
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
 }
 
 compileJava {
@@ -104,3 +119,8 @@ compileJava {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += "-parameters"
+}
+

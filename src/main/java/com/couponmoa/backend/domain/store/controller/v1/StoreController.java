@@ -2,8 +2,8 @@ package com.couponmoa.backend.domain.store.controller.v1;
 
 import com.couponmoa.backend.common.dto.ApiResponse;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.service.v1.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stores")
-@Tag(name = "스토어 API", description = "가게 관리 API")
+@Tag(name = "Store API", description = "가게 관리 API")
 public class StoreController {
 
     private final StoreService storeService;
@@ -40,18 +40,18 @@ public class StoreController {
     @GetMapping("/my")
     @Operation(summary = "내 가게 목록 조회",
                description = "로그인한 사용자가 자신이 생성한 가게 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse<List<StoreResponse>>> getMyStore(
+    public ResponseEntity<ApiResponse<List<StoreResponse>>> findMyStore(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<StoreResponse> response = storeService.getMyStore(authUser.getId()); // category 제거
+        List<StoreResponse> response = storeService.findMyStore(authUser.getId()); // category 제거
         return ResponseEntity.ok(ApiResponse.success(response, "가게 목록 조회 성공"));
     }
 
     @GetMapping("/my/simple")
     @Operation(summary = "내 가게 간단 목록 조회",
                description = "로그인 한 사용자가 자신의 가게 ID와 이름만 포함한 간단 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse<List<StoreSimpleResponse>>> getMySimpleStores(
+    public ResponseEntity<ApiResponse<List<StoreSimpleResponse>>> findMySimpleStores(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<StoreSimpleResponse> response = storeService.getMySimpleStores(authUser.getId());
+        List<StoreSimpleResponse> response = storeService.findMySimpleStores(authUser.getId());
         return ResponseEntity.ok(ApiResponse.success(response, "내 가게 간단 목록 조회 성공"));
     }
 
@@ -59,7 +59,7 @@ public class StoreController {
     @Operation(summary = "특정 가게 조회",
                description = "가게 ID를 통해 특정 가게의 상세 정보를 조회합니다")
     public ResponseEntity<ApiResponse<StoreResponse>> getStore(@PathVariable Long storeId) {
-        StoreResponse response = storeService.getStore(storeId);
+        StoreResponse response = storeService.findStore(storeId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

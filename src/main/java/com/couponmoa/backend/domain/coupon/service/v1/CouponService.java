@@ -32,6 +32,7 @@ public class CouponService {
     private final StoreRepository storeRepository;
     private final UserCouponSubscribeService userCouponSubServ;
     private final UserStoreSubscribeService userStoreSubServ;
+    private final CouponElasticsearchService couponElasticsearchService;
 
     public CouponResponse createCoupon(CouponCreateRequest requestDto) {
 
@@ -129,6 +130,7 @@ public class CouponService {
         // 쿠폰 업데이트, 사실상 put 방식처럼 작동하도록.. 이게맞나 ?
         updateIfPresent(coupon, requestDto);
 
+
         couponRepository.save(coupon);
 
         return new CouponResponse(coupon.getId());
@@ -141,8 +143,11 @@ public class CouponService {
         // Store의 소유자가 맞는지 검증 & Store가 존재하는지도 검증
         validateStoreOwnerAndGetStore(coupon.getStore().getId());
 
-        coupon.delete();
+        // 쿠폰 삭제
+        couponRepository.delete(coupon);
+        
     }
+
 
     private Store validateStoreOwnerAndGetStore(Long storeId) {
         Store store = storeRepository.findByIdOrElseThrow(storeId, ErrorCode.STORE_NOT_FOUND);

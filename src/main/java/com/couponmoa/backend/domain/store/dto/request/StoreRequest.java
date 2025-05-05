@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter //테스트 용도
 @NoArgsConstructor
 public class StoreRequest {
 

@@ -6,8 +6,8 @@ import com.couponmoa.backend.config.JwtUtil;
 import com.couponmoa.backend.config.SecurityConfig;
 import com.couponmoa.backend.domain.store.controller.v1.StoreController;
 import com.couponmoa.backend.domain.store.dto.request.StoreRequest;
-import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.dto.response.StoreResponse;
+import com.couponmoa.backend.domain.store.dto.response.StoreSimpleResponse;
 import com.couponmoa.backend.domain.store.service.v1.StoreService;
 import com.couponmoa.backend.domain.user.dto.AuthUser;
 import com.couponmoa.backend.domain.user.enums.UserRole;
@@ -27,10 +27,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(StoreController.class)
@@ -48,9 +46,6 @@ public class StoreControllerTest {
 
     @MockitoBean
     private RedisService redisService;
-
-   /* @MockitoBean
-    private JwtUtil jwtUtil;*/
 
     private JwtAuthenticationToken userAuthToken;
     private JwtAuthenticationToken adminAuthToken;
@@ -93,8 +88,7 @@ public class StoreControllerTest {
     @Test
     void 내_가게_목록_조회() throws Exception {
         StoreResponse response = new StoreResponse(1L, "가게명", "설명", "주소");
-        given(storeService.getMyStore(anyLong())).willReturn(List.of(response));
-
+        given(storeService.findMyStore(anyLong())).willReturn(List.of(response));
         mockMvc.perform(get("/api/v1/stores/my")
                         .with(authentication(userAuthToken)))
                 .andExpect(status().isOk())
@@ -104,8 +98,7 @@ public class StoreControllerTest {
     @Test
     void 내_가게_간단_목록_조회() throws Exception {
         StoreSimpleResponse response = new StoreSimpleResponse(1L, "가게명");
-        given(storeService.getMySimpleStores(anyLong())).willReturn(List.of(response));
-
+        given(storeService.findMySimpleStores(anyLong())).willReturn(List.of(response));
         mockMvc.perform(get("/api/v1/stores/my/simple")
                         .with(authentication(userAuthToken)))
                 .andExpect(status().isOk())
